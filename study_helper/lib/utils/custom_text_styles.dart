@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CustomTextStyle extends TextStyle {
-  CustomTextStyle({
-    double size = 28,
-    Color color = Colors.black,
-    FontWeight fw = FontWeight.w200,
-  }) {
-    TextStyle(
-      fontSize: size,
-      color: color,
-      fontWeight: fw,
-    );
-  }
+TextStyle customTextStyle({
+  double size = 25,
+  Color color = Colors.black,
+  FontWeight fw = FontWeight.w200,
+}) {
+  return TextStyle(
+    fontSize: size,
+    color: color,
+    fontWeight: fw,
+  );
 }

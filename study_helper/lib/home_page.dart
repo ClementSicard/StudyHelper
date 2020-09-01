@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
@@ -31,19 +32,58 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(
               'Welcome back to StudyHelper !',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.w200,
+              textAlign: TextAlign.center,
+              style: customTextStyle(
+                size: 30,
               ),
             ),
-            SizedBox(height: 20),
-            Card(
-              color: Colors.orange,
-              child: Text(
-                "ça marche bg",
-                style: CustomTextStyle(),
+            SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.all(30),
+              child: Card(
+                borderOnForeground: false,
+                elevation: 10,
+                shadowColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(60)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.orange,
+                        Colors.yellow,
+                      ],
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                    ),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(60)),
+                    onPressed: () {},
+                    child: Container(
+                      constraints: BoxConstraints.expand(
+                        width: 400,
+                        height: 300,
+                      ),
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: Text(
+                          "Continue to study",
+                          textAlign: TextAlign.right,
+                          style: customTextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            )
+            ),
+            SizedBox(height: 50),
           ],
         ),
       ),
