@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:study_helper/utils/custom_text_styles.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -38,7 +39,10 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 20),
             Card(
               color: Colors.orange,
-              child: Text("ça marche bg"),
+              child: Text(
+                "ça marche bg",
+                style: CustomTextStyle(),
+              ),
             )
           ],
         ),
