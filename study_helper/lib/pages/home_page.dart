@@ -32,7 +32,36 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.black,
               size: 30,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(
+                      brightness: Brightness.light,
+                      elevation: 0,
+                      centerTitle: true,
+                      leading: IconButton(
+                        icon: Icon(
+                          CupertinoIcons.back,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      title: Text(
+                        "Settings",
+                        textAlign: TextAlign.center,
+                        style: customTextStyle(),
+                      ),
+                      backgroundColor: Colors.white,
+                    ),
+                    body: null,
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+              );
+            },
           )
         ],
       ),
