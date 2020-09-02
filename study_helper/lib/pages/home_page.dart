@@ -28,7 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.settings,
+              CupertinoIcons.gear,
               color: Colors.black,
               size: 30,
             ),
@@ -53,23 +53,42 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 60),
               RaisedButton(
                 onPressed: () {},
+                padding: const EdgeInsets.all(0.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(40),
                 ),
                 color: Colors.orange,
                 elevation: 0,
-                child: Container(
-                  padding: EdgeInsets.all(15),
-                  alignment: Alignment.bottomCenter,
-                  child: Text(
-                    "Continue studying",
-                    style: customTextStyle(
-                      color: Colors.white,
-                      fw: FontWeight.w100,
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.yellow[700],
+                        Colors.orange,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(40.0),
                     ),
                   ),
-                  height: 200,
-                  width: 300,
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    constraints: const BoxConstraints(
+                      minWidth: 88.0,
+                      minHeight: 36.0,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: Text(
+                        "Continue studying",
+                        style: customTextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    height: 200,
+                    width: 300,
+                  ),
                 ),
               ),
               SizedBox(height: 50),
