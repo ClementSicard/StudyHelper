@@ -16,75 +16,65 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
+        elevation: 0,
+        centerTitle: true,
         title: Text(
           widget.title,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w200,
-          ),
+          style: customTextStyle(),
         ),
         backgroundColor: Colors.white,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Welcome back to StudyHelper !',
-              textAlign: TextAlign.center,
-              style: customTextStyle(
-                size: 30,
-              ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.settings,
+              color: Colors.black,
+              size: 30,
             ),
-            SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.all(30),
-              child: Card(
-                borderOnForeground: false,
-                elevation: 10,
-                shadowColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(60)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.orange,
-                        Colors.yellow,
-                      ],
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                    ),
-                    shape: BoxShape.rectangle,
-                  ),
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(60)),
-                    onPressed: () {},
-                    child: Container(
-                      constraints: BoxConstraints.expand(
-                        width: 400,
-                        height: 300,
-                      ),
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(30),
-                        child: Text(
-                          "Continue to study",
-                          textAlign: TextAlign.right,
-                          style: customTextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+            onPressed: () {},
+          )
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Welcome back to StudyHelper !',
+                textAlign: TextAlign.center,
+                style: customTextStyle(
+                  size: 30,
                 ),
               ),
-            ),
-            SizedBox(height: 50),
-          ],
+              SizedBox(height: 60),
+              RaisedButton(
+                onPressed: () {},
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                color: Colors.orange,
+                elevation: 0,
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    "Continue studying",
+                    style: customTextStyle(
+                      color: Colors.white,
+                      fw: FontWeight.w100,
+                    ),
+                  ),
+                  height: 200,
+                  width: 300,
+                ),
+              ),
+              SizedBox(height: 50),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
