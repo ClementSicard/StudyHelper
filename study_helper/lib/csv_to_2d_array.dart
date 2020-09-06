@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:study_helper/semester.dart';
 
-List<Chapter> CSVto2DArray(File csv, {String delimitator = ";"}) {
-  if (csv == null)
+List<Chapter> csvTo2DArray(File csv, {String delimitator = ";"}) {
+  if (csv == null) {
+    print("CSV file is null\n");
     return null;
-  else {
+  } else {
     List<String> contents = csv.readAsLinesSync();
     int nbOfChapters = contents[0].split(";").length;
     if (!checkCorrectCSV(contents, nbOfChapters)) {
@@ -28,8 +29,8 @@ List<Chapter> CSVto2DArray(File csv, {String delimitator = ";"}) {
 
 bool checkCorrectCSV(List<String> csv, int nbOfChapters,
     {String delimitator = ";"}) {
-  for (String s in csv) {
-    if (s.split(delimitator).length != nbOfChapters) {
+  for (String line in csv) {
+    if (line.split(delimitator).length != nbOfChapters) {
       return false;
     }
   }
