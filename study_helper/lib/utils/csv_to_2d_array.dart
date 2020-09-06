@@ -1,12 +1,12 @@
 import 'dart:io';
-import 'package:study_helper/semester.dart';
+import 'package:study_helper/objects/semester.dart';
 
-List<Chapter> csvTo2DArray(File csv, {String delimiter = ";"}) {
+Future<List<Chapter>> csvTo2DArray(File csv, {String delimiter = ";"}) async {
   if (csv == null) {
     print("CSV file is null\n");
     return null;
   } else {
-    List<String> contents = csv.readAsLinesSync();
+    List<String> contents = await csv.readAsLines();
     int nbOfChapters = contents[0].split(";").length;
     if (!_checkCorrectCSV(contents, nbOfChapters)) {
       return null;
@@ -27,7 +27,8 @@ List<Chapter> csvTo2DArray(File csv, {String delimiter = ";"}) {
   }
 }
 
-void arrayToCSV(List<Chapter> chapters, File csv, {String delimiter = ";"}) {
+Future<void> arrayToCSV(List<Chapter> chapters, File csv,
+    {String delimiter = ";"}) async {
   int max = _maxSubjects(chapters);
   List<String> strings = List();
 
@@ -55,7 +56,7 @@ void arrayToCSV(List<Chapter> chapters, File csv, {String delimiter = ";"}) {
 
   // Join all the lines into one big, separated by \n characters, and then write into the file
   String content = strings.join("\n");
-  csv.writeAsStringSync(content);
+  await csv.writeAsString(content);
 }
 
 /*******************************
