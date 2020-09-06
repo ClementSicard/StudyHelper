@@ -1,23 +1,23 @@
 import 'dart:io';
 import 'package:study_helper/semester.dart';
 
-List<Chapter> csvTo2DArray(File csv, {String delimitator = ";"}) {
+List<Chapter> csvTo2DArray(File csv, {String delimiter = ";"}) {
   if (csv == null) {
     print("CSV file is null\n");
     return null;
   } else {
     List<String> contents = csv.readAsLinesSync();
     int nbOfChapters = contents[0].split(";").length;
-    if (!checkCorrectCSV(contents, nbOfChapters)) {
+    if (!_checkCorrectCSV(contents, nbOfChapters)) {
       return null;
     } else {
       List<Chapter> chapters = List();
-      List<String> firstLine = contents[0].split(delimitator);
+      List<String> firstLine = contents[0].split(delimiter);
       for (int i = 0; i < nbOfChapters; i++) {
         List<Subject> subList = List();
         for (int j = 0; j < contents.length; j++) {
-          List<String> currentLine = contents[j].split(delimitator);
-          // Initially all the subjects are poorly mastered
+          List<String> currentLine = contents[j].split(delimiter);
+          // Initially all the subjects are all poorly mastered
           subList.add(Subject(currentLine[i], Mastered.Poorly));
         }
         chapters.add(Chapter(firstLine[i], subList));
@@ -27,10 +27,52 @@ List<Chapter> csvTo2DArray(File csv, {String delimitator = ";"}) {
   }
 }
 
-bool checkCorrectCSV(List<String> csv, int nbOfChapters,
-    {String delimitator = ";"}) {
+void arrayToCSV(List<Chapter> chapters, File csv, {String delimiter = ";"}) {
+  int max = _maxSubjects(chapters);
+  List<String> strings = List();
+
+  // Initialize the list of strings to the max number of subjects
+  for (int i = 0; i < max; i++) {
+    strings.add("");
+  }
+
+  // Add the names of the chapters on top
+  String firstLine = "";
+  for (Chapter chapter in chapters) {
+    firstLine += chapter.name + delimiter;
+  }
+  strings.add(firstLine);
+
+  // For each chapter, add subject if there is any in it, otherwise add empty string
+  for (int i = 0; i < max; i++) {
+    String currentLine = "";
+    for (Chapter chapter in chapters) {
+      currentLine +=
+          chapter.subjects.length > i ? chapter.subjects[i] : "" + delimiter;
+    }
+    strings.add(currentLine);
+  }
+
+  // Join all the lines into one big, separated by \n characters, and then write into the file
+  String content = strings.join("\n");
+  csv.writeAsStringSync(content);
+}
+
+int _maxSubjects(List<Chapter> chapters) {
+  int currentMax = 0;
+  for (Chapter chapter in chapters) {
+    int nbOfSubjects = chapter.subjects.length;
+    if (nbOfSubjects > currentMax) {
+      currentMax = nbOfSubjects;
+    }
+  }
+  return currentMax;
+}
+
+bool _checkCorrectCSV(List<String> csv, int nbOfChapters,
+    {String delimiter = ";"}) {
   for (String line in csv) {
-    if (line.split(delimitator).length != nbOfChapters) {
+    if (line.split(delimiter).length != nbOfChapters) {
       return false;
     }
   }
