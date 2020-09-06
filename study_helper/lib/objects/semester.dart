@@ -1,52 +1,23 @@
-class Semester {
-  String _name;
-  List<Course> _courses;
-
-  Semester(String name) {
-    _name = name;
-    _courses = List();
-  }
-
-  bool addCourse(Course course) {
-    if (course.name != "" && course.subjects != null) {
-      _courses.add(course);
-      return true;
-    }
-    return false;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  set name(String newName) {
-    _name = newName;
-  }
-
-  List<Course> get courses {
-    return List.from(_courses);
-  }
-}
-
 class Course {
   String _name;
   List<Chapter> _chapters;
 
+  Course(String name, {List<Chapter> chapters = const []}) {
+    this._name = name;
+    this._chapters = chapters;
+  }
+
   List<List<Subject>> get subjects {
     List<List<Subject>> list = List();
     for (Chapter chapter in _chapters) {
-      list.addAll(chapter.subjects);
+      list.add(chapter.subjects);
     }
     return list;
   }
 
-  List<Chapter> get chapters {
-    return List.from(_chapters);
-  }
+  List<Chapter> get getChapters => _chapters;
 
-  String get name {
-    return _name;
-  }
+  String get name => _name;
 
   set name(String newName) {
     _name = newName;
@@ -62,7 +33,7 @@ class Chapter {
     this._subjects = List.from(subjects);
   }
 
-  List<List<Subject>> get subjects {
+  List<Subject> get subjects {
     return List.from(_subjects);
   }
 
@@ -85,7 +56,7 @@ class Subject {
   String _name;
   Mastered _mas;
 
-  Subject(String name, Mastered mas) {
+  Subject(String name, {Mastered mas = Mastered.Poorly}) {
     this._name = name;
     this._mas = mas;
   }
