@@ -58,6 +58,12 @@ void arrayToCSV(List<Chapter> chapters, File csv, {String delimiter = ";"}) {
   csv.writeAsStringSync(content);
 }
 
+/*******************************
+
+            HELPERS
+
+*******************************/
+
 int _maxSubjects(List<Chapter> chapters) {
   int currentMax = 0;
   for (Chapter chapter in chapters) {
