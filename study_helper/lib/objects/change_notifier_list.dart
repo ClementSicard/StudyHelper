@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// This class is usefull to use a Provider with a list and to be notified
+/// if the list is changed. The list can only be change by the given methods
 class ChangeNotifierList<E> with ChangeNotifier {
   List<E> _list;
 
@@ -23,36 +25,38 @@ class ChangeNotifierList<E> with ChangeNotifier {
     return _list.length;
   }
 
-  ///returns a copy of the list
+  /// Returns a copy of the list
   List<E> get list {
     return _list;
   }
 
-  ///add the given element to the list and notify listeners
+  /// Add the given element to the list and notify listeners
   void add(E element) {
     _list.add(element);
     notifyListeners();
   }
 
-  ///remove the given element from the list and notify listeners
+  /// Remove the given element from the list and notify listeners
   void remove(int index) {
     _list.removeAt(index);
     notifyListeners();
   }
 
-  ///clear the list and notify listeners
+  /// Clear the list and notify listeners
   void clear() {
     _list.clear();
     notifyListeners();
   }
 
-  void allAll(Iterable<E> iterable) {
+  /// Add all the given elements and notify listerners
+  void addAll(Iterable<E> iterable) {
     if (iterable != null) {
       _list.addAll(iterable);
       notifyListeners();
     }
   }
 
+  /// Erase the actual list and replace it with the new given elements, and then notify listeners
   void newList(Iterable<E> iterable) {
     assert(iterable != null);
     _list = List<E>.from(iterable);

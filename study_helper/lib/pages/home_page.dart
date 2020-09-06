@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:study_helper/pages/settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
