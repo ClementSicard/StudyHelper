@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:study_helper/objects/semester.dart';
+import 'package:study_helper/objects/chapter.dart';
+import 'package:study_helper/objects/subject.dart';
 
 Future<List<Chapter>> csvTo2DArray(File csv, {String delimiter = ";"}) async {
   if (csv == null) {

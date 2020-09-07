@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:study_helper/objects/semester.dart';
+import 'package:study_helper/objects/chapter.dart';
+import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/objects/subject.dart';
 
 class CoursesDataHandler with ChangeNotifier {
   List<Course> _courses;
@@ -62,7 +64,7 @@ class CoursesDataHandler with ChangeNotifier {
     final File file = File("${dir.path}/courses_data.json");
 
     if (!await file.exists()) {
-      _courses = List();
+      _courses = [];
       notifyListeners();
       return true;
     }
@@ -87,11 +89,109 @@ class CoursesDataHandler with ChangeNotifier {
     );
     _courses = courses;
     notifyListeners();
+    return true;
   }
 
-  Future<bool> remove(int index) async {}
+  Future<bool> removeCourseAtIndex(int index) async {
+    assert(index >= 0);
 
-  Future<bool> clear() async {}
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+
+    if (!await file.exists()) {
+      _courses = [];
+      notifyListeners();
+      return true;
+    }
+    String contents = await file.readAsString();
+    final List previousSave = jsonDecode(contents);
+
+    if (index >= previousSave.length) {
+      return false;
+    }
+    previousSave.removeAt(index);
+    contents = jsonEncode(previousSave);
+    await file.writeAsString(contents);
+    _update();
+    return true;
+  }
+
+  Future<bool> removeCourse(Course course) async {
+    assert(course != null);
+
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+
+    if (!await file.exists()) {
+      _courses = [];
+      notifyListeners();
+      return true;
+    }
+    String contents = await file.readAsString();
+    final List previousSave = jsonDecode(contents);
+
+    for (int i = 0; i < previousSave.length; i++) {
+      if (previousSave[i]["name"] == course.name) {
+        previousSave.removeAt(i);
+        return true;
+      }
+    }
+    contents = jsonEncode(previousSave);
+    await file.writeAsString(contents);
+    _update();
+    return true;
+  }
+
+  Future<bool> removeChapter(Course course, Chapter chapter) async {
+    assert(course != null && chapter != null);
+
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+
+    if (!await file.exists()) {
+      _courses = [];
+      notifyListeners();
+      return true;
+    }
+
+    String contents = await file.readAsString();
+    final List previousSave = jsonDecode(contents);
+
+    for (int i = 0; i < previousSave.length; i++) {
+      if (previousSave[i]["name"] == course.name) {
+        for (Chapter chap in previousSave[i]["chapters"]) {
+          if (chap.name == chapter.name) {
+            previousSave[i]["chapters"].remove(chap);
+            return true;
+          }
+        }
+        return true;
+      }
+    }
+    contents = jsonEncode(previousSave);
+    await file.writeAsString(contents);
+    _update();
+    return true;
+  }
+
+  Future<bool> clear() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+    String contents;
+    if (await file.exists()) {
+      contents = await file.readAsString();
+    } else {
+      return false;
+    }
+
+    List previousSave = jsonDecode(contents);
+    previousSave.clear();
+
+    contents = jsonEncode(previousSave);
+    await file.writeAsString(contents);
+    _update();
+    return true;
+  }
 
   List<Course> get courses => _courses;
 }
