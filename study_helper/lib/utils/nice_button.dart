@@ -24,7 +24,6 @@ Widget NiceButton({
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(borderRadius),
     ),
-    color: Colors.orange,
     elevation: elevation,
     child: Ink(
       decoration: BoxDecoration(
