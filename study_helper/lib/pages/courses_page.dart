@@ -71,6 +71,7 @@ class _CoursesPageState extends State<CoursesPage> {
                     Icons.add,
                     color: Colors.white,
                   ),
+                  enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
                   onPressed: () {
                     Navigator.push(
@@ -86,6 +87,7 @@ class _CoursesPageState extends State<CoursesPage> {
         ),
       );
     } else {
+      courses.sort((a, b) => a.name.compareTo(b.name));
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -149,7 +151,13 @@ class _CoursesPageState extends State<CoursesPage> {
             ),
             color: Colors.white,
             tooltip: "Add new course",
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CoursePromptPage(),
+                ),
+              );
+            },
           ),
         ],
       ),
