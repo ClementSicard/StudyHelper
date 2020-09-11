@@ -34,7 +34,16 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           backgroundColor: Colors.white,
         ),
-        body: null,
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(
+            child: Text(
+              "No settings available at the moment.",
+              style: customTextStyle(),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
         backgroundColor: Colors.white,
       ),
     );
