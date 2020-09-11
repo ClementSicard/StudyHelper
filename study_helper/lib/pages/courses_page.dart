@@ -15,12 +15,11 @@ class CoursesPage extends StatefulWidget {
 class _CoursesPageState extends State<CoursesPage> {
   List<Course> courses = [
     Course("Analyse IV"),
-    Course("Proba Stats"),
     Course("Programmation orientée système"),
     Course("Probabilities & Statistics"),
     Course("Signals and Systems"),
     Course("Musical Improvisation, Invention and Creativity"),
-  ];
+  ]..sort((a, b) => a.name.compareTo(b.name));
 
   @override
   Widget build(BuildContext context) {

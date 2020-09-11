@@ -10,20 +10,26 @@ class CustomGradients {
     ),
     LinearGradient(
       colors: [
-        Colors.blue[400],
+        Colors.blue[200],
         Colors.blue,
       ],
     ),
     LinearGradient(
       colors: [
         Colors.green[200],
-        Colors.green[300],
+        Colors.green,
       ],
     ),
     LinearGradient(
       colors: [
-        Colors.green[200],
-        Colors.green[300],
+        Colors.red[200],
+        Colors.red,
+      ],
+    ),
+    LinearGradient(
+      colors: [
+        Colors.brown[200],
+        Colors.brown,
       ],
     ),
   ];
