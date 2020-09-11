@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/pages/chapters_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
 
@@ -71,6 +72,12 @@ class _CoursesPageState extends State<CoursesPage> {
                 children: [
                   NiceButton(
                     text: current.name,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => ChaptersPage(current)),
+                      );
+                    },
                   ),
                   SizedBox(height: 30),
                 ],
