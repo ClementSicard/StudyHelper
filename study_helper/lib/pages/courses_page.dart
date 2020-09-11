@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:study_helper/objects/course.dart';
-import 'package:study_helper/pages/settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
 
