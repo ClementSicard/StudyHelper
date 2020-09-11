@@ -21,71 +21,74 @@ class _CoursesPageState extends State<CoursesPage> {
     Course("Musical Improvisation, Invention and Creativity"),
   ]..sort((a, b) => a.name.compareTo(b.name));
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.light,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          "Your courses",
-          textAlign: TextAlign.center,
-          style: customTextStyle(),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            CupertinoIcons.back,
-            color: Colors.black,
-            size: 30,
-          ),
-          tooltip: "Back",
-          onPressed: () {
-            Navigator.pop(context);
+  Widget _body() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListView.builder(
+          shrinkWrap: true,
+          primary: false,
+          itemCount: courses.length,
+          itemBuilder: (context, index) {
+            Course current = courses[index];
+            return Column(
+              children: [
+                NiceButton(
+                  text: current.name,
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => ChaptersPage(current)),
+                    );
+                  },
+                ),
+                SizedBox(height: 30),
+              ],
+            );
           },
-        ),
-        backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: Icon(
-              CupertinoIcons.add_circled,
-              color: Colors.black,
-              size: 30,
-            ),
-            color: Colors.white,
-            tooltip: "Add new course",
-            onPressed: () {},
-          ),
-        ],
-      ),
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ListView.builder(
-            shrinkWrap: true,
-            primary: false,
-            itemCount: courses.length,
-            itemBuilder: (context, index) {
-              Course current = courses[index];
-              return Column(
-                children: [
-                  NiceButton(
-                    text: current.name,
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => ChaptersPage(current)),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 30),
-                ],
-              );
-            },
-          ),
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          brightness: Brightness.light,
+          elevation: 0,
+          centerTitle: true,
+          title: Text(
+            "Your courses",
+            textAlign: TextAlign.center,
+            style: customTextStyle(),
+          ),
+          leading: IconButton(
+            icon: Icon(
+              CupertinoIcons.back,
+              color: Colors.black,
+              size: 30,
+            ),
+            tooltip: "Back",
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: Colors.white,
+          actions: [
+            IconButton(
+              icon: Icon(
+                CupertinoIcons.add_circled,
+                color: Colors.black,
+                size: 30,
+              ),
+              color: Colors.white,
+              tooltip: "Add new course",
+              onPressed: () {},
+            ),
+          ],
+        ),
+        backgroundColor: Colors.white,
+        body: _body());
   }
 }

@@ -35,6 +35,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           _course.name,
           textAlign: TextAlign.center,
           style: customTextStyle(),
+          maxLines: 2,
         ),
         leading: IconButton(
           icon: Icon(
