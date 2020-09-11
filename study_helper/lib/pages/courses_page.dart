@@ -39,6 +39,7 @@ class _CoursesPageState extends State<CoursesPage> {
             color: Colors.black,
             size: 30,
           ),
+          tooltip: "Back",
           onPressed: () {
             Navigator.pop(context);
           },
@@ -47,17 +48,14 @@ class _CoursesPageState extends State<CoursesPage> {
         actions: [
           IconButton(
             icon: Icon(
-              CupertinoIcons.gear,
+              CupertinoIcons.add_circled,
               color: Colors.black,
               size: 30,
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
-          )
+            color: Colors.white,
+            tooltip: "Add new course",
+            onPressed: () {},
+          ),
         ],
       ),
       backgroundColor: Colors.white,
