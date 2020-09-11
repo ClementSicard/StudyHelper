@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:study_helper/pages/courses_page.dart';
 import 'package:study_helper/pages/settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
@@ -59,7 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SizedBox(height: 60),
               RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CoursesPage()),
+                  );
+                },
                 padding: const EdgeInsets.all(0.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(40),
