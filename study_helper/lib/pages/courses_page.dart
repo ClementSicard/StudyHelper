@@ -144,7 +144,7 @@ class _CoursesPageState extends State<CoursesPage> {
         backgroundColor: Colors.white,
         actions: [
           Visibility(
-            visible: _courses.isNotEmpty,
+            visible: _courses?.isNotEmpty ?? true,
             child: IconButton(
               icon: Icon(
                 CupertinoIcons.add_circled,

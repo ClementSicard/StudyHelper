@@ -88,11 +88,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   maxLength: 100,
                   maxLines: 1,
                   textCapitalization: TextCapitalization.sentences,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w200,
-                  ),
+                  style: customTextStyle(),
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter some text';
@@ -140,8 +136,8 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 barrierDismissible: false,
                 builder: (BuildContext context) {
                   return CustomAlertDialog.alertdialog(
-                    title: "Please fill all the fields in",
-                    content: "You cannot have empty fields",
+                    title: "Please give a name for your course",
+                    content: "The name cannot be empty",
                     actions: [
                       MapEntry(
                         "Try again",
