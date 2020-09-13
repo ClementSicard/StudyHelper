@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/pages/chapters_page.dart';
+import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
 import 'course_prompt_page.dart';
@@ -55,7 +56,7 @@ class _CoursesPageState extends State<CoursesPage> {
                 height: MediaQuery.of(context).size.height / 3.0,
               ),
               Text(
-                "Add your first course !",
+                "Add your first course!",
                 style: customTextStyle(),
                 textAlign: TextAlign.center,
               ),
@@ -74,7 +75,8 @@ class _CoursesPageState extends State<CoursesPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CoursePromptPage(courses)),
+                        builder: (context) => CoursePromptPage(),
+                      ),
                     );
                   },
                 ),
@@ -96,12 +98,49 @@ class _CoursesPageState extends State<CoursesPage> {
               Course current = courses[index];
               return Column(
                 children: [
-                  NiceButton(
-                    text: current.name,
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => ChaptersPage(current)),
+                  GestureDetector(
+                    child: NiceButton(
+                      text: current.name,
+                      width: 500,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => ChaptersPage(current)),
+                        );
+                      },
+                    ),
+                    onLongPress: () async {
+                      final coursesData = Provider.of<CoursesDataHandler>(
+                          context,
+                          listen: false);
+
+                      await showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return CustomAlertDialog.alertdialog(
+                            title: "Confirm delete",
+                            content: "Are you sure to delete this course?",
+                            actions: [
+                              MapEntry(
+                                "Cancel",
+                                () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              MapEntry(
+                                "Delete",
+                                () async {
+                                  Navigator.of(context).pop();
+                                  final coursesProvider =
+                                      Provider.of<CoursesDataHandler>(context,
+                                          listen: false);
+                                  coursesProvider.removeCourse(current);
+                                },
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
                   ),
@@ -155,9 +194,7 @@ class _CoursesPageState extends State<CoursesPage> {
               tooltip: "Add new course",
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CoursePromptPage(_courses),
-                  ),
+                  MaterialPageRoute(builder: (context) => CoursePromptPage()),
                 );
               },
             ),

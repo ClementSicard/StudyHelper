@@ -9,25 +9,19 @@ import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
 class CoursePromptPage extends StatefulWidget {
-  final List<Course> _courses;
-
-  factory CoursePromptPage(List<Course> courses, {Key key}) {
-    return CoursePromptPage._(courses, key: key);
+  factory CoursePromptPage({Key key}) {
+    return CoursePromptPage._(key: key);
   }
 
-  CoursePromptPage._(this._courses, {Key key}) : super(key: key);
+  CoursePromptPage._({Key key}) : super(key: key);
 
   @override
-  _CoursePromptPageState createState() => _CoursePromptPageState(_courses);
+  _CoursePromptPageState createState() => _CoursePromptPageState();
 }
 
 class _CoursePromptPageState extends State<CoursePromptPage> {
   TextEditingController _nameController;
   TextEditingController _descriptionController;
-
-  final List<Course> _courses;
-
-  _CoursePromptPageState(this._courses);
 
   @override
   void initState() {
@@ -133,6 +127,9 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
         padding: const EdgeInsets.only(bottom: 40),
         child: FloatingActionButton.extended(
           onPressed: () async {
+            final coursesData =
+                Provider.of<CoursesDataHandler>(context, listen: false);
+            List<Course> courses = coursesData.courses;
             String givenName = _nameController.text;
             String description = _descriptionController.text;
             if (givenName == "") {
@@ -154,10 +151,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   );
                 },
               );
-            } else if (_courses
-                .map((c) => c.name)
-                .toSet()
-                .contains(givenName)) {
+            } else if (courses.map((c) => c.name).toSet().contains(givenName)) {
               await showDialog(
                 context: context,
                 barrierDismissible: false,
@@ -186,16 +180,26 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
               final coursesData =
                   Provider.of<CoursesDataHandler>(context, listen: false);
               bool success = await coursesData.save(newCourse);
+              print("bien joué maggle");
               if (!success) {
                 Fluttertoast.showToast(
                   msg:
                       "The course couldn't be saved on your device: Please try later",
                   backgroundColor: Colors.red,
-                  gravity: ToastGravity.CENTER,
+                  gravity: ToastGravity.BOTTOM,
+                  fontSize: 20.0,
+                  timeInSecForIosWeb: 1,
+                );
+              } else {
+                Fluttertoast.showToast(
+                  msg: givenName + " was successfully saved!",
+                  backgroundColor: Colors.red,
+                  gravity: ToastGravity.BOTTOM,
                   fontSize: 20.0,
                   timeInSecForIosWeb: 1,
                 );
               }
+              Navigator.of(context).pop();
             }
           },
           label: Text(

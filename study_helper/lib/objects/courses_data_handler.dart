@@ -20,12 +20,15 @@ class CoursesDataHandler with ChangeNotifier {
 
     final dir = await getApplicationDocumentsDirectory();
     final File file = File("${dir.path}/courses_data.json");
+    print("C'est bon ma gueule");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
     } else {
       contents = "";
     }
+
+    print(course.getChapters);
 
     List<Map<String, List<String>>> chapters =
         List<Map<String, List<String>>>.generate(
@@ -45,6 +48,7 @@ class CoursesDataHandler with ChangeNotifier {
     };
 
     dynamic previousSave;
+    print(contents);
     if (contents.isEmpty) {
       previousSave = [toAdd];
     } else {
@@ -129,15 +133,19 @@ class CoursesDataHandler with ChangeNotifier {
     }
     String contents = await file.readAsString();
     final List previousSave = jsonDecode(contents);
+    print(previousSave);
 
     for (int i = 0; i < previousSave.length; i++) {
+      print(previousSave[i]["name"] + " vs " + course.name);
+      bool test = previousSave[i]["name"] == course.name;
+      print(test);
       if (previousSave[i]["name"] == course.name) {
         previousSave.removeAt(i);
-        return true;
       }
     }
     contents = jsonEncode(previousSave);
     await file.writeAsString(contents);
+    print(contents);
     _update();
     return true;
   }
