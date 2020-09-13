@@ -46,7 +46,7 @@ class _CoursesPageState extends State<CoursesPage> {
       );
     } else if (courses.isEmpty) {
       return Padding(
-        padding: EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(5.0),
         child: Center(
           child: ListView(
             physics: NeverScrollableScrollPhysics(),

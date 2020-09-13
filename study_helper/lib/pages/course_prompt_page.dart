@@ -71,7 +71,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
               ),
               SizedBox(height: 100),
               Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
@@ -98,7 +98,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
                   controller: _commentController,
                   decoration: InputDecoration(
