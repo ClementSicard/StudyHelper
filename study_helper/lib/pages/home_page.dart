@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:study_helper/pages/courses_page.dart';
 import 'package:study_helper/pages/settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
+import 'package:study_helper/utils/nice_button.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -58,50 +59,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               SizedBox(height: 60),
-              RaisedButton(
+              NiceButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => CoursesPage()),
                   );
                 },
-                padding: const EdgeInsets.all(0.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                color: Colors.orange,
-                elevation: 0,
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.yellow[700],
-                        Colors.orange,
-                      ],
-                    ),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(40.0),
-                    ),
-                  ),
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    constraints: const BoxConstraints(
-                      minWidth: 88.0,
-                      minHeight: 36.0,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      child: Text(
-                        "Continue studying",
-                        style: customTextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    height: 200,
-                    width: 300,
-                  ),
-                ),
+                text: "Continue studying",
               ),
             ],
           ),
