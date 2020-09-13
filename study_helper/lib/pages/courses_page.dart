@@ -16,7 +16,7 @@ class CoursesPage extends StatefulWidget {
 }
 
 class _CoursesPageState extends State<CoursesPage> {
-  List<Course> courses = [
+  List<Course> courses_test = [
     Course("Analyse IV"),
     Course("Programmation orientée système"),
     Course("Probabilities & Statistics"),
@@ -24,10 +24,7 @@ class _CoursesPageState extends State<CoursesPage> {
     Course("Musical Improvisation, Invention and Creativity"),
   ]..sort((a, b) => a.name.compareTo(b.name));
 
-  Widget _body() {
-    final coursesListProvider =
-        Provider.of<CoursesDataHandler>(context, listen: true);
-    List<Course> courses = coursesListProvider.courses;
+  Widget _body(List<Course> courses) {
     if (courses == null) {
       return Center(
         child: Container(
@@ -120,6 +117,9 @@ class _CoursesPageState extends State<CoursesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final coursesListProvider =
+        Provider.of<CoursesDataHandler>(context, listen: true);
+    List<Course> courses = coursesListProvider.courses;
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -143,26 +143,29 @@ class _CoursesPageState extends State<CoursesPage> {
         ),
         backgroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: Icon(
-              CupertinoIcons.add_circled,
-              color: Colors.black,
-              size: 30,
+          Visibility(
+            visible: courses.isNotEmpty,
+            child: IconButton(
+              icon: Icon(
+                CupertinoIcons.add_circled,
+                color: Colors.black,
+                size: 30,
+              ),
+              color: Colors.white,
+              tooltip: "Add new course",
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CoursePromptPage(),
+                  ),
+                );
+              },
             ),
-            color: Colors.white,
-            tooltip: "Add new course",
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CoursePromptPage(),
-                ),
-              );
-            },
           ),
         ],
       ),
       backgroundColor: Colors.white,
-      body: _body(),
+      body: _body(courses),
     );
   }
 }

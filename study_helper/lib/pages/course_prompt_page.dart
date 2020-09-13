@@ -34,24 +34,6 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
           },
         ),
         backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: Icon(
-              CupertinoIcons.add_circled,
-              color: Colors.black,
-              size: 30,
-            ),
-            color: Colors.white,
-            tooltip: "Add new course",
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CoursePromptPage(),
-                ),
-              );
-            },
-          ),
-        ],
       ),
       backgroundColor: Colors.white,
     );
