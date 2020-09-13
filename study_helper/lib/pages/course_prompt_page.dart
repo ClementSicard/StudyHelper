@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
@@ -20,7 +23,7 @@ class CoursePromptPage extends StatefulWidget {
 
 class _CoursePromptPageState extends State<CoursePromptPage> {
   TextEditingController _nameController;
-  TextEditingController _commentController;
+  TextEditingController _descriptionController;
 
   final List<Course> _courses;
 
@@ -30,7 +33,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
   void initState() {
     super.initState();
     _nameController = TextEditingController();
-    _commentController = TextEditingController();
+    _descriptionController = TextEditingController();
   }
 
   @override
@@ -100,7 +103,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
-                  controller: _commentController,
+                  controller: _descriptionController,
                   decoration: InputDecoration(
                     labelText: 'Description (optional)',
                     labelStyle: customTextStyle(),
@@ -130,7 +133,9 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
         padding: const EdgeInsets.only(bottom: 40),
         child: FloatingActionButton.extended(
           onPressed: () async {
-            if (_nameController.text == "") {
+            String givenName = _nameController.text;
+            String description = _descriptionController.text;
+            if (givenName == "") {
               await showDialog(
                 context: context,
                 barrierDismissible: false,
@@ -149,7 +154,49 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   );
                 },
               );
-            } else {}
+            } else if (_courses
+                .map((c) => c.name)
+                .toSet()
+                .contains(givenName)) {
+              await showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return CustomAlertDialog.alertdialog(
+                    title: "You already have a course of with the name \"" +
+                        givenName +
+                        "\"",
+                    content: "Please choose another name",
+                    actions: [
+                      MapEntry(
+                        "Try again",
+                        () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              Course newCourse = Course(
+                givenName,
+                description: description,
+              );
+              final coursesData =
+                  Provider.of<CoursesDataHandler>(context, listen: false);
+              bool success = await coursesData.save(newCourse);
+              if (!success) {
+                Fluttertoast.showToast(
+                  msg:
+                      "The course couldn't be saved on your device: Please try later",
+                  backgroundColor: Colors.red,
+                  gravity: ToastGravity.CENTER,
+                  fontSize: 20.0,
+                  timeInSecForIosWeb: 1,
+                );
+              }
+            }
           },
           label: Text(
             'Save this course',

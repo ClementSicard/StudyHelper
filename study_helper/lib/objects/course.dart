@@ -4,10 +4,13 @@ import 'package:study_helper/objects/subject.dart';
 class Course {
   String _name;
   List<Chapter> _chapters;
+  String _description;
 
-  Course(String name, {List<Chapter> chapters = const []}) {
+  Course(String name,
+      {List<Chapter> chapters = const [], String description = ""}) {
     this._name = name;
     this._chapters = chapters;
+    this._description = description;
   }
 
   List<List<Subject>> get subjects {
@@ -19,8 +22,8 @@ class Course {
   }
 
   List<Chapter> get getChapters => _chapters;
-
   String get name => _name;
+  String get description => _description;
 
   set name(String newName) {
     _name = newName;

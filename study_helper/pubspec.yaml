@@ -32,6 +32,7 @@ dependencies:
   shared_preferences: ^0.5.10
   path_provider: ^1.6.14
   flutter_colorpicker: ^0.3.4
+  fluttertoast: ^7.1.1
 
 dev_dependencies:
   flutter_test:
