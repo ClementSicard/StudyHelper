@@ -16,7 +16,7 @@ class CoursesPage extends StatefulWidget {
 }
 
 class _CoursesPageState extends State<CoursesPage> {
-  List<Course> courses_test = [
+  List<Course> coursesTest = [
     Course("Analyse IV"),
     Course("Programmation orientée système"),
     Course("Probabilities & Statistics"),
@@ -74,7 +74,7 @@ class _CoursesPageState extends State<CoursesPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CoursePromptPage()),
+                          builder: (context) => CoursePromptPage(courses)),
                     );
                   },
                 ),
@@ -119,7 +119,7 @@ class _CoursesPageState extends State<CoursesPage> {
   Widget build(BuildContext context) {
     final coursesListProvider =
         Provider.of<CoursesDataHandler>(context, listen: true);
-    List<Course> courses = coursesListProvider.courses;
+    List<Course> _courses = coursesListProvider.courses;
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -144,7 +144,7 @@ class _CoursesPageState extends State<CoursesPage> {
         backgroundColor: Colors.white,
         actions: [
           Visibility(
-            visible: courses.isNotEmpty,
+            visible: _courses.isNotEmpty,
             child: IconButton(
               icon: Icon(
                 CupertinoIcons.add_circled,
@@ -156,7 +156,7 @@ class _CoursesPageState extends State<CoursesPage> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CoursePromptPage(),
+                    builder: (context) => CoursePromptPage(_courses),
                   ),
                 );
               },
@@ -165,7 +165,7 @@ class _CoursesPageState extends State<CoursesPage> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: _body(courses),
+      body: _body(_courses),
     );
   }
 }

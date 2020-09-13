@@ -1,28 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
-import 'package:study_helper/utils/nice_button.dart';
 
 class CoursePromptPage extends StatefulWidget {
-  CoursePromptPage({Key key}) : super(key: key);
+  final List<Course> _courses;
+
+  factory CoursePromptPage(List<Course> courses, {Key key}) {
+    return CoursePromptPage._(courses, key: key);
+  }
+
+  CoursePromptPage._(this._courses, {Key key}) : super(key: key);
 
   @override
-  _CoursePromptPageState createState() => _CoursePromptPageState();
+  _CoursePromptPageState createState() => _CoursePromptPageState(_courses);
 }
 
 class _CoursePromptPageState extends State<CoursePromptPage> {
   TextEditingController _nameController;
   TextEditingController _commentController;
 
-  // create some values
-  Color pickerColor = Color(0xff443a49);
-  Color currentColor = Color(0xff443a49);
+  final List<Course> _courses;
 
-  // ValueChanged<Color> callback
-  void changeColor(Color color) {
-    setState(() => pickerColor = color);
-  }
+  _CoursePromptPageState(this._courses);
 
   @override
   void initState() {
@@ -55,21 +57,23 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
           },
         ),
         backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.more_vert,
+                color: Colors.black,
+                size: 35,
+              ),
+              onPressed: () {}),
+        ],
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: ListView(
             shrinkWrap: true,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
             children: <Widget>[
-              Text(
-                'Welcome back to StudyHelper !',
-                textAlign: TextAlign.center,
-                style: customTextStyle(
-                  size: 30,
-                ),
-              ),
-              SizedBox(height: 100),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
@@ -108,6 +112,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   ),
                   maxLength: 1000,
                   maxLengthEnforced: true,
+                  keyboardType: TextInputType.multiline,
                   style: customTextStyle(),
                   textCapitalization: TextCapitalization.sentences,
                   validator: (value) {
@@ -118,12 +123,53 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   },
                 ),
               ),
-              Padding(padding: const EdgeInsets.all(16.0))
+              SizedBox(height: 100),
             ],
           ),
         ),
       ),
       backgroundColor: Colors.white,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 40),
+        child: FloatingActionButton.extended(
+          onPressed: () async {
+            if (_nameController.text == "") {
+              await showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return CustomAlertDialog.alertdialog(
+                    title: "Please fill all the fields in",
+                    content: "You cannot have empty fields",
+                    actions: [
+                      MapEntry(
+                        "Try again",
+                        () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {}
+          },
+          label: Text(
+            'Save this course',
+            style: customTextStyle(
+              color: Colors.white,
+            ),
+          ),
+          icon: const Icon(
+            CupertinoIcons.check_mark,
+            color: Colors.white,
+            size: 50,
+          ),
+          backgroundColor: Colors.orange,
+          elevation: 0,
+        ),
+      ),
     );
   }
 }
