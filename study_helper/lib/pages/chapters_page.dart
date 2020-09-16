@@ -65,8 +65,12 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 builder: (context) {
                   return AlertDialog(
                     elevation: 0,
-                    title: Text('Rename this course'),
+                    title: Text(
+                      'Rename this course',
+                      style: customTextStyle(),
+                    ),
                     content: TextField(
+                      autocorrect: false,
                       controller: _textFieldController,
                       decoration:
                           InputDecoration(hintText: "Input the new name"),
@@ -103,6 +107,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                 listen: false);
                             await coursesData.renameCourse(_course, inputName);
                             _course.name = inputName;
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
                           }
                         },
                       )
