@@ -49,20 +49,46 @@ class _ChaptersPageState extends State<ChaptersPage> {
           },
         ),
         backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: Icon(
-              CupertinoIcons.add_circled,
-              color: Colors.black,
-              size: 30,
-            ),
-            color: Colors.white,
-            tooltip: "Add new course",
-            onPressed: () {},
-          ),
-        ],
       ),
+      body: _body(),
       backgroundColor: Colors.white,
     );
+  }
+
+  Widget _body() {
+    if (_course.getChapters.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Center(
+          child: ListView(
+            physics: NeverScrollableScrollPhysics(),
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 3.0,
+              ),
+              Text(
+                "Add a first chapter",
+                style: customTextStyle(),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 40),
+              CircleAvatar(
+                radius: MediaQuery.of(context).size.height / 17.0,
+                backgroundColor: Colors.orange,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  enableFeedback: true,
+                  iconSize: MediaQuery.of(context).size.height / 17.0,
+                  onPressed: () {},
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

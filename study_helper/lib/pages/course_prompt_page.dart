@@ -74,6 +74,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
+                  autocorrect: false,
                   controller: _nameController,
                   decoration: InputDecoration(
                     labelText: 'Name of the course',
