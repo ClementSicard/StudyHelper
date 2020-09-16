@@ -20,15 +20,12 @@ class CoursesDataHandler with ChangeNotifier {
 
     final dir = await getApplicationDocumentsDirectory();
     final File file = File("${dir.path}/courses_data.json");
-    print("C'est bon ma gueule");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
     } else {
       contents = "";
     }
-
-    print(course.getChapters);
 
     List<Map<String, List<String>>> chapters =
         List<Map<String, List<String>>>.generate(
@@ -146,38 +143,6 @@ class CoursesDataHandler with ChangeNotifier {
     contents = jsonEncode(previousSave);
     await file.writeAsString(contents);
     print(contents);
-    _update();
-    return true;
-  }
-
-  Future<bool> removeChapter(Course course, Chapter chapter) async {
-    assert(course != null && chapter != null);
-
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-
-    if (!await file.exists()) {
-      _courses = [];
-      notifyListeners();
-      return true;
-    }
-
-    String contents = await file.readAsString();
-    final List previousSave = jsonDecode(contents);
-
-    for (int i = 0; i < previousSave.length; i++) {
-      if (previousSave[i]["name"] == course.name) {
-        for (Chapter chap in previousSave[i]["chapters"]) {
-          if (chap.name == chapter.name) {
-            previousSave[i]["chapters"].remove(chap);
-            return true;
-          }
-        }
-        return true;
-      }
-    }
-    contents = jsonEncode(previousSave);
-    await file.writeAsString(contents);
     _update();
     return true;
   }
