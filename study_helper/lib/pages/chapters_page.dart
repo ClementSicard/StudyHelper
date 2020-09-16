@@ -98,11 +98,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
                               ],
                             );
                           } else {
-                            _course.name = inputName;
                             final coursesData = Provider.of<CoursesDataHandler>(
                                 context,
                                 listen: false);
-                            coursesData
+                            await coursesData.renameCourse(_course, inputName);
+                            _course.name = inputName;
                           }
                         },
                       )
