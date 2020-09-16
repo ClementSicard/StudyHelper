@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
 class ChaptersPage extends StatefulWidget {
@@ -48,6 +50,69 @@ class _ChaptersPageState extends State<ChaptersPage> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.black,
+              size: 25,
+            ),
+            onPressed: () async {
+              TextEditingController _textFieldController =
+                  TextEditingController();
+              return showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    elevation: 0,
+                    title: Text('Rename this course'),
+                    content: TextField(
+                      controller: _textFieldController,
+                      decoration:
+                          InputDecoration(hintText: "Input the new name"),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: const Text('CANCEL'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: const Text('OK'),
+                        onPressed: () async {
+                          String inputName = _textFieldController.text;
+                          if (inputName == _course.name) {
+                            return AlertDialog(
+                              elevation: 0,
+                              title: Text(
+                                  'The new name is the same as the previous one !'),
+                              content: Text("You must input a different name"),
+                              actions: [
+                                FlatButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          } else {
+                            _course.name = inputName;
+                            final coursesData = Provider.of<CoursesDataHandler>(
+                                context,
+                                listen: false);
+                            coursesData
+                          }
+                        },
+                      )
+                    ],
+                  );
+                },
+              );
+            },
+          )
+        ],
         backgroundColor: Colors.white,
       ),
       body: _body(),

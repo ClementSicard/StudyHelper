@@ -60,6 +60,45 @@ class CoursesDataHandler with ChangeNotifier {
     return true;
   }
 
+  Future<bool> renameCourse(Course course, String name) async {
+    if (course == null) {
+      return false;
+    }
+
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+    String contents;
+    if (await file.exists()) {
+      contents = await file.readAsString();
+    } else {
+      print("Couldn't rename the course : file doesn't exist");
+      return false;
+    }
+
+    List decodedContents = jsonDecode(contents);
+
+    bool found = false;
+    for (int i = 0; i < decodedContents.length; i++) {
+      if (decodedContents[i]["name"] == course.name) {
+        found = true;
+        decodedContents[i]["name"] = name;
+      }
+    }
+    if (found) {
+      contents = jsonEncode(decodedContents);
+      await file.writeAsString(contents);
+      _update();
+    }
+    print(found);
+    return found;
+  }
+
+  Future<void> updateCourse(Course course) async {
+    assert(course != null);
+    await removeCourse(course);
+    await save(course);
+  }
+
   Future<bool> _update() async {
     final dir = await getApplicationDocumentsDirectory();
     final File file = File("${dir.path}/courses_data.json");
