@@ -52,7 +52,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
             ? _chapters[j].subjects[i]
             : Subject(""));
       }
-      print(subList.map((s) => s.name).toList());
+
       subjectsByCol.add(subList);
     }
     return subjectsByCol;
