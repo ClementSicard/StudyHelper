@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
@@ -153,13 +154,76 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   ),
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
-                  onPressed: () {},
+                  onPressed: () async {
+                    TextEditingController _textFieldController =
+                        TextEditingController();
+                    return showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          elevation: 0,
+                          title: Text(
+                            'Add a new chapter',
+                            style: customTextStyle(),
+                          ),
+                          content: TextField(
+                            autocorrect: false,
+                            controller: _textFieldController,
+                            decoration:
+                                InputDecoration(hintText: "Input the name"),
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: const Text('CANCEL'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            FlatButton(
+                              child: const Text('OK'),
+                              onPressed: () async {
+                                String inputName = _textFieldController.text;
+                                if (_course.getChapters
+                                    .map((c) => c.name)
+                                    .toSet()
+                                    .contains(inputName)) {
+                                  return AlertDialog(
+                                    elevation: 0,
+                                    title: Text(
+                                        'There already exists a chapter with the same name'),
+                                    content: Text("Please try a different one"),
+                                    actions: [
+                                      FlatButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  final coursesData =
+                                      Provider.of<CoursesDataHandler>(context,
+                                          listen: false);
+                                  await coursesData.addChapter(
+                                      _course, Chapter(inputName));
+                                  _course.name = inputName;
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                            )
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ],
           ),
         ),
       );
-    }
+    } else {}
   }
 }

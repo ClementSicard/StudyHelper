@@ -120,7 +120,9 @@ class CoursesDataHandler with ChangeNotifier {
           (i) {
             return Chapter(
               decodedChapters[i]["name"][0],
-              decodedChapters[i]["subjects"].map((s) => Subject(s)).toList(),
+              subjects: decodedChapters[i]["subjects"]
+                  .map((s) => Subject(s))
+                  .toList(),
             );
           },
         );

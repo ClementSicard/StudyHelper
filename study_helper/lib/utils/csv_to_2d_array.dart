@@ -21,7 +21,7 @@ Future<List<Chapter>> csvTo2DArray(File csv, {String delimiter = ";"}) async {
           // Initially all the subjects are all poorly mastered
           subList.add(Subject(currentLine[i]));
         }
-        chapters.add(Chapter(firstLine[i], subList));
+        chapters.add(Chapter(firstLine[i], subjects: subList));
       }
       return chapters;
     }

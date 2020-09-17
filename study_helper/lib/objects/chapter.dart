@@ -4,7 +4,7 @@ class Chapter {
   String _name;
   List<Subject> _subjects;
 
-  Chapter(String name, List<Subject> subjects) {
+  Chapter(String name, {List<Subject> subjects = const []}) {
     this._name = name;
     this._subjects = List.from(subjects);
   }
