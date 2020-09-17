@@ -45,7 +45,7 @@ class CoursesDataHandler with ChangeNotifier {
     };
 
     dynamic previousSave;
-    print(contents);
+
     if (contents.isEmpty) {
       previousSave = [toAdd];
     } else {
@@ -71,7 +71,6 @@ class CoursesDataHandler with ChangeNotifier {
     if (await file.exists()) {
       contents = await file.readAsString();
     } else {
-      print("Couldn't rename the course : file doesn't exist");
       return false;
     }
 
@@ -89,7 +88,7 @@ class CoursesDataHandler with ChangeNotifier {
       await file.writeAsString(contents);
       _update();
     }
-    print(found);
+
     return found;
   }
 
@@ -171,19 +170,17 @@ class CoursesDataHandler with ChangeNotifier {
     }
     String contents = await file.readAsString();
     final List previousSave = jsonDecode(contents);
-    print(previousSave);
 
     for (int i = 0; i < previousSave.length; i++) {
-      print(previousSave[i]["name"] + " vs " + course.name);
       bool test = previousSave[i]["name"] == course.name;
-      print(test);
+
       if (previousSave[i]["name"] == course.name) {
         previousSave.removeAt(i);
       }
     }
     contents = jsonEncode(previousSave);
     await file.writeAsString(contents);
-    print(contents);
+
     _update();
     return true;
   }
@@ -234,7 +231,7 @@ class CoursesDataHandler with ChangeNotifier {
       await file.writeAsString(contents);
       _update();
     }
-    print(found);
+
     return found;
   }
 
