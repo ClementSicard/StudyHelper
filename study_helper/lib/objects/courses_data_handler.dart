@@ -34,7 +34,9 @@ class CoursesDataHandler with ChangeNotifier {
         Chapter currentChapter = course.getChapters[index];
         return {
           "name": [currentChapter.name],
-          "subjects": currentChapter.subjects.map((s) => s.name).toList()
+          "subjects": currentChapter.subjects.isEmpty
+              ? []
+              : currentChapter.subjects.map((s) => s.name).toList()
         };
       },
     );
