@@ -34,9 +34,7 @@ class CoursesDataHandler with ChangeNotifier {
         Chapter currentChapter = course.getChapters[index];
         return {
           "name": [currentChapter.name],
-          "subjects": currentChapter.subjects.isEmpty
-              ? []
-              : currentChapter.subjects.map((s) => s.name).toList()
+          "subjects": currentChapter.subjects.map((s) => s.name).toList()
         };
       },
     );
@@ -121,7 +119,7 @@ class CoursesDataHandler with ChangeNotifier {
           decodedChapters.length,
           (i) {
             return Chapter(
-              decodedChapters[i]["name"],
+              decodedChapters[i]["name"][0],
               decodedChapters[i]["subjects"].map((s) => Subject(s)).toList(),
             );
           },
@@ -205,6 +203,37 @@ class CoursesDataHandler with ChangeNotifier {
     await file.writeAsString(contents);
     _update();
     return true;
+  }
+
+  Future<bool> addChapter(Course course, Chapter chapter) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+    String contents;
+    if (await file.exists()) {
+      contents = await file.readAsString();
+    } else {
+      return false;
+    }
+
+    List decodedContents = jsonDecode(contents);
+    bool found = false;
+    for (int i = 0; i < decodedContents.length; i++) {
+      if (decodedContents[i]["name"] == course.name) {
+        found = true;
+        Map<String, List<String>> cMap = {
+          "name": [chapter.name],
+          "subjects": chapter.subjects.map((s) => s.name).toList()
+        };
+        decodedContents[i]["chapters"].add(cMap);
+      }
+    }
+    if (found) {
+      contents = jsonEncode(decodedContents);
+      await file.writeAsString(contents);
+      _update();
+    }
+    print(found);
+    return found;
   }
 
   List<Course> get courses => _courses;

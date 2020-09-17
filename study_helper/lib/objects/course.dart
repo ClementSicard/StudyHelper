@@ -21,8 +21,7 @@ class Course {
     return list;
   }
 
-  List<Chapter> get getChapters =>
-      _chapters..sort((a, b) => (a.name.compareTo(b.name)));
+  List<Chapter> get getChapters => List.from(_chapters);
   String get name => _name;
   String get description => _description;
 
