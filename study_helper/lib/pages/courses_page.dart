@@ -13,10 +13,10 @@ class CoursesPage extends StatefulWidget {
   CoursesPage({Key key}) : super(key: key);
 
   @override
-  _CoursesPageState createState() => _CoursesPageState();
+  coursesPageState createState() => coursesPageState();
 }
 
-class _CoursesPageState extends State<CoursesPage> {
+class coursesPageState extends State<CoursesPage> {
   List<Course> coursesTest = [
     Course("Analyse IV"),
     Course("Programmation orientée système"),
@@ -158,7 +158,7 @@ class _CoursesPageState extends State<CoursesPage> {
   Widget build(BuildContext context) {
     final coursesListProvider =
         Provider.of<CoursesDataHandler>(context, listen: true);
-    List<Course> _courses = coursesListProvider.courses;
+    List<Course> courses = coursesListProvider.courses;
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -183,7 +183,7 @@ class _CoursesPageState extends State<CoursesPage> {
         backgroundColor: Colors.white,
         actions: [
           Visibility(
-            visible: _courses?.isNotEmpty ?? true,
+            visible: courses?.isNotEmpty ?? true,
             child: IconButton(
               icon: Icon(
                 CupertinoIcons.add_circled,
@@ -202,7 +202,7 @@ class _CoursesPageState extends State<CoursesPage> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: _body(_courses),
+      body: _body(courses),
     );
   }
 }

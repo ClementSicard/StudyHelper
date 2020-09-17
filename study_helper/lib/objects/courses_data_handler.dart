@@ -117,14 +117,17 @@ class CoursesDataHandler with ChangeNotifier {
         List<Chapter> chapters = List<Chapter>.generate(
           decodedChapters.length,
           (i) {
+            print("On est la");
             return Chapter(
               decodedChapters[i]["name"][0],
-              subjects: decodedChapters[i]["subjects"]
-                  .map((s) => Subject(s))
-                  .toList(),
+              subjects: List<Subject>.generate(
+                  decodedChapters[i]["subjects"].length, (j) {
+                return Subject(decodedChapters[i]["subjects"][j]);
+              }),
             );
           },
         );
+        print("Bien vu l'artisite");
         return Course(decodedContents[index]["name"], chapters: chapters);
       },
     );
@@ -231,9 +234,49 @@ class CoursesDataHandler with ChangeNotifier {
       await file.writeAsString(contents);
       _update();
     }
+    return found;
+  }
 
+  Future<bool> removeChapter(Course course, Chapter chapter) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+    String contents;
+    if (await file.exists()) {
+      contents = await file.readAsString();
+    } else {
+      return false;
+    }
+
+    List decodedContents = jsonDecode(contents);
+    bool found = false;
+    for (int i = 0; i < decodedContents.length; i++) {
+      if (decodedContents[i]["name"] == course.name) {
+        List chapters = decodedContents[i]["chapters"];
+        for (int j = 0; j < chapters.length; j++) {
+          if (chapters[j].name == chapter.name) {
+            chapters.removeAt(j);
+            found = true;
+          }
+        }
+      }
+    }
+    if (found) {
+      contents = jsonEncode(decodedContents);
+      await file.writeAsString(contents);
+      _update();
+    }
     return found;
   }
 
   List<Course> get courses => _courses;
+
+  List<Chapter> getChapters(Course course) {
+    for (Course c in _courses) {
+      if (c.name == course.name) {
+        return c.getChapters;
+      }
+    }
+    print("On a pas trouvé le cours");
+    return [];
+  }
 }

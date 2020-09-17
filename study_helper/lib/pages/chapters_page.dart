@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
+import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
 class ChaptersPage extends StatefulWidget {
@@ -24,11 +25,95 @@ class ChaptersPage extends StatefulWidget {
 
 class _ChaptersPageState extends State<ChaptersPage> {
   final Course _course;
+  List<Chapter> _chapters;
 
   _ChaptersPageState(this._course);
 
+  List<List<Subject>> subjectsByColumn() {
+    List<List<Subject>> subjectsByChapter =
+        _chapters.map((c) => c.subjects).toList();
+
+    // Find max length
+    int maxLength = 0, minLength = 4294967296;
+    for (List<Subject> list in subjectsByChapter) {
+      if (maxLength < list.length) {
+        maxLength = list.length;
+      }
+      if (minLength > list.length) {
+        minLength = list.length;
+      }
+    }
+
+    List<List<Subject>> subjectsByCol = [];
+    for (int i = 0; i < maxLength; i++) {
+      List<Subject> subList = [];
+      for (int j = 0; j < _chapters.length; j++) {
+        subList.add(_chapters[j].subjects.length > i
+            ? _chapters[j].subjects[i]
+            : Subject(""));
+      }
+      print(subList.map((s) => s.name).toList());
+      subjectsByCol.add(subList);
+    }
+    return subjectsByCol;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final coursesData = Provider.of<CoursesDataHandler>(context, listen: true);
+    // _chapters = coursesData.getChapters(_course);
+    _chapters = [
+      Chapter(
+        "Analyse IV",
+        subjects: [
+          Subject("Fonctions"),
+          Subject("Zebi"),
+          Subject("Ok1"),
+          Subject("Cauchy"),
+          Subject("Dior"),
+          Subject("asdsads"),
+          Subject("hieori"),
+          Subject("sss"),
+        ],
+      ),
+      Chapter(
+        "Covid 19",
+        subjects: [
+          Subject("sss"),
+          Subject("Zebi"),
+          Subject("Ok1"),
+          Subject("Fonctions"),
+          Subject("Cauchy"),
+          Subject("sss"),
+          Subject("Dior"),
+          Subject("hieori"),
+          Subject("sss"),
+          Subject("asdsads"),
+          Subject("asdsd"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qeweqws"),
+          Subject("qweqew"),
+        ],
+      ),
+      Chapter(
+        "Mange moi le poireau",
+        subjects: [
+          Subject("zizon"),
+          Subject("ses"),
+          Subject("Osdsg"),
+          Subject("Casdady"),
+        ],
+      ),
+    ];
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -128,7 +213,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
   }
 
   Widget _body() {
-    if (_course.getChapters.isEmpty) {
+    if (_chapters.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Center(
@@ -207,8 +292,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                           listen: false);
                                   await coursesData.addChapter(
                                       _course, Chapter(inputName));
-                                  _course.name = inputName;
-                                  Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                 }
                               },
@@ -224,6 +307,44 @@ class _ChaptersPageState extends State<ChaptersPage> {
           ),
         ),
       );
-    } else {}
+    } else {
+      List<List<Subject>> subjectsByCol = subjectsByColumn();
+
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: DataTable(
+              columns: _chapters
+                  .map(
+                    (c) => DataColumn(
+                      label: Text(c.name),
+                      numeric: false,
+                    ),
+                  )
+                  .toList(),
+              rows: subjectsByCol
+                  .map(
+                    (r) => DataRow(
+                      cells: r
+                          .map(
+                            (s) => DataCell(
+                              Text(
+                                s.name,
+                                style: customTextStyle(),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ),
+      );
+    }
   }
 }
