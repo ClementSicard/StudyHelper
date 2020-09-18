@@ -35,10 +35,16 @@ dependencies:
   fluttertoast: ^7.1.1
   table_sticky_headers: ^1.1.2
   flutter_material_pickers: ^1.7.4
+  flutter_launcher_icons: ^0.8.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
