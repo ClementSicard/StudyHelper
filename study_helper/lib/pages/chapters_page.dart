@@ -259,9 +259,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       cells: r
                           .map(
                             (s) => DataCell(
-                              Text(
-                                s.name,
-                                style: customTextStyle(size: 20),
+                              Center(
+                                child: Text(
+                                  s.name,
+                                  style: customTextStyle(size: 20),
+                                ),
                               ),
                               showEditIcon: s.name != "",
                             ),
@@ -310,7 +312,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
               ),
               SizedBox(height: 30),
               FloatingActionButton.extended(
-                backgroundColor: Colors.red[200],
+                elevation: 0,
+                backgroundColor: Colors.orange,
                 label: Text(
                   "Pick chapter",
                   style: customTextStyle(
@@ -334,16 +337,37 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                 _selectedChapter = c;
                               });
                               print(_selectedChapter.name);
-                              final coursesData =
-                                  Provider.of<CoursesDataHandler>(context,
-                                      listen: false);
-                              await coursesData.addSubject(
-                                _course,
-                                _selectedChapter,
-                                Subject(_textFieldController.text),
-                              );
-                              Navigator.of(context).pop();
-                              Navigator.pop(context);
+                              String inputName = _textFieldController.text;
+                              if (_selectedChapter.subjects
+                                  .map((c) => c.name)
+                                  .toSet()
+                                  .contains(inputName)) {
+                                return AlertDialog(
+                                  elevation: 0,
+                                  title: Text(
+                                      'There already exists a subject with the same name in the same chapter'),
+                                  content: Text("Please try a different one"),
+                                  actions: [
+                                    FlatButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                final coursesData =
+                                    Provider.of<CoursesDataHandler>(context,
+                                        listen: false);
+                                await coursesData.addSubject(
+                                  _course,
+                                  _selectedChapter,
+                                  Subject(_textFieldController.text),
+                                );
+                                Navigator.of(context).pop();
+                                Navigator.pop(context);
+                              }
                             },
                           ),
                         )
@@ -358,51 +382,19 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
             ],
           ),
           actions: <Widget>[
             FlatButton(
-              child: const Text('CANCEL'),
+              child: Text(
+                'CANCEL',
+                style: TextStyle(color: Colors.orange),
+              ),
               onPressed: () {
                 _selectedChapter = null;
                 Navigator.of(context).pop();
               },
             ),
-            FlatButton(
-              child: const Text('OK'),
-              onPressed: () async {
-                String inputName = _textFieldController.text;
-                if (_selectedChapter.subjects
-                    .map((c) => c.name)
-                    .toSet()
-                    .contains(inputName)) {
-                  return AlertDialog(
-                    elevation: 0,
-                    title: Text(
-                        'There already exists a subject with the same name in the same chapter'),
-                    content: Text("Please try a different one"),
-                    actions: [
-                      FlatButton(
-                        child: const Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                } else {
-                  final coursesData =
-                      Provider.of<CoursesDataHandler>(context, listen: false);
-                  await coursesData.addSubject(
-                    _course,
-                    _selectedChapter,
-                    Subject(inputName),
-                  );
-                  Navigator.of(context).pop();
-                }
-              },
-            )
           ],
         );
       },
