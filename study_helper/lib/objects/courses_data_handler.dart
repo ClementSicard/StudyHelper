@@ -117,7 +117,6 @@ class CoursesDataHandler with ChangeNotifier {
         List<Chapter> chapters = List<Chapter>.generate(
           decodedChapters.length,
           (i) {
-            print("On est la");
             return Chapter(
               decodedChapters[i]["name"][0],
               subjects: List<Subject>.generate(
@@ -127,7 +126,6 @@ class CoursesDataHandler with ChangeNotifier {
             );
           },
         );
-        print("Bien vu l'artisite");
         return Course(decodedContents[index]["name"], chapters: chapters);
       },
     );

@@ -140,6 +140,17 @@ class _ChaptersPageState extends State<ChaptersPage> {
       ),
       body: _body(),
       backgroundColor: Colors.white,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: FloatingActionButton(
+          onPressed: _promptNewSubject,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.red,
+        ),
+      ),
     );
   }
 
@@ -237,6 +248,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
       context: context,
       builder: (context) {
         Chapter chapter;
+        String value = "";
         return AlertDialog(
           elevation: 0,
           title: Text(
@@ -244,26 +256,37 @@ class _ChaptersPageState extends State<ChaptersPage> {
             style: customTextStyle(),
           ),
           content: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 autocorrect: false,
                 controller: _textFieldController,
                 decoration: InputDecoration(hintText: "Input the name"),
               ),
-              CupertinoPicker(
-                itemExtent: 10,
-                onSelectedItemChanged: (int value) {
-                  chapter = _chapters[value];
-                  print(chapter.name);
-                },
-                children: _chapters
+              DropdownButton(
+                isDense: false,
+                isExpanded: true,
+                focusColor: Colors.black,
+                items: _chapters
                     .map(
-                      (c) => Text(
-                        c.name,
-                        style: customTextStyle(),
+                      (c) => DropdownMenuItem(
+                        child: Text(
+                          c.name,
+                          style: customTextStyle(size: 20),
+                        ),
+                        value: c,
                       ),
                     )
                     .toList(),
+                onChanged: (newValue) {
+                  setState(
+                    () {
+                      value = newValue.name;
+                      chapter = newValue;
+                    },
+                  );
+                },
               )
             ],
           ),
