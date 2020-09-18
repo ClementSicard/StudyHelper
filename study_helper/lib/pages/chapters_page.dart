@@ -223,27 +223,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                             ),
                     ),
                   )
-                  .toList()
-                    ..add(
-                      DataRow(
-                        cells: _chapters
-                            .map(
-                              (c) => DataCell(
-                                IconButton(
-                                  icon: Icon(CupertinoIcons.add),
-                                  color: Colors.red,
-                                  onPressed: _promptNewSubject,
-                                ),
-                              ),
-                            )
-                            .toList()
-                              ..add(
-                                DataCell(
-                                  Text(""),
-                                ),
-                              ),
-                      ),
-                    ),
+                  .toList(),
             ),
           ),
         ),
@@ -263,8 +243,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
             'Add a new subject',
             style: customTextStyle(),
           ),
-          content: ListView(
-            shrinkWrap: true,
+          content: Column(
             children: [
               TextField(
                 autocorrect: false,
