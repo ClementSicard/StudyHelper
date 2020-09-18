@@ -249,11 +249,9 @@ class CoursesDataHandler with ChangeNotifier {
       if (decodedContents[i]["name"] == course.name) {
         List chapters = decodedContents[i]["chapters"];
         for (int j = 0; j < chapters.length; j++) {
-          print(chapters[j]["name"][0]);
           if (chapters[j]["name"][0] == chapter.name) {
             decodedContents[i]["chapters"].removeAt(j);
             found = true;
-            print("Removed");
           }
         }
       }

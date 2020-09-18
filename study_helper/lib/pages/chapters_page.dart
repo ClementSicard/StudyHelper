@@ -301,6 +301,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 autocorrect: false,
                 controller: _textFieldController,
                 decoration: InputDecoration(hintText: "Input the name"),
+                textCapitalization: TextCapitalization.sentences,
               ),
               SizedBox(height: 30),
               Text(
