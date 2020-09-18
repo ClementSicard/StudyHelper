@@ -5,7 +5,6 @@ import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/subject.dart';
-import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
 class ChaptersPage extends StatefulWidget {
@@ -63,59 +62,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
   Widget build(BuildContext context) {
     final coursesData = Provider.of<CoursesDataHandler>(context, listen: true);
     _chapters = coursesData.getChapters(_course);
-    // _chapters = [
-    //   Chapter(
-    //     "Analyse IV",
-    //     subjects: [
-    //       Subject("Fonctions"),
-    //       Subject("Zebi"),
-    //       Subject("Ok1"),
-    //       Subject("Cauchy"),
-    //       Subject("Dior"),
-    //       Subject("asdsads"),
-    //       Subject("hieori"),
-    //       Subject("sss"),
-    //     ],
-    //   ),
-    //   Chapter(
-    //     "Covid 19",
-    //     subjects: [
-    //       Subject("sss"),
-    //       Subject("Zebi"),
-    //       Subject("Ok1"),
-    //       Subject("Fonctions"),
-    //       Subject("Cauchy"),
-    //       Subject("sss"),
-    //       Subject("Dior"),
-    //       Subject("hieori"),
-    //       Subject("sss"),
-    //       Subject("asdsads"),
-    //       Subject("asdsd"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qeweqws"),
-    //       Subject("qweqew"),
-    //     ],
-    //   ),
-    //   Chapter(
-    //     "Mange moi le poireau",
-    //     subjects: [
-    //       Subject("zizon"),
-    //       Subject("ses"),
-    //       Subject("Osdsg"),
-    //       Subject("Casdady"),
-    //     ],
-    //   ),
-    // ];
-
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -198,85 +144,107 @@ class _ChaptersPageState extends State<ChaptersPage> {
           scrollDirection: Axis.horizontal,
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: DataTable(
-              columns: _chapters
-                  .map(
-                    (c) => DataColumn(
-                      label: GestureDetector(
-                        onLongPress: () async {
-                          showCupertinoModalPopup(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                CupertinoActionSheet(
-                              title: const Text('Delete chapter'),
-                              message:
-                                  Text("Are you sure to delete this chapter ?"),
-                              actions: [
-                                CupertinoActionSheetAction(
-                                  child: const Text("Delete"),
-                                  isDefaultAction: true,
-                                  onPressed: () async {
-                                    final coursesProvider =
-                                        Provider.of<CoursesDataHandler>(context,
-                                            listen: false);
-                                    await coursesProvider.removeChapter(
-                                        _course, c);
-                                    Navigator.pop(context);
-                                  },
+            child: Center(
+              child: DataTable(
+                dividerThickness: 0.0,
+                headingRowHeight: 90.0,
+                columnSpacing: 40.0,
+                columns: _chapters
+                    .map(
+                      (c) => DataColumn(
+                        label: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onLongPress: () async {
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    CupertinoActionSheet(
+                                  title: const Text('Delete chapter'),
+                                  message: Text(
+                                      "Are you sure to delete this chapter ?"),
+                                  actions: [
+                                    CupertinoActionSheetAction(
+                                      child: const Text("Delete"),
+                                      isDefaultAction: true,
+                                      onPressed: () async {
+                                        final coursesProvider =
+                                            Provider.of<CoursesDataHandler>(
+                                                context,
+                                                listen: false);
+                                        await coursesProvider.removeChapter(
+                                            _course, c);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                  cancelButton: CupertinoActionSheetAction(
+                                    child: const Text('Cancel'),
+                                    isDefaultAction: true,
+                                    onPressed: () {
+                                      Navigator.pop(context, 'Cancel');
+                                    },
+                                  ),
                                 ),
-                              ],
-                              cancelButton: CupertinoActionSheetAction(
-                                child: const Text('Cancel'),
-                                isDefaultAction: true,
-                                onPressed: () {
-                                  Navigator.pop(context, 'Cancel');
-                                },
+                              );
+                            },
+                            child: FlatButton(
+                              color: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40.0),
                               ),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          c.name,
-                          style: customTextStyle(),
-                        ),
-                      ),
-                      numeric: false,
-                    ),
-                  )
-                  .toList()
-                    ..add(
-                      DataColumn(
-                        label: IconButton(
-                          icon: Icon(CupertinoIcons.add),
-                          color: Colors.red,
-                          onPressed: _promptNewChapter,
-                        ),
-                      ),
-                    ),
-              rows: subjectsByCol
-                  .map(
-                    (r) => DataRow(
-                      cells: r
-                          .map(
-                            (s) => DataCell(
-                              Center(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15.0),
                                 child: Text(
-                                  s.name,
-                                  style: customTextStyle(size: 20),
+                                  c.name,
+                                  style: customTextStyle(color: Colors.white),
                                 ),
                               ),
-                              showEditIcon: s.name != "",
+                              onPressed: () {},
                             ),
-                          )
-                          .toList()
-                            ..add(
-                              DataCell(
-                                Text(""),
+                          ),
+                        ),
+                        numeric: false,
+                      ),
+                    )
+                    .toList()
+                      ..add(
+                        DataColumn(
+                          label: FloatingActionButton(
+                            child: Icon(CupertinoIcons.add),
+                            backgroundColor: Colors.red,
+                            onPressed: _promptNewChapter,
+                            mini: true,
+                            elevation: 0,
+                          ),
+                        ),
+                      ),
+                rows: subjectsByCol
+                    .map(
+                      (r) => DataRow(
+                        cells: r
+                            .map(
+                              (s) => DataCell(
+                                Center(
+                                  child: Text(
+                                    s.name,
+                                    style: customTextStyle(size: 20),
+                                  ),
+                                ),
+                                showEditIcon: s.name != "",
                               ),
-                            ),
-                    ),
-                  )
-                  .toList(),
+                            )
+                            .toList()
+                              ..add(
+                                DataCell(
+                                  Text(""),
+                                ),
+                              ),
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           ),
         ),
