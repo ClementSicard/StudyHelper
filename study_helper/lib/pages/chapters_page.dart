@@ -5,7 +5,9 @@ import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/subject.dart';
+import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
+import 'package:study_helper/utils/nice_button.dart';
 
 class ChaptersPage extends StatefulWidget {
   final Course _course;
@@ -26,7 +28,7 @@ class ChaptersPage extends StatefulWidget {
 class _ChaptersPageState extends State<ChaptersPage> {
   final Course _course;
   List<Chapter> _chapters;
-
+  Chapter _selectedChapter;
   _ChaptersPageState(this._course);
 
   List<List<Subject>> subjectsByColumn() {
@@ -247,8 +249,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
     return showDialog(
       context: context,
       builder: (context) {
-        Chapter chapter;
-        String value = "";
         return AlertDialog(
           elevation: 0,
           title: Text(
@@ -264,30 +264,25 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 controller: _textFieldController,
                 decoration: InputDecoration(hintText: "Input the name"),
               ),
-              DropdownButton(
-                isDense: false,
-                isExpanded: true,
-                focusColor: Colors.black,
-                items: _chapters
-                    .map(
-                      (c) => DropdownMenuItem(
-                        child: Text(
-                          c.name,
-                          style: customTextStyle(size: 20),
-                        ),
-                        value: c,
-                      ),
-                    )
-                    .toList(),
-                onChanged: (newValue) {
-                  setState(
-                    () {
-                      value = newValue.name;
-                      chapter = newValue;
+              SizedBox(height: 30),
+              FlatButton(
+                child: Text(
+                  "Choose the chapter :",
+                  style: customTextStyle(size: 20),
+                ),
+                color: Colors.red,
+                onPressed: () {
+                  return showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CustomAlertDialog.alertdialog(
+                        title: "Choose the chapter",
+                      );
                     },
                   );
                 },
-              )
+              ),
+              SizedBox(height: 15),
             ],
           ),
           actions: <Widget>[
@@ -301,7 +296,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
               child: const Text('OK'),
               onPressed: () async {
                 String inputName = _textFieldController.text;
-                if (chapter.subjects
+                if (_selectedChapter.subjects
                     .map((c) => c.name)
                     .toSet()
                     .contains(inputName)) {
@@ -324,7 +319,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       Provider.of<CoursesDataHandler>(context, listen: false);
                   await coursesData.addSubject(
                     _course,
-                    chapter,
+                    _selectedChapter,
                     Subject(inputName),
                   );
                   Navigator.of(context).pop();
