@@ -136,75 +136,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: Colors.black,
-              size: 25,
-            ),
-            onPressed: () async {
-              TextEditingController _textFieldController =
-                  TextEditingController();
-              return showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    elevation: 0,
-                    title: Text(
-                      'Rename this course',
-                      style: customTextStyle(),
-                    ),
-                    content: TextField(
-                      autocorrect: false,
-                      controller: _textFieldController,
-                      decoration:
-                          InputDecoration(hintText: "Input the new name"),
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: const Text('CANCEL'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      FlatButton(
-                        child: const Text('OK'),
-                        onPressed: () async {
-                          String inputName = _textFieldController.text;
-                          if (inputName == _course.name) {
-                            return AlertDialog(
-                              elevation: 0,
-                              title: Text(
-                                  'The new name is the same as the previous one !'),
-                              content: Text("You must input a different name"),
-                              actions: [
-                                FlatButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          } else {
-                            final coursesData = Provider.of<CoursesDataHandler>(
-                                context,
-                                listen: false);
-                            await coursesData.renameCourse(_course, inputName);
-                            _course.name = inputName;
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          }
-                        },
-                      )
-                    ],
-                  );
-                },
-              );
-            },
-          )
-        ],
         backgroundColor: Colors.white,
       ),
       body: _body(),
@@ -239,68 +170,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   ),
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
-                  onPressed: () async {
-                    TextEditingController _textFieldController =
-                        TextEditingController();
-                    return showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          elevation: 0,
-                          title: Text(
-                            'Add a new chapter',
-                            style: customTextStyle(),
-                          ),
-                          content: TextField(
-                            autocorrect: false,
-                            controller: _textFieldController,
-                            decoration:
-                                InputDecoration(hintText: "Input the name"),
-                          ),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: const Text('CANCEL'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            FlatButton(
-                              child: const Text('OK'),
-                              onPressed: () async {
-                                String inputName = _textFieldController.text;
-                                if (_course.getChapters
-                                    .map((c) => c.name)
-                                    .toSet()
-                                    .contains(inputName)) {
-                                  return AlertDialog(
-                                    elevation: 0,
-                                    title: Text(
-                                        'There already exists a chapter with the same name'),
-                                    content: Text("Please try a different one"),
-                                    actions: [
-                                      FlatButton(
-                                        child: const Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  final coursesData =
-                                      Provider.of<CoursesDataHandler>(context,
-                                          listen: false);
-                                  await coursesData.addChapter(
-                                      _course, Chapter(inputName));
-                                  Navigator.of(context).pop();
-                                }
-                              },
-                            )
-                          ],
-                        );
-                      },
-                    );
-                  },
+                  onPressed: _promptNewChapter,
                 ),
               ),
             ],
@@ -309,7 +179,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
       );
     } else {
       List<List<Subject>> subjectsByCol = subjectsByColumn();
-
       return Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
@@ -324,7 +193,16 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       numeric: false,
                     ),
                   )
-                  .toList(),
+                  .toList()
+                    ..add(
+                      DataColumn(
+                        label: IconButton(
+                          icon: Icon(CupertinoIcons.add),
+                          color: Colors.red,
+                          onPressed: _promptNewChapter,
+                        ),
+                      ),
+                    ),
               rows: subjectsByCol
                   .map(
                     (r) => DataRow(
@@ -337,14 +215,182 @@ class _ChaptersPageState extends State<ChaptersPage> {
                               ),
                             ),
                           )
-                          .toList(),
+                          .toList()
+                            ..add(
+                              DataCell(
+                                Text(""),
+                              ),
+                            ),
                     ),
                   )
-                  .toList(),
+                  .toList()
+                    ..add(
+                      DataRow(
+                        cells: _chapters
+                            .map(
+                              (c) => DataCell(
+                                IconButton(
+                                  icon: Icon(CupertinoIcons.add),
+                                  color: Colors.red,
+                                  onPressed: _promptNewSubject,
+                                ),
+                              ),
+                            )
+                            .toList()
+                              ..add(
+                                DataCell(
+                                  Text(""),
+                                ),
+                              ),
+                      ),
+                    ),
             ),
           ),
         ),
       );
     }
+  }
+
+  Future<Widget> _promptNewSubject() async {
+    TextEditingController _textFieldController = TextEditingController();
+    return showDialog(
+      context: context,
+      builder: (context) {
+        Chapter chapter;
+        return AlertDialog(
+          elevation: 0,
+          title: Text(
+            'Add a new subject',
+            style: customTextStyle(),
+          ),
+          content: ListView(
+            shrinkWrap: true,
+            children: [
+              TextField(
+                autocorrect: false,
+                controller: _textFieldController,
+                decoration: InputDecoration(hintText: "Input the name"),
+              ),
+              CupertinoPicker(
+                itemExtent: 10,
+                onSelectedItemChanged: (int value) {
+                  chapter = _chapters[value];
+                  print(chapter.name);
+                },
+                children: _chapters
+                    .map(
+                      (c) => Text(
+                        c.name,
+                        style: customTextStyle(),
+                      ),
+                    )
+                    .toList(),
+              )
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text('OK'),
+              onPressed: () async {
+                String inputName = _textFieldController.text;
+                if (chapter.subjects
+                    .map((c) => c.name)
+                    .toSet()
+                    .contains(inputName)) {
+                  return AlertDialog(
+                    elevation: 0,
+                    title: Text(
+                        'There already exists a subject with the same name in the same chapter'),
+                    content: Text("Please try a different one"),
+                    actions: [
+                      FlatButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                } else {
+                  final coursesData =
+                      Provider.of<CoursesDataHandler>(context, listen: false);
+                  await coursesData.addSubject(
+                    _course,
+                    chapter,
+                    Subject(inputName),
+                  );
+                  Navigator.of(context).pop();
+                }
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<Widget> _promptNewChapter() async {
+    TextEditingController _textFieldController = TextEditingController();
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          elevation: 0,
+          title: Text(
+            'Add a new chapter',
+            style: customTextStyle(),
+          ),
+          content: TextField(
+            autocorrect: false,
+            controller: _textFieldController,
+            decoration: InputDecoration(hintText: "Input the name"),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text('OK'),
+              onPressed: () async {
+                String inputName = _textFieldController.text;
+                if (_course.getChapters
+                    .map((c) => c.name)
+                    .toSet()
+                    .contains(inputName)) {
+                  return AlertDialog(
+                    elevation: 0,
+                    title: Text(
+                        'There already exists a chapter with the same name'),
+                    content: Text("Please try a different one"),
+                    actions: [
+                      FlatButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                } else {
+                  final coursesData =
+                      Provider.of<CoursesDataHandler>(context, listen: false);
+                  await coursesData.addChapter(_course, Chapter(inputName));
+                  Navigator.of(context).pop();
+                }
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 }

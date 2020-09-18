@@ -237,6 +237,40 @@ class CoursesDataHandler with ChangeNotifier {
     return found;
   }
 
+  Future<bool> addSubject(
+      Course course, Chapter chapter, Subject subject) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+    String contents;
+    if (await file.exists()) {
+      contents = await file.readAsString();
+    } else {
+      return false;
+    }
+
+    List decodedContents = jsonDecode(contents);
+    bool found = false;
+    for (int i = 0; i < decodedContents.length; i++) {
+      if (decodedContents[i]["name"] == course.name) {
+        for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
+          if (decodedContents[i]["chapters"][j] == chapter.name) {
+            found = true;
+            List subjects = decodedContents[i]["chapters"][j];
+            subjects.isEmpty
+                ? subjects = [subject.name]
+                : subjects.add(subject.name);
+          }
+        }
+      }
+    }
+    if (found) {
+      contents = jsonEncode(decodedContents);
+      await file.writeAsString(contents);
+      _update();
+    }
+    return found;
+  }
+
   Future<bool> removeChapter(Course course, Chapter chapter) async {
     final dir = await getApplicationDocumentsDirectory();
     final File file = File("${dir.path}/courses_data.json");
