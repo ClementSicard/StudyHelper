@@ -22,10 +22,22 @@ class _MyHomePageState extends State<MyHomePage> {
         brightness: Brightness.light,
         elevation: 0,
         centerTitle: true,
-        title: Text(
-          widget.title,
-          textAlign: TextAlign.center,
-          style: customTextStyle(),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/icon100x100.png',
+              height: 50,
+              width: 50,
+            ),
+            SizedBox(width: 10),
+            Text(
+              widget.title,
+              textAlign: TextAlign.center,
+              style: customTextStyle(size: 30),
+            ),
+          ],
         ),
         backgroundColor: Colors.white,
         actions: [
