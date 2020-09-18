@@ -5,9 +5,7 @@ import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/subject.dart';
-import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
-import 'package:study_helper/utils/nice_button.dart';
 
 class ChaptersPage extends StatefulWidget {
   final Course _course;
@@ -63,59 +61,60 @@ class _ChaptersPageState extends State<ChaptersPage> {
   @override
   Widget build(BuildContext context) {
     final coursesData = Provider.of<CoursesDataHandler>(context, listen: true);
-    // _chapters = coursesData.getChapters(_course);
-    _chapters = [
-      Chapter(
-        "Analyse IV",
-        subjects: [
-          Subject("Fonctions"),
-          Subject("Zebi"),
-          Subject("Ok1"),
-          Subject("Cauchy"),
-          Subject("Dior"),
-          Subject("asdsads"),
-          Subject("hieori"),
-          Subject("sss"),
-        ],
-      ),
-      Chapter(
-        "Covid 19",
-        subjects: [
-          Subject("sss"),
-          Subject("Zebi"),
-          Subject("Ok1"),
-          Subject("Fonctions"),
-          Subject("Cauchy"),
-          Subject("sss"),
-          Subject("Dior"),
-          Subject("hieori"),
-          Subject("sss"),
-          Subject("asdsads"),
-          Subject("asdsd"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qeweqws"),
-          Subject("qweqew"),
-        ],
-      ),
-      Chapter(
-        "Mange moi le poireau",
-        subjects: [
-          Subject("zizon"),
-          Subject("ses"),
-          Subject("Osdsg"),
-          Subject("Casdady"),
-        ],
-      ),
-    ];
+    _chapters = coursesData.getChapters(_course);
+    // _chapters = [
+    //   Chapter(
+    //     "Analyse IV",
+    //     subjects: [
+    //       Subject("Fonctions"),
+    //       Subject("Zebi"),
+    //       Subject("Ok1"),
+    //       Subject("Cauchy"),
+    //       Subject("Dior"),
+    //       Subject("asdsads"),
+    //       Subject("hieori"),
+    //       Subject("sss"),
+    //     ],
+    //   ),
+    //   Chapter(
+    //     "Covid 19",
+    //     subjects: [
+    //       Subject("sss"),
+    //       Subject("Zebi"),
+    //       Subject("Ok1"),
+    //       Subject("Fonctions"),
+    //       Subject("Cauchy"),
+    //       Subject("sss"),
+    //       Subject("Dior"),
+    //       Subject("hieori"),
+    //       Subject("sss"),
+    //       Subject("asdsads"),
+    //       Subject("asdsd"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qeweqws"),
+    //       Subject("qweqew"),
+    //     ],
+    //   ),
+    //   Chapter(
+    //     "Mange moi le poireau",
+    //     subjects: [
+    //       Subject("zizon"),
+    //       Subject("ses"),
+    //       Subject("Osdsg"),
+    //       Subject("Casdady"),
+    //     ],
+    //   ),
+    // ];
+
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -202,7 +201,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
               columns: _chapters
                   .map(
                     (c) => DataColumn(
-                      label: Text(c.name),
+                      label: Text(
+                        c.name,
+                        style: customTextStyle(),
+                      ),
                       numeric: false,
                     ),
                   )
@@ -224,8 +226,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                             (s) => DataCell(
                               Text(
                                 s.name,
-                                style: customTextStyle(),
+                                style: customTextStyle(size: 20),
                               ),
+                              showEditIcon: s.name != "",
                             ),
                           )
                           .toList()
@@ -265,30 +268,68 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 decoration: InputDecoration(hintText: "Input the name"),
               ),
               SizedBox(height: 30),
-              FlatButton(
-                child: Text(
-                  "Choose the chapter :",
-                  style: customTextStyle(size: 20),
-                ),
-                color: Colors.red,
-                onPressed: () {
-                  return showDialog(
-                    context: context,
-                    builder: (context) {
-                      return CustomAlertDialog.alertdialog(
-                        title: "Choose the chapter",
-                      );
-                    },
-                  );
-                },
+              Text(
+                "Select the chapter",
+                style: customTextStyle(size: 20),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 30),
+              FloatingActionButton.extended(
+                backgroundColor: Colors.red[200],
+                label: Text(
+                  "Pick chapter",
+                  style: customTextStyle(
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () => showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) => CupertinoActionSheet(
+                    title: const Text('Pick chapter'),
+                    actions: _chapters
+                        .map(
+                          (c) => CupertinoActionSheetAction(
+                            child: Text(
+                              c.name,
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                            onPressed: () async {
+                              setState(() {
+                                _selectedChapter = c;
+                              });
+                              print(_selectedChapter.name);
+                              final coursesData =
+                                  Provider.of<CoursesDataHandler>(context,
+                                      listen: false);
+                              await coursesData.addSubject(
+                                _course,
+                                _selectedChapter,
+                                Subject(_textFieldController.text),
+                              );
+                              Navigator.of(context).pop();
+                              Navigator.pop(context);
+                            },
+                          ),
+                        )
+                        .toList(),
+                    cancelButton: CupertinoActionSheetAction(
+                      child: const Text('Cancel'),
+                      isDefaultAction: true,
+                      onPressed: () {
+                        Navigator.pop(context, 'Cancel');
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 30),
             ],
           ),
           actions: <Widget>[
             FlatButton(
               child: const Text('CANCEL'),
               onPressed: () {
+                _selectedChapter = null;
                 Navigator.of(context).pop();
               },
             ),

@@ -251,12 +251,11 @@ class CoursesDataHandler with ChangeNotifier {
     for (int i = 0; i < decodedContents.length; i++) {
       if (decodedContents[i]["name"] == course.name) {
         for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
-          if (decodedContents[i]["chapters"][j] == chapter.name) {
+          print(decodedContents[i]["chapters"]);
+          print(decodedContents[i]["chapters"][j]["name"][0]);
+          if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
             found = true;
-            List subjects = decodedContents[i]["chapters"][j];
-            subjects.isEmpty
-                ? subjects = [subject.name]
-                : subjects.add(subject.name);
+            decodedContents[i]["chapters"][j]["subjects"].add(subject.name);
           }
         }
       }
@@ -265,6 +264,7 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
+      print("Subject saved!");
     }
     return found;
   }
