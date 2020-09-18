@@ -76,11 +76,18 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 child: TextFormField(
                   autocorrect: false,
                   controller: _nameController,
+                  cursorColor: Colors.blueAccent,
                   decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blueAccent),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.green),
+                    ),
                     labelText: 'Name of the course',
-                    focusColor: Colors.red,
+                    focusColor: Colors.blueAccent,
                     labelStyle: customTextStyle(),
-                    fillColor: Colors.red,
+                    fillColor: Colors.blueAccent,
                   ),
                   maxLengthEnforced: true,
                   maxLength: 100,
@@ -99,10 +106,17 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
                   controller: _descriptionController,
+                  cursorColor: Colors.blueAccent,
                   decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blueAccent),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.green),
+                    ),
                     labelText: 'Description (optional)',
                     labelStyle: customTextStyle(),
-                    fillColor: Colors.red,
+                    fillColor: Colors.blueAccent,
                   ),
                   maxLength: 1000,
                   maxLengthEnforced: true,
@@ -134,17 +148,19 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
             String givenName = _nameController.text;
             String description = _descriptionController.text;
             if (givenName == "") {
-              await showDialog(
+              await showCupertinoModalPopup(
                 context: context,
-                barrierDismissible: false,
                 builder: (BuildContext context) {
-                  return CustomAlertDialog.alertdialog(
-                    title: "Please give a name for your course",
-                    content: "The name cannot be empty",
+                  return CupertinoActionSheet(
+                    title: Text("Please give a name for your course"),
+                    message: Text("The name cannot be empty"),
                     actions: [
-                      MapEntry(
-                        "Try again",
-                        () {
+                      CupertinoActionSheetAction(
+                        child: Text(
+                          "Try again",
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        onPressed: () {
                           Navigator.of(context).pop();
                         },
                       ),
@@ -186,7 +202,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 Fluttertoast.showToast(
                   msg:
                       "The course couldn't be saved on your device: Please try later",
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.blueAccent,
                   gravity: ToastGravity.BOTTOM,
                   fontSize: 20.0,
                   timeInSecForIosWeb: 1,
@@ -194,7 +210,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
               } else {
                 Fluttertoast.showToast(
                   msg: givenName + " was successfully saved!",
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.blueAccent,
                   gravity: ToastGravity.BOTTOM,
                   fontSize: 20.0,
                   timeInSecForIosWeb: 1,
@@ -214,7 +230,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
             color: Colors.white,
             size: 50,
           ),
-          backgroundColor: Colors.orange,
+          backgroundColor: Colors.blueAccent,
           elevation: 0,
         ),
       ),

@@ -11,6 +11,7 @@ Widget NiceButton({
   double elevation = 0,
   String text = "",
   Color textColor = Colors.white,
+  Color color = Colors.orange,
 }) {
   return RaisedButton(
     onPressed: onPressed ?? () {},
@@ -18,7 +19,7 @@ Widget NiceButton({
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(borderRadius),
     ),
-    color: Colors.orange,
+    color: color,
     elevation: elevation,
     child: Container(
       alignment: Alignment.center,

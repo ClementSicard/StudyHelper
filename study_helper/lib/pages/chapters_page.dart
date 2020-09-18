@@ -88,15 +88,18 @@ class _ChaptersPageState extends State<ChaptersPage> {
       ),
       body: _body(),
       backgroundColor: Colors.white,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: FloatingActionButton(
-          onPressed: _promptNewSubject,
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
+      floatingActionButton: Visibility(
+        visible: _chapters?.isNotEmpty ?? true,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: FloatingActionButton(
+            onPressed: _promptNewSubject,
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.redAccent,
           ),
-          backgroundColor: Colors.red,
         ),
       ),
     );
@@ -121,11 +124,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
               SizedBox(height: 40),
               CircleAvatar(
                 radius: MediaQuery.of(context).size.height / 17.0,
-                backgroundColor: Colors.orange,
+                backgroundColor: Colors.greenAccent,
                 child: IconButton(
                   icon: Icon(
                     Icons.add,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
@@ -162,12 +165,12 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                 builder: (BuildContext context) =>
                                     CupertinoActionSheet(
                                   title: const Text('Delete chapter'),
-                                  message: Text(
+                                  message: const Text(
                                       "Are you sure to delete this chapter ?"),
                                   actions: [
                                     CupertinoActionSheetAction(
                                       child: const Text("Delete"),
-                                      isDefaultAction: true,
+                                      isDefaultAction: false,
                                       onPressed: () async {
                                         final coursesProvider =
                                             Provider.of<CoursesDataHandler>(
@@ -180,7 +183,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                     ),
                                   ],
                                   cancelButton: CupertinoActionSheetAction(
-                                    child: const Text('Cancel'),
+                                    child: const Text(
+                                      'Cancel',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
                                     isDefaultAction: true,
                                     onPressed: () {
                                       Navigator.pop(context, 'Cancel');
@@ -316,6 +322,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       color: Colors.white,
                     ),
                   ),
+                  heroTag: null,
                   onPressed: () => showCupertinoModalPopup(
                     context: context,
                     builder: (BuildContext context) => CupertinoActionSheet(

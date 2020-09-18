@@ -13,10 +13,10 @@ class CoursesPage extends StatefulWidget {
   CoursesPage({Key key}) : super(key: key);
 
   @override
-  coursesPageState createState() => coursesPageState();
+  CoursesPageState createState() => CoursesPageState();
 }
 
-class coursesPageState extends State<CoursesPage> {
+class CoursesPageState extends State<CoursesPage> {
   List<Course> coursesTest = [
     Course("Analyse IV"),
     Course("Programmation orientée système"),
@@ -100,6 +100,7 @@ class coursesPageState extends State<CoursesPage> {
                 GestureDetector(
                   child: NiceButton(
                     text: current.name,
+                    color: Colors.blueAccent,
                     width: 500,
                     onPressed: () {
                       Navigator.of(context).push(
@@ -109,34 +110,32 @@ class coursesPageState extends State<CoursesPage> {
                     },
                   ),
                   onLongPress: () async {
-                    final coursesData =
-                        Provider.of<CoursesDataHandler>(context, listen: false);
-
-                    await showDialog(
+                    await showCupertinoModalPopup(
                       context: context,
-                      barrierDismissible: false,
                       builder: (BuildContext context) {
-                        return CustomAlertDialog.alertdialog(
-                          title: "Confirm delete",
-                          content: "Are you sure to delete this course?",
+                        return CupertinoActionSheet(
+                          title: const Text("Confirm delete"),
+                          message:
+                              const Text("Are you sure to delete this course?"),
                           actions: [
-                            MapEntry(
-                              "Cancel",
-                              () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            MapEntry(
-                              "Delete",
-                              () async {
-                                Navigator.of(context).pop();
+                            CupertinoActionSheetAction(
+                              child: Text("Delete"),
+                              onPressed: () async {
                                 final coursesProvider =
                                     Provider.of<CoursesDataHandler>(context,
                                         listen: false);
                                 await coursesProvider.removeCourse(current);
+                                Navigator.of(context).pop();
                               },
                             ),
                           ],
+                          cancelButton: CupertinoActionSheetAction(
+                            child: Text("Cancel",
+                                style: TextStyle(color: Colors.blue)),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
                         );
                       },
                     );
@@ -200,6 +199,14 @@ class coursesPageState extends State<CoursesPage> {
       ),
       backgroundColor: Colors.white,
       body: _body(courses),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => CoursePromptPage()),
+        ),
+        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor: Colors.blueAccent[100],
+        elevation: 0,
+      ),
     );
   }
 }
