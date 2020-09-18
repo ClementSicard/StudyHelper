@@ -173,8 +173,6 @@ class CoursesDataHandler with ChangeNotifier {
     final List previousSave = jsonDecode(contents);
 
     for (int i = 0; i < previousSave.length; i++) {
-      bool test = previousSave[i]["name"] == course.name;
-
       if (previousSave[i]["name"] == course.name) {
         previousSave.removeAt(i);
       }
@@ -235,6 +233,39 @@ class CoursesDataHandler with ChangeNotifier {
     return found;
   }
 
+  Future<bool> removeChapter(Course course, Chapter chapter) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+    String contents;
+    if (await file.exists()) {
+      contents = await file.readAsString();
+    } else {
+      return false;
+    }
+
+    List decodedContents = jsonDecode(contents);
+    bool found = false;
+    for (int i = 0; i < decodedContents.length; i++) {
+      if (decodedContents[i]["name"] == course.name) {
+        List chapters = decodedContents[i]["chapters"];
+        for (int j = 0; j < chapters.length; j++) {
+          print(chapters[j]["name"][0]);
+          if (chapters[j]["name"][0] == chapter.name) {
+            decodedContents[i]["chapters"].removeAt(j);
+            found = true;
+            print("Removed");
+          }
+        }
+      }
+    }
+    if (found) {
+      contents = jsonEncode(decodedContents);
+      await file.writeAsString(contents);
+      _update();
+    }
+    return found;
+  }
+
   Future<bool> addSubject(
       Course course, Chapter chapter, Subject subject) async {
     final dir = await getApplicationDocumentsDirectory();
@@ -269,7 +300,8 @@ class CoursesDataHandler with ChangeNotifier {
     return found;
   }
 
-  Future<bool> removeChapter(Course course, Chapter chapter) async {
+  Future<bool> removeSubject(
+      Course course, Chapter chapter, Subject subject) async {
     final dir = await getApplicationDocumentsDirectory();
     final File file = File("${dir.path}/courses_data.json");
     String contents;
@@ -283,11 +315,17 @@ class CoursesDataHandler with ChangeNotifier {
     bool found = false;
     for (int i = 0; i < decodedContents.length; i++) {
       if (decodedContents[i]["name"] == course.name) {
-        List chapters = decodedContents[i]["chapters"];
-        for (int j = 0; j < chapters.length; j++) {
-          if (chapters[j].name == chapter.name) {
-            chapters.removeAt(j);
+        for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
+          print(decodedContents[i]["chapters"]);
+          print(decodedContents[i]["chapters"][j]["name"][0]);
+          if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
             found = true;
+            List subjects = decodedContents[i]["chapters"][j]["subjects"];
+            for (int k = 0; k < subjects.length; k++) {
+              if (subjects[k] == subject.name) {
+                decodedContents[i]["chapters"][j]["subjects"].removeAt(k);
+              }
+            }
           }
         }
       }
@@ -296,6 +334,7 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
+      print("Subject saved!");
     }
     return found;
   }

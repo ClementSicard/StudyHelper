@@ -5,6 +5,7 @@ import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/subject.dart';
+import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
 class ChaptersPage extends StatefulWidget {
@@ -201,9 +202,43 @@ class _ChaptersPageState extends State<ChaptersPage> {
               columns: _chapters
                   .map(
                     (c) => DataColumn(
-                      label: Text(
-                        c.name,
-                        style: customTextStyle(),
+                      label: GestureDetector(
+                        onLongPress: () async {
+                          showCupertinoModalPopup(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                CupertinoActionSheet(
+                              title: const Text('Delete chapter'),
+                              message:
+                                  Text("Are you sure to delete this chapter ?"),
+                              actions: [
+                                CupertinoActionSheetAction(
+                                  child: const Text("Delete"),
+                                  isDefaultAction: true,
+                                  onPressed: () async {
+                                    final coursesProvider =
+                                        Provider.of<CoursesDataHandler>(context,
+                                            listen: false);
+                                    await coursesProvider.removeChapter(
+                                        _course, c);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                              cancelButton: CupertinoActionSheetAction(
+                                child: const Text('Cancel'),
+                                isDefaultAction: true,
+                                onPressed: () {
+                                  Navigator.pop(context, 'Cancel');
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          c.name,
+                          style: customTextStyle(),
+                        ),
                       ),
                       numeric: false,
                     ),

@@ -135,7 +135,7 @@ class coursesPageState extends State<CoursesPage> {
                                   final coursesProvider =
                                       Provider.of<CoursesDataHandler>(context,
                                           listen: false);
-                                  coursesProvider.removeCourse(current);
+                                  await coursesProvider.removeCourse(current);
                                 },
                               ),
                             ],
