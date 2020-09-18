@@ -45,31 +45,32 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Welcome back to StudyHelper !',
-                textAlign: TextAlign.center,
-                style: customTextStyle(
-                  size: 30,
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 100),
+            Text(
+              'Welcome back to StudyHelper !',
+              textAlign: TextAlign.center,
+              style: customTextStyle(
+                size: 30,
               ),
-              SizedBox(height: 60),
-              NiceButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CoursesPage()),
-                  );
-                },
-                text: "Continue studying",
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: 60),
+            NiceButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CoursesPage()),
+                );
+              },
+              text: "Continue studying",
+            ),
+            SizedBox(height: 60),
+          ],
         ),
       ),
     );
