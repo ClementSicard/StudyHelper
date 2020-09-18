@@ -87,68 +87,65 @@ class coursesPageState extends State<CoursesPage> {
       );
     } else {
       courses.sort((a, b) => a.name.compareTo(b.name));
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: ListView.builder(
-            shrinkWrap: true,
-            primary: false,
-            itemCount: courses.length,
-            itemBuilder: (context, index) {
-              Course current = courses[index];
-              return Column(
-                children: [
-                  GestureDetector(
-                    child: NiceButton(
-                      text: current.name,
-                      width: 500,
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => ChaptersPage(current)),
-                        );
-                      },
-                    ),
-                    onLongPress: () async {
-                      final coursesData = Provider.of<CoursesDataHandler>(
-                          context,
-                          listen: false);
-
-                      await showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return CustomAlertDialog.alertdialog(
-                            title: "Confirm delete",
-                            content: "Are you sure to delete this course?",
-                            actions: [
-                              MapEntry(
-                                "Cancel",
-                                () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              MapEntry(
-                                "Delete",
-                                () async {
-                                  Navigator.of(context).pop();
-                                  final coursesProvider =
-                                      Provider.of<CoursesDataHandler>(context,
-                                          listen: false);
-                                  await coursesProvider.removeCourse(current);
-                                },
-                              ),
-                            ],
-                          );
-                        },
+      return Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: ListView.builder(
+          shrinkWrap: true,
+          primary: false,
+          itemCount: courses.length,
+          itemBuilder: (context, index) {
+            Course current = courses[index];
+            return Column(
+              children: [
+                GestureDetector(
+                  child: NiceButton(
+                    text: current.name,
+                    width: 500,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => ChaptersPage(current)),
                       );
                     },
                   ),
-                  SizedBox(height: 30),
-                ],
-              );
-            },
-          ),
+                  onLongPress: () async {
+                    final coursesData =
+                        Provider.of<CoursesDataHandler>(context, listen: false);
+
+                    await showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return CustomAlertDialog.alertdialog(
+                          title: "Confirm delete",
+                          content: "Are you sure to delete this course?",
+                          actions: [
+                            MapEntry(
+                              "Cancel",
+                              () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            MapEntry(
+                              "Delete",
+                              () async {
+                                Navigator.of(context).pop();
+                                final coursesProvider =
+                                    Provider.of<CoursesDataHandler>(context,
+                                        listen: false);
+                                await coursesProvider.removeCourse(current);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+                SizedBox(height: 30),
+              ],
+            );
+          },
         ),
       );
     }
