@@ -89,7 +89,7 @@ class coursesPageState extends State<CoursesPage> {
       courses.sort((a, b) => a.name.compareTo(b.name));
       return Center(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(25.0),
           child: ListView.builder(
             shrinkWrap: true,
             primary: false,
