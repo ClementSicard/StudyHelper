@@ -191,7 +191,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                             child: FlatButton(
                               color: Colors.green,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(40.0),
+                                borderRadius: BorderRadius.circular(60.0),
                               ),
                               child: Padding(
                                 padding:
