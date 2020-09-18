@@ -146,6 +146,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
             scrollDirection: Axis.vertical,
             child: Center(
               child: DataTable(
+                dataRowHeight: 80.0,
                 dividerThickness: 0.0,
                 headingRowHeight: 90.0,
                 columnSpacing: 40.0,
@@ -189,7 +190,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                               );
                             },
                             child: FlatButton(
-                              color: Colors.green,
+                              color: Colors.greenAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(60.0),
                               ),
@@ -198,7 +199,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                     const EdgeInsets.symmetric(vertical: 15.0),
                                 child: Text(
                                   c.name,
-                                  style: customTextStyle(color: Colors.white),
+                                  style: customTextStyle(),
                                 ),
                               ),
                               onPressed: () {},
@@ -212,8 +213,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       ..add(
                         DataColumn(
                           label: FloatingActionButton(
-                            child: Icon(CupertinoIcons.add),
-                            backgroundColor: Colors.red,
+                            child: Icon(
+                              CupertinoIcons.add,
+                              color: Colors.white,
+                            ),
+                            backgroundColor: Colors.greenAccent,
                             onPressed: _promptNewChapter,
                             mini: true,
                             elevation: 0,
@@ -226,13 +230,37 @@ class _ChaptersPageState extends State<ChaptersPage> {
                         cells: r
                             .map(
                               (s) => DataCell(
-                                Center(
-                                  child: Text(
-                                    s.name,
-                                    style: customTextStyle(size: 20),
+                                Visibility(
+                                  visible: s.name != "",
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                      onLongPress: () {},
+                                      child: FlatButton(
+                                        color: Colors.redAccent,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(60.0),
+                                        ),
+                                        onPressed: () {},
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 15.0),
+                                            child: Text(
+                                              s.name,
+                                              style: customTextStyle(
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                              overflow: TextOverflow.clip,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                showEditIcon: s.name != "",
                               ),
                             )
                             .toList()
@@ -259,104 +287,119 @@ class _ChaptersPageState extends State<ChaptersPage> {
       builder: (context) {
         return AlertDialog(
           elevation: 0,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: Text(
             'Add a new subject',
             style: customTextStyle(),
           ),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                autocorrect: false,
-                controller: _textFieldController,
-                decoration: InputDecoration(hintText: "Input the name"),
-                textCapitalization: TextCapitalization.sentences,
-              ),
-              SizedBox(height: 30),
-              Text(
-                "Select the chapter",
-                style: customTextStyle(size: 20),
-              ),
-              SizedBox(height: 30),
-              FloatingActionButton.extended(
-                elevation: 0,
-                backgroundColor: Colors.orange,
-                label: Text(
-                  "Pick chapter",
-                  style: customTextStyle(
-                    size: 20,
-                    color: Colors.white,
-                  ),
+          content: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  autocorrect: false,
+                  controller: _textFieldController,
+                  decoration: InputDecoration(hintText: "Input the name"),
+                  textCapitalization: TextCapitalization.sentences,
                 ),
-                onPressed: () => showCupertinoModalPopup(
-                  context: context,
-                  builder: (BuildContext context) => CupertinoActionSheet(
-                    title: const Text('Pick chapter'),
-                    actions: _chapters
-                        .map(
-                          (c) => CupertinoActionSheetAction(
-                            child: Text(
-                              c.name,
-                              style: TextStyle(color: Colors.blue),
+                SizedBox(height: 40),
+                FloatingActionButton.extended(
+                  elevation: 0,
+                  backgroundColor: Colors.redAccent,
+                  label: Text(
+                    "Pick chapter",
+                    style: customTextStyle(
+                      size: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () => showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) => CupertinoActionSheet(
+                      title: const Text('Pick chapter'),
+                      actions: _chapters
+                          .map(
+                            (c) => CupertinoActionSheetAction(
+                              child: Text(
+                                c.name,
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                              onPressed: () async {
+                                setState(() {
+                                  _selectedChapter = c;
+                                });
+                                print(_selectedChapter.name);
+                                String inputName = _textFieldController.text;
+                                if (_selectedChapter.subjects
+                                    .map((c) => c.name)
+                                    .toSet()
+                                    .contains(inputName)) {
+                                  return AlertDialog(
+                                    elevation: 0,
+                                    title: Text(
+                                        'There already exists a subject with the same name in the same chapter'),
+                                    content: Text("Please try a different one"),
+                                    actions: [
+                                      FlatButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                } else if (inputName == "") {
+                                  return AlertDialog(
+                                    elevation: 0,
+                                    title: Text(
+                                        "A subject cannot have an empty name"),
+                                    content: Text("Please try a different one"),
+                                    actions: [
+                                      FlatButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  final coursesData =
+                                      Provider.of<CoursesDataHandler>(context,
+                                          listen: false);
+                                  await coursesData.addSubject(
+                                    _course,
+                                    _selectedChapter,
+                                    Subject(_textFieldController.text),
+                                  );
+                                  Navigator.of(context).pop();
+                                  Navigator.pop(context);
+                                }
+                              },
                             ),
-                            onPressed: () async {
-                              setState(() {
-                                _selectedChapter = c;
-                              });
-                              print(_selectedChapter.name);
-                              String inputName = _textFieldController.text;
-                              if (_selectedChapter.subjects
-                                  .map((c) => c.name)
-                                  .toSet()
-                                  .contains(inputName)) {
-                                return AlertDialog(
-                                  elevation: 0,
-                                  title: Text(
-                                      'There already exists a subject with the same name in the same chapter'),
-                                  content: Text("Please try a different one"),
-                                  actions: [
-                                    FlatButton(
-                                      child: const Text('OK'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              } else {
-                                final coursesData =
-                                    Provider.of<CoursesDataHandler>(context,
-                                        listen: false);
-                                await coursesData.addSubject(
-                                  _course,
-                                  _selectedChapter,
-                                  Subject(_textFieldController.text),
-                                );
-                                Navigator.of(context).pop();
-                                Navigator.pop(context);
-                              }
-                            },
-                          ),
-                        )
-                        .toList(),
-                    cancelButton: CupertinoActionSheetAction(
-                      child: const Text('Cancel'),
-                      isDefaultAction: true,
-                      onPressed: () {
-                        Navigator.pop(context, 'Cancel');
-                      },
+                          )
+                          .toList(),
+                      cancelButton: CupertinoActionSheetAction(
+                        child: const Text('Cancel'),
+                        isDefaultAction: true,
+                        onPressed: () {
+                          Navigator.pop(context, 'Cancel');
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           actions: <Widget>[
             FlatButton(
               child: Text(
                 'CANCEL',
-                style: TextStyle(color: Colors.orange),
+                style: TextStyle(color: Colors.redAccent),
               ),
               onPressed: () {
                 _selectedChapter = null;
@@ -375,6 +418,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20.0),
+            ),
+          ),
           elevation: 0,
           title: Text(
             'Add a new chapter',
@@ -387,13 +435,19 @@ class _ChaptersPageState extends State<ChaptersPage> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: const Text('CANCEL'),
+              child: const Text(
+                'CANCEL',
+                style: TextStyle(color: Colors.red),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.greenAccent),
+              ),
               onPressed: () async {
                 String inputName = _textFieldController.text;
                 if (_course.getChapters
@@ -409,7 +463,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       FlatButton(
                         child: const Text('OK'),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.pop(context);
                         },
                       ),
                     ],
