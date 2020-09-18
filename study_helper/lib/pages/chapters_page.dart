@@ -138,13 +138,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
       );
     } else {
       List<List<Subject>> subjectsByCol = subjectsByColumn();
-      return Padding(
-        padding: const EdgeInsets.all(20.0),
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Center(
+          scrollDirection: Axis.vertical,
+          child: Center(
+            child: Theme(
+              data: Theme.of(context).copyWith(dividerColor: Colors.white),
               child: DataTable(
                 dataRowHeight: 80.0,
                 dividerThickness: 0.0,
@@ -215,12 +215,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           label: FloatingActionButton(
                             child: Icon(
                               CupertinoIcons.add,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                             backgroundColor: Colors.greenAccent,
                             onPressed: _promptNewChapter,
                             mini: true,
                             elevation: 0,
+                            heroTag: null,
                           ),
                         ),
                       ),
@@ -250,7 +251,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                             child: Text(
                                               s.name,
                                               style: customTextStyle(
-                                                size: 20,
                                                 color: Colors.white,
                                               ),
                                               overflow: TextOverflow.clip,
