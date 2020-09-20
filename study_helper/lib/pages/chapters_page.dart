@@ -150,10 +150,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
             child: Theme(
               data: Theme.of(context).copyWith(dividerColor: Colors.white),
               child: DataTable(
-                dataRowHeight: 80.0,
+                dataRowHeight: 90.0,
                 dividerThickness: 0.0,
                 headingRowHeight: 90.0,
-                columnSpacing: 40.0,
+                columnSpacing: 10.0,
                 columns: _chapters
                     .map(
                       (c) => DataColumn(
@@ -196,20 +196,24 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                 ),
                               );
                             },
-                            child: FlatButton(
-                              color: Colors.greenAccent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(60.0),
-                              ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15.0),
-                                child: Text(
-                                  c.name,
-                                  style: customTextStyle(),
+                            child: Container(
+                              width: 200,
+                              height: 70,
+                              child: FlatButton(
+                                color: Colors.greenAccent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(60.0),
                                 ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 15.0),
+                                  child: Text(
+                                    c.name,
+                                    style: customTextStyle(size: 20),
+                                  ),
+                                ),
+                                onPressed: () {},
                               ),
-                              onPressed: () {},
                             ),
                           ),
                         ),
@@ -244,23 +248,29 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: GestureDetector(
                                       onLongPress: () {},
-                                      child: FlatButton(
-                                        color: Colors.redAccent,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(60.0),
-                                        ),
-                                        onPressed: () {},
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 15.0),
-                                            child: Text(
-                                              s.name,
-                                              style: customTextStyle(
-                                                color: Colors.white,
+                                      child: Container(
+                                        width: 200,
+                                        height: 70,
+                                        child: FlatButton(
+                                          color: Colors.redAccent,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(60.0),
+                                          ),
+                                          onPressed: () {},
+                                          child: Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 15.0),
+                                              child: Text(
+                                                s.name,
+                                                style: customTextStyle(
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                              overflow: TextOverflow.clip,
                                             ),
                                           ),
                                         ),
@@ -273,7 +283,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                             .toList()
                               ..add(
                                 DataCell(
-                                  Text(""),
+                                  const Text(""),
                                 ),
                               ),
                       ),
@@ -347,9 +357,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                     .contains(inputName)) {
                                   return AlertDialog(
                                     elevation: 0,
-                                    title: Text(
+                                    title: const Text(
                                         'There already exists a subject with the same name in the same chapter'),
-                                    content: Text("Please try a different one"),
+                                    content: const Text(
+                                        "Please try a different one"),
                                     actions: [
                                       FlatButton(
                                         child: const Text('OK'),
@@ -362,7 +373,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                 } else if (inputName == "") {
                                   return AlertDialog(
                                     elevation: 0,
-                                    title: Text(
+                                    title: const Text(
                                         "A subject cannot have an empty name"),
                                     content: Text("Please try a different one"),
                                     actions: [
@@ -403,9 +414,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
               ],
             ),
           ),
-          actions: <Widget>[
+          actions: [
             FlatButton(
-              child: Text(
+              child: const Text(
                 'CANCEL',
                 style: TextStyle(color: Colors.redAccent),
               ),
@@ -464,9 +475,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                     .contains(inputName)) {
                   return AlertDialog(
                     elevation: 0,
-                    title: Text(
+                    title: const Text(
                         'There already exists a chapter with the same name'),
-                    content: Text("Please try a different one"),
+                    content: const Text("Please try a different one"),
                     actions: [
                       FlatButton(
                         child: const Text('OK'),

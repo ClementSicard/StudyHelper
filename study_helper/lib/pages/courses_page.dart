@@ -34,7 +34,7 @@ class CoursesPageState extends State<CoursesPage> {
             children: <Widget>[
               CircularProgressIndicator(),
               SizedBox(height: 10),
-              Text(
+              const Text(
                 "Loading...",
                 style: TextStyle(
                   color: Colors.black,
@@ -118,7 +118,7 @@ class CoursesPageState extends State<CoursesPage> {
                               const Text("Are you sure to delete this course?"),
                           actions: [
                             CupertinoActionSheetAction(
-                              child: Text("Delete"),
+                              child: const Text("Delete"),
                               onPressed: () async {
                                 final coursesProvider =
                                     Provider.of<CoursesDataHandler>(context,
@@ -129,7 +129,7 @@ class CoursesPageState extends State<CoursesPage> {
                             ),
                           ],
                           cancelButton: CupertinoActionSheetAction(
-                            child: Text("Cancel",
+                            child: const Text("Cancel",
                                 style: TextStyle(color: Colors.blue)),
                             onPressed: () {
                               Navigator.pop(context);

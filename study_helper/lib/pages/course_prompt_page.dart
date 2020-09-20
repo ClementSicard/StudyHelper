@@ -152,11 +152,11 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return CupertinoActionSheet(
-                    title: Text("Please give a name for your course"),
-                    message: Text("The name cannot be empty"),
+                    title: const Text("Please give a name for your course"),
+                    message: const Text("The name cannot be empty"),
                     actions: [
                       CupertinoActionSheetAction(
-                        child: Text(
+                        child: const Text(
                           "Try again",
                           style: TextStyle(color: Colors.green),
                         ),
