@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/pages/chapters_page.dart';
-import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
 import 'course_prompt_page.dart';
@@ -199,13 +198,16 @@ class CoursesPageState extends State<CoursesPage> {
       ),
       backgroundColor: Colors.white,
       body: _body(courses),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => CoursePromptPage()),
+      floatingActionButton: Visibility(
+        visible: courses?.isNotEmpty ?? true,
+        child: FloatingActionButton(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => CoursePromptPage()),
+          ),
+          child: Icon(Icons.add, color: Colors.white),
+          backgroundColor: Colors.blueAccent[100],
+          elevation: 0,
         ),
-        child: Icon(Icons.add, color: Colors.white),
-        backgroundColor: Colors.blueAccent[100],
-        elevation: 0,
       ),
     );
   }

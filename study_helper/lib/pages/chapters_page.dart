@@ -93,6 +93,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: FloatingActionButton(
+            elevation: 0,
             onPressed: _promptNewSubject,
             child: Icon(
               Icons.add,
