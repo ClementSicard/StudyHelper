@@ -8,18 +8,18 @@ import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
-class CoursePromptPage extends StatefulWidget {
-  factory CoursePromptPage({Key key}) {
-    return CoursePromptPage._(key: key);
+class SessionSettingsPage extends StatefulWidget {
+  factory SessionSettingsPage({Key key}) {
+    return SessionSettingsPage._(key: key);
   }
 
-  CoursePromptPage._({Key key}) : super(key: key);
+  SessionSettingsPage._({Key key}) : super(key: key);
 
   @override
-  _CoursePromptPageState createState() => _CoursePromptPageState();
+  _SessionSettingsPageState createState() => _SessionSettingsPageState();
 }
 
-class _CoursePromptPageState extends State<CoursePromptPage> {
+class _SessionSettingsPageState extends State<SessionSettingsPage> {
   TextEditingController _nameController;
   TextEditingController _descriptionController;
 
@@ -38,7 +38,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Add a new course",
+          "Tune your session",
           textAlign: TextAlign.center,
           style: customTextStyle(),
         ),
@@ -70,7 +70,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
           child: ListView(
             shrinkWrap: true,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-            children: <Widget>[
+            children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
@@ -79,11 +79,11 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   autofocus: true,
                   cursorColor: Colors.blueAccent,
                   decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blueAccent),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.blueAccent),
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.green),
                     ),
                     labelText: 'Name of the course',
                     focusColor: Colors.blueAccent,
@@ -159,7 +159,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                       CupertinoActionSheetAction(
                         child: const Text(
                           "Try again",
-                          style: TextStyle(color: Colors.green),
+                          style: const TextStyle(color: Colors.green),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -198,7 +198,6 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
               final coursesData =
                   Provider.of<CoursesDataHandler>(context, listen: false);
               bool success = await coursesData.save(newCourse);
-              print("bien joué maggle");
               if (!success) {
                 Fluttertoast.showToast(
                   msg:

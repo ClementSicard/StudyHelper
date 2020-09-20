@@ -99,7 +99,7 @@ class CoursesPageState extends State<CoursesPage> {
                 GestureDetector(
                   child: NiceButton(
                     text: current.name,
-                    color: Colors.blueAccent,
+                    color: Colors.blueAccent[100],
                     width: 500,
                     onPressed: () {
                       Navigator.of(context).push(
