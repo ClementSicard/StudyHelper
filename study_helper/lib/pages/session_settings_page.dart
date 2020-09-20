@@ -1,33 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
+import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
-import 'package:study_helper/objects/courses_data_handler.dart';
-import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
 class SessionSettingsPage extends StatefulWidget {
-  factory SessionSettingsPage({Key key}) {
-    return SessionSettingsPage._(key: key);
+  final Course _course;
+  final List<Chapter> _chapters;
+
+  factory SessionSettingsPage(Course course, List<Chapter> chapters,
+      {Key key}) {
+    return SessionSettingsPage._(course, chapters, key: key);
   }
 
-  SessionSettingsPage._({Key key}) : super(key: key);
+  SessionSettingsPage._(this._course, this._chapters, {Key key})
+      : super(key: key);
 
   @override
-  _SessionSettingsPageState createState() => _SessionSettingsPageState();
+  _SessionSettingsPageState createState() =>
+      _SessionSettingsPageState(_course, _chapters);
 }
 
 class _SessionSettingsPageState extends State<SessionSettingsPage> {
-  TextEditingController _nameController;
-  TextEditingController _descriptionController;
+  final Course _course;
+  final List<Chapter> _chapters;
+  List<bool> _selected;
+  bool _all = true;
+
+  _SessionSettingsPageState(this._course, this._chapters);
 
   @override
   void initState() {
+    _selected = _chapters.map((c) => false).toList();
     super.initState();
-    _nameController = TextEditingController();
-    _descriptionController = TextEditingController();
   }
 
   @override
@@ -64,77 +70,46 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
               onPressed: () {}),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: ListView(
-            shrinkWrap: true,
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextFormField(
-                  autocorrect: false,
-                  controller: _nameController,
-                  autofocus: true,
-                  cursorColor: Colors.blueAccent,
-                  decoration: InputDecoration(
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.blueAccent),
-                    ),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.green),
-                    ),
-                    labelText: 'Name of the course',
-                    focusColor: Colors.blueAccent,
-                    labelStyle: customTextStyle(),
-                    fillColor: Colors.blueAccent,
-                  ),
-                  maxLengthEnforced: true,
-                  maxLength: 100,
-                  maxLines: 1,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: customTextStyle(),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          shrinkWrap: true,
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+          children: [
+            SizedBox(height: 30),
+            Text(
+              "Select chapters",
+              style: customTextStyle(),
+            ),
+            Visibility(child: ListTile()),
+            SizedBox(height: 30),
+          ]
+            ..addAll([
+              ListTile(
+                title: Text(
+                  "All",
+                  style: customTextStyle(size: 20),
+                ),
+                trailing: CupertinoSwitch(
+                  activeColor: Colors.red,
+                  value: _all,
+                  onChanged: (bool value) {
+                    print(value);
+                    setState(() {
+                      print(value);
+                      _all = value;
+                      _selected = _chapters.map((c) => value).toList();
+                    });
                   },
                 ),
+                onTap: () {
+                  setState(() {
+                    _all = !_all;
+                  });
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextFormField(
-                  controller: _descriptionController,
-                  cursorColor: Colors.blueAccent,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blueAccent),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
-                    ),
-                    labelText: 'Description (optional)',
-                    labelStyle: customTextStyle(),
-                    fillColor: Colors.blueAccent,
-                  ),
-                  maxLength: 1000,
-                  maxLengthEnforced: true,
-                  keyboardType: TextInputType.multiline,
-                  style: customTextStyle(),
-                  textCapitalization: TextCapitalization.sentences,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              SizedBox(height: 100),
-            ],
-          ),
+            ])
+            ..addAll(_chapterSelection()),
         ),
       ),
       backgroundColor: Colors.white,
@@ -142,83 +117,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 40),
         child: FloatingActionButton.extended(
-          onPressed: () async {
-            final coursesData =
-                Provider.of<CoursesDataHandler>(context, listen: false);
-            List<Course> courses = coursesData.courses;
-            String givenName = _nameController.text;
-            String description = _descriptionController.text;
-            if (givenName == "") {
-              await showCupertinoModalPopup(
-                context: context,
-                builder: (BuildContext context) {
-                  return CupertinoActionSheet(
-                    title: const Text("Please give a name for your course"),
-                    message: const Text("The name cannot be empty"),
-                    actions: [
-                      CupertinoActionSheetAction(
-                        child: const Text(
-                          "Try again",
-                          style: const TextStyle(color: Colors.green),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            } else if (courses.map((c) => c.name).toSet().contains(givenName)) {
-              await showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return CustomAlertDialog.alertdialog(
-                    title: "You already have a course of with the name \"" +
-                        givenName +
-                        "\"",
-                    content: "Please choose another name",
-                    actions: [
-                      MapEntry(
-                        "Try again",
-                        () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            } else {
-              Course newCourse = Course(
-                givenName,
-                description: description,
-              );
-              final coursesData =
-                  Provider.of<CoursesDataHandler>(context, listen: false);
-              bool success = await coursesData.save(newCourse);
-              if (!success) {
-                Fluttertoast.showToast(
-                  msg:
-                      "The course couldn't be saved on your device: Please try later",
-                  backgroundColor: Colors.blueAccent,
-                  gravity: ToastGravity.BOTTOM,
-                  fontSize: 20.0,
-                  timeInSecForIosWeb: 1,
-                );
-              } else {
-                Fluttertoast.showToast(
-                  msg: givenName + " was successfully saved!",
-                  backgroundColor: Colors.blueAccent,
-                  gravity: ToastGravity.BOTTOM,
-                  fontSize: 20.0,
-                  timeInSecForIosWeb: 1,
-                );
-              }
-              Navigator.of(context).pop();
-            }
-          },
+          onPressed: () {},
           label: Text(
             'Save this course',
             style: customTextStyle(
@@ -235,5 +134,42 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
         ),
       ),
     );
+  }
+
+  List<Visibility> _chapterSelection() {
+    List<Visibility> switchesTiles = [];
+    for (int i = 0; i < _chapters.length; i++) {
+      Chapter current = _chapters[i];
+      switchesTiles.add(
+        Visibility(
+          visible: _all == false,
+          child: ListTile(
+            title: Text(
+              current.name,
+              style: customTextStyle(size: 20),
+            ),
+            trailing: CupertinoSwitch(
+              value: _selected[i],
+              onChanged: (bool value) {
+                setState(() {
+                  _selected[i] = value;
+                });
+              },
+            ),
+            onTap: () {
+              setState(() {
+                _selected[i] = !_selected[i];
+                if (_selected.any((element) => false)) {
+                  _all = false;
+                } else if (!_selected.any((element) => false)) {
+                  _all = true;
+                }
+              });
+            },
+          ),
+        ),
+      );
+    }
+    return switchesTiles;
   }
 }

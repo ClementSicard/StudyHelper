@@ -113,12 +113,15 @@ class _ChaptersPageState extends State<ChaptersPage> {
           padding: const EdgeInsets.all(15.0),
           child: FloatingActionButton(
             elevation: 0,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SessionSettingsPage(),
-              ),
-            ),
+            onPressed: () {
+              print(_chapters[0].subjects.map((s) => s.name));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SessionSettingsPage(_course, _chapters),
+                ),
+              );
+            },
             child: Icon(
               Icons.play_arrow,
               size: 35,
