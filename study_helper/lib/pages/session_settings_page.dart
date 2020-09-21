@@ -26,7 +26,8 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
   final Course _course;
   final List<Chapter> _chapters;
   List<bool> _selected;
-  bool _all = true;
+  bool _all = false;
+  bool _random = true;
 
   _SessionSettingsPageState(this._course, this._chapters);
 
@@ -81,35 +82,58 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
               "Select chapters",
               style: customTextStyle(),
             ),
-            Visibility(child: ListTile()),
-            SizedBox(height: 30),
+            SizedBox(height: 15)
           ]
-            ..addAll([
-              ListTile(
-                title: Text(
-                  "All",
-                  style: customTextStyle(size: 20),
-                ),
-                trailing: CupertinoSwitch(
-                  activeColor: Colors.red,
-                  value: _all,
-                  onChanged: (bool value) {
-                    print(value);
-                    setState(() {
+            ..addAll(
+              [
+                ListTile(
+                  title: Text(
+                    "All chapters",
+                    style: customTextStyle(size: 20),
+                  ),
+                  trailing: CupertinoSwitch(
+                    activeColor: Colors.red,
+                    value: _all,
+                    onChanged: (bool value) {
                       print(value);
-                      _all = value;
-                      _selected = _chapters.map((c) => value).toList();
+                      setState(() {
+                        print(value);
+                        _all = value;
+                        _selected = _chapters.map((c) => value).toList();
+                      });
+                    },
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _all = !_all;
                     });
                   },
                 ),
+                SizedBox(height: 15),
+              ],
+            )
+            ..addAll(_chapterSelection())
+            ..addAll([
+              SizedBox(height: 20),
+              ListTile(
+                title: Text(
+                  "Random order ?",
+                  style: customTextStyle(size: 20),
+                ),
+                trailing: CupertinoSwitch(
+                    value: _random,
+                    onChanged: (value) {
+                      setState(() {
+                        _random = value;
+                      });
+                    }),
                 onTap: () {
                   setState(() {
-                    _all = !_all;
+                    _random = !_random;
                   });
                 },
-              ),
-            ])
-            ..addAll(_chapterSelection()),
+              )
+            ]),
         ),
       ),
       backgroundColor: Colors.white,
