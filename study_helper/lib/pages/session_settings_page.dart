@@ -103,7 +103,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                 SizedBox(height: 15),
               ],
             )
-            ..addAll(_chapterSelection())
+            ..addAll(_chapterSelection(themeChange.darkTheme))
             ..addAll([
               SizedBox(height: 20),
               ListTile(
@@ -170,12 +170,11 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
           label: Text(
             "Let's start!",
             style: customTextStyle(
-              themeChange.darkTheme,
+              !themeChange.darkTheme,
             ),
           ),
           icon: const Icon(
             CupertinoIcons.play_arrow_solid,
-            color: Colors.white,
             size: 35,
           ),
           backgroundColor: Colors.greenAccent,
@@ -186,7 +185,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
     );
   }
 
-  List<Visibility> _chapterSelection() {
+  List<Visibility> _chapterSelection(bool darkTheme) {
     List<Visibility> switchesTiles = [];
     for (int i = 0; i < _chapters.length; i++) {
       Chapter current = _chapters[i];
@@ -196,7 +195,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
           child: ListTile(
             title: Text(
               current.name,
-              style: customTextStyle(false, size: 20),
+              style: customTextStyle(darkTheme, size: 20),
             ),
             trailing: CupertinoSwitch(
               value: _selected[i],

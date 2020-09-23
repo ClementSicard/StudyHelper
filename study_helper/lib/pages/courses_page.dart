@@ -87,7 +87,7 @@ class CoursesPageState extends State<CoursesPage> {
     } else {
       courses.sort((a, b) => a.name.compareTo(b.name));
       return Padding(
-        padding: const EdgeInsets.all(25.0),
+        padding: const EdgeInsets.all(35.0),
         child: ListView.builder(
           shrinkWrap: true,
           primary: false,
@@ -98,6 +98,7 @@ class CoursesPageState extends State<CoursesPage> {
               children: [
                 GestureDetector(
                   child: NiceButton(
+                    darkTheme,
                     text: current.name,
                     color: Colors.blueAccent[100],
                     width: 500,
@@ -140,7 +141,7 @@ class CoursesPageState extends State<CoursesPage> {
                     );
                   },
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 40),
               ],
             );
           },

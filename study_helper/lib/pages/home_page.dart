@@ -67,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 60),
             NiceButton(
+              themeChange.darkTheme,
               onPressed: () {
                 Navigator.push(
                   context,

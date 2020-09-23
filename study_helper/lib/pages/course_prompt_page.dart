@@ -57,7 +57,6 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
           padding: const EdgeInsets.all(20.0),
           child: ListView(
             shrinkWrap: true,
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -209,17 +208,13 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
           },
           label: Text(
             'Save this course',
-            style: customTextStyle(
-              themeChange.darkTheme,
-              color: Colors.white,
-            ),
+            style: customTextStyle(!themeChange.darkTheme),
           ),
           icon: const Icon(
             CupertinoIcons.check_mark,
-            color: Colors.white,
             size: 50,
           ),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.blueAccent[100],
           elevation: 0,
         ),
       ),

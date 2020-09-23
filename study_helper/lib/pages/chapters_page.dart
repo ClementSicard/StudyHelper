@@ -87,15 +87,21 @@ class _ChaptersPageState extends State<ChaptersPage> {
           Visibility(
             visible: _chapters?.isNotEmpty ?? true,
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: FloatingActionButton(
-                elevation: 0,
-                onPressed: () => _promptNewSubject(themeChange.darkTheme),
-                child: const Icon(
-                  Icons.add,
+              padding: const EdgeInsets.only(right: 15.0),
+              child: SizedBox(
+                height: 30,
+                width: 30,
+                child: FloatingActionButton(
+                  mini: true,
+                  heroTag: null,
+                  onPressed: () => _promptNewSubject(themeChange.darkTheme),
+                  child: Icon(
+                    CupertinoIcons.add,
+                    color: themeChange.darkTheme ? Colors.black : Colors.white,
+                  ),
+                  backgroundColor: Colors.greenAccent,
+                  splashColor: Colors.transparent,
                 ),
-                backgroundColor: Colors.redAccent[100],
-                heroTag: null,
               ),
             ),
           ),
@@ -167,86 +173,92 @@ class _ChaptersPageState extends State<ChaptersPage> {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Center(
-            child: Theme(
-              data: Theme.of(context).copyWith(dividerColor: Colors.white),
-              child: DataTable(
-                dataRowHeight: 90.0,
-                dividerThickness: 0.0,
-                headingRowHeight: 90.0,
-                columnSpacing: 10.0,
-                columns: _chapters
-                    .map(
-                      (c) => DataColumn(
-                        label: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onLongPress: () async {
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    CupertinoActionSheet(
-                                  title: const Text('Delete chapter'),
-                                  message: const Text(
-                                      "Are you sure to delete this chapter ?"),
-                                  actions: [
-                                    CupertinoActionSheetAction(
-                                      child: const Text("Delete"),
-                                      isDefaultAction: false,
-                                      onPressed: () async {
-                                        final coursesProvider =
-                                            Provider.of<CoursesDataHandler>(
-                                                context,
-                                                listen: false);
-                                        await coursesProvider.removeChapter(
-                                            _course, c);
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                  cancelButton: CupertinoActionSheetAction(
-                                    child: const Text(
-                                      'Cancel',
-                                      style:
-                                          const TextStyle(color: Colors.blue),
-                                    ),
-                                    isDefaultAction: true,
-                                    onPressed: () {
-                                      Navigator.pop(context, 'Cancel');
+            child: DataTable(
+              dataRowHeight: 90.0,
+              dividerThickness: 0.0,
+              headingRowHeight: 90.0,
+              columnSpacing: 10.0,
+              columns: _chapters
+                  .map(
+                    (c) => DataColumn(
+                      label: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onLongPress: () async {
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CupertinoActionSheet(
+                                title: const Text('Delete chapter'),
+                                message: const Text(
+                                    "Are you sure to delete this chapter ?"),
+                                actions: [
+                                  CupertinoActionSheetAction(
+                                    child: const Text("Delete"),
+                                    isDefaultAction: false,
+                                    onPressed: () async {
+                                      final coursesProvider =
+                                          Provider.of<CoursesDataHandler>(
+                                              context,
+                                              listen: false);
+                                      await coursesProvider.removeChapter(
+                                          _course, c);
+                                      Navigator.pop(context);
                                     },
                                   ),
+                                ],
+                                cancelButton: CupertinoActionSheetAction(
+                                  child: const Text(
+                                    'Cancel',
+                                    style: const TextStyle(color: Colors.blue),
+                                  ),
+                                  isDefaultAction: true,
+                                  onPressed: () {
+                                    Navigator.pop(context, 'Cancel');
+                                  },
                                 ),
-                              );
-                            },
-                            child: Container(
-                              width: 200,
-                              height: 70,
-                              child: FlatButton(
-                                color: Colors.greenAccent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(60.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 15.0),
-                                  child: Text(
-                                    c.name,
-                                    style: customTextStyle(darkTheme, size: 20),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 200,
+                            height: 70,
+                            child: FlatButton(
+                              highlightColor: Colors.greenAccent[100],
+                              color: Colors.greenAccent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(60.0),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15.0),
+                                child: Text(
+                                  c.name,
+                                  style: customTextStyle(
+                                    darkTheme,
+                                    color: Colors.black,
+                                    size: 20,
                                   ),
                                 ),
-                                onPressed: () {},
                               ),
+                              onPressed: () {},
                             ),
                           ),
                         ),
-                        numeric: false,
                       ),
-                    )
-                    .toList()
-                      ..add(
-                        DataColumn(
-                          label: FloatingActionButton(
+                      numeric: false,
+                    ),
+                  )
+                  .toList()
+                    ..add(
+                      DataColumn(
+                        label: SizedBox(
+                          height: 45,
+                          width: 45,
+                          child: FloatingActionButton(
                             child: const Icon(
                               CupertinoIcons.add,
+                              color: Colors.black,
                             ),
                             backgroundColor: Colors.greenAccent,
                             onPressed: () => _promptNewChapter(darkTheme),
@@ -256,42 +268,44 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           ),
                         ),
                       ),
-                rows: subjectsByCol
-                    .map(
-                      (r) => DataRow(
-                        cells: r
-                            .map(
-                              (s) => DataCell(
-                                Visibility(
-                                  visible: s.name != "",
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: GestureDetector(
-                                      onLongPress: () {},
-                                      child: Container(
-                                        width: 200,
-                                        height: 70,
-                                        child: FlatButton(
-                                          color: Colors.redAccent[100],
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(60.0),
-                                          ),
-                                          onPressed: () {},
-                                          child: Center(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 15.0),
-                                              child: Text(
-                                                s.name,
-                                                style: customTextStyle(
-                                                  darkTheme,
-                                                  color: Colors.white,
-                                                  size: 20,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
+                    ),
+              rows: subjectsByCol
+                  .map(
+                    (r) => DataRow(
+                      cells: r
+                          .map(
+                            (s) => DataCell(
+                              Visibility(
+                                visible: s.name != "",
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GestureDetector(
+                                    onLongPress: () {},
+                                    child: Container(
+                                      width: 200,
+                                      height: 70,
+                                      child: FlatButton(
+                                        highlightColor: Colors.redAccent,
+                                        color: Colors.redAccent[100],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(60.0),
+                                        ),
+                                        onPressed: () {},
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 15.0),
+                                            child: Text(
+                                              s.name,
+                                              style: customTextStyle(
+                                                darkTheme,
+                                                color: darkTheme
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                                size: 20,
                                               ),
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),
@@ -300,17 +314,17 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                   ),
                                 ),
                               ),
-                            )
-                            .toList()
-                              ..add(
-                                const DataCell(
-                                  const Text(""),
-                                ),
+                            ),
+                          )
+                          .toList()
+                            ..add(
+                              const DataCell(
+                                const Text(""),
                               ),
-                      ),
-                    )
-                    .toList(),
-              ),
+                            ),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
         ),
@@ -341,7 +355,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   autocorrect: false,
                   autofocus: true,
                   controller: _textFieldController,
-                  decoration: InputDecoration(hintText: "Input the name"),
+                  decoration: InputDecoration(
+                    hintText: "Input the name",
+                    hintStyle: customTextStyle(darkTheme, size: 17),
+                  ),
                   textCapitalization: TextCapitalization.sentences,
                 ),
                 SizedBox(height: 40),
@@ -417,7 +434,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                     _selectedChapter,
                                     Subject(_textFieldController.text),
                                   );
-                                  Navigator.of(context).pop();
+                                  Navigator.pop(context);
                                   Navigator.pop(context);
                                 }
                               },

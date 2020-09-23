@@ -30,6 +30,7 @@ class Styles {
         size: 30,
       ),
       scaffoldBackgroundColor: isDarkTheme ? Color(0xff282728) : Colors.white,
+      dividerColor: isDarkTheme ? Color(0xff282728) : Colors.white,
     );
   }
 }
