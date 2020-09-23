@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/pages/game_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
 class SessionSettingsPage extends StatefulWidget {
@@ -141,20 +142,27 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 40),
         child: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () {
+            List<Chapter> selectedChapters = [];
+            for (int i = 0; i < _chapters.length; i++) {}
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => GamePage()),
+            );
+          },
           label: Text(
-            'Save this course',
-            style: customTextStyle(
-              color: Colors.white,
-            ),
+            "Let's start!",
+            style: customTextStyle(),
           ),
           icon: const Icon(
-            CupertinoIcons.check_mark,
+            CupertinoIcons.play_arrow_solid,
             color: Colors.white,
-            size: 50,
+            size: 35,
           ),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.greenAccent,
           elevation: 0,
+          heroTag: "animationToFullScreen",
         ),
       ),
     );
