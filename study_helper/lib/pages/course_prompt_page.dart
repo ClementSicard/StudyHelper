@@ -37,9 +37,6 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
 
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
-        elevation: 0,
-        centerTitle: true,
         title: Text(
           "Add a new course",
           textAlign: TextAlign.center,

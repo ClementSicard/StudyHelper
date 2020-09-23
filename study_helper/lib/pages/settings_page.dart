@@ -18,9 +18,6 @@ class _SettingsPageState extends State<SettingsPage> {
     return Container(
       child: Scaffold(
         appBar: AppBar(
-          brightness: Brightness.light,
-          elevation: 0,
-          centerTitle: true,
           leading: IconButton(
             icon: const Icon(
               CupertinoIcons.back,

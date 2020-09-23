@@ -22,9 +22,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        brightness: themeChange.darkTheme ? Brightness.dark : Brightness.light,
-        elevation: 0,
-        centerTitle: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

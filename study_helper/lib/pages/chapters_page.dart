@@ -68,9 +68,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
-        elevation: 0,
-        centerTitle: true,
         title: Text(
           _course.name,
           textAlign: TextAlign.center,

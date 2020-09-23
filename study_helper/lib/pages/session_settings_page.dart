@@ -45,9 +45,6 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
-        elevation: 0,
-        centerTitle: true,
         title: Text(
           "Tune your session",
           textAlign: TextAlign.center,

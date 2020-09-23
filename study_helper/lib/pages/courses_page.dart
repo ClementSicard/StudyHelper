@@ -157,9 +157,6 @@ class CoursesPageState extends State<CoursesPage> {
     List<Course> courses = coursesListProvider.courses;
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
-        elevation: 0,
-        centerTitle: true,
         title: Text(
           "Your courses",
           textAlign: TextAlign.center,
