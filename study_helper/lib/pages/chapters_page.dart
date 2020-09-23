@@ -128,6 +128,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
               color: Colors.white,
             ),
             backgroundColor: Colors.greenAccent,
+            heroTag: "animationToFullScreen",
           ),
         ),
       ),

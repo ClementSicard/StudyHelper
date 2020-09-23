@@ -144,13 +144,39 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
         child: FloatingActionButton.extended(
           onPressed: () {
             List<Chapter> selectedChapters = [];
-            for (int i = 0; i < _chapters.length; i++) {}
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      GamePage(_course, _chapters)),
-            );
+            for (int i = 0; i < _chapters.length; i++) {
+              if (_selected[i]) {
+                selectedChapters.add(_chapters[i]);
+              }
+            }
+            print(selectedChapters.map((c) => c.name).toList());
+
+            if (selectedChapters.isNotEmpty) {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) =>
+                        GamePage(_course, selectedChapters)),
+              );
+            } else {
+              showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) => CupertinoActionSheet(
+                  title: const Text('No chapter selected'),
+                  message: const Text("You must select at least one chapter!"),
+                  cancelButton: CupertinoActionSheetAction(
+                    child: const Text(
+                      'Cancel',
+                      style: const TextStyle(color: Colors.blue),
+                    ),
+                    isDefaultAction: true,
+                    onPressed: () {
+                      Navigator.pop(context, 'Cancel');
+                    },
+                  ),
+                ),
+              );
+            }
           },
           label: Text(
             "Let's start!",
