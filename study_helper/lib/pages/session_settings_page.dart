@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/pages/game_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
@@ -40,6 +42,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -48,7 +51,9 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
         title: Text(
           "Tune your session",
           textAlign: TextAlign.center,
-          style: customTextStyle(),
+          style: customTextStyle(
+            themeChange.darkTheme,
+          ),
         ),
         leading: IconButton(
           icon: Icon(
@@ -61,7 +66,6 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white,
         actions: [
           IconButton(
               icon: Icon(
@@ -81,7 +85,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
             SizedBox(height: 30),
             Text(
               "Select chapters",
-              style: customTextStyle(),
+              style: customTextStyle(themeChange.darkTheme),
             ),
             SizedBox(height: 15)
           ]
@@ -90,7 +94,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                 ListTile(
                   title: Text(
                     "All chapters",
-                    style: customTextStyle(size: 20),
+                    style: customTextStyle(themeChange.darkTheme, size: 20),
                   ),
                   trailing: CupertinoSwitch(
                     activeColor: Colors.red,
@@ -119,7 +123,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
               ListTile(
                 title: Text(
                   "Random order ?",
-                  style: customTextStyle(size: 20),
+                  style: customTextStyle(themeChange.darkTheme, size: 20),
                 ),
                 trailing: CupertinoSwitch(
                     value: _random,
@@ -137,7 +141,6 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
             ]),
         ),
       ),
-      backgroundColor: Colors.white,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 40),
@@ -180,7 +183,9 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
           },
           label: Text(
             "Let's start!",
-            style: customTextStyle(),
+            style: customTextStyle(
+              themeChange.darkTheme,
+            ),
           ),
           icon: const Icon(
             CupertinoIcons.play_arrow_solid,
@@ -205,7 +210,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
           child: ListTile(
             title: Text(
               current.name,
-              style: customTextStyle(size: 20),
+              style: customTextStyle(false, size: 20),
             ),
             trailing: CupertinoSwitch(
               value: _selected[i],

@@ -4,8 +4,8 @@ class Styles {
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
     return ThemeData(
       primarySwatch: Colors.red,
-      primaryColor: isDarkTheme ? Colors.black : Colors.white,
-      backgroundColor: isDarkTheme ? Color(0x121212) : Colors.white,
+      primaryColor: isDarkTheme ? Color(0xff121212) : Colors.white,
+      backgroundColor: isDarkTheme ? Color(0xff121212) : Colors.white,
       indicatorColor: isDarkTheme ? Color(0xff0E1D36) : Color(0xffCBDCF8),
       buttonColor: isDarkTheme ? Color(0xff3B3B3B) : Color(0xffF1F5FB),
       hintColor: isDarkTheme ? Color(0xff280C0B) : Color(0xffEECED3),
@@ -22,6 +22,7 @@ class Styles {
       appBarTheme: AppBarTheme(
         elevation: 0.0,
       ),
+      scaffoldBackgroundColor: isDarkTheme ? Color(0xff282728) : Colors.white,
     );
   }
 }

@@ -36,6 +36,7 @@ dependencies:
   table_sticky_headers: ^1.1.2
   flutter_material_pickers: ^1.7.4
   flutter_launcher_icons: ^0.8.0
+  flutter_icons: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -59,7 +60,6 @@ flutter:
   assets:
     - assets/icon.png
     - assets/icon100x100.png
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

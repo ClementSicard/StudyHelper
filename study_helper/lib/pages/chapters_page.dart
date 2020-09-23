@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
+import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/pages/session_settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
@@ -63,6 +64,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
   Widget build(BuildContext context) {
     final coursesData = Provider.of<CoursesDataHandler>(context, listen: true);
     _chapters = coursesData.getChapters(_course);
+    final themeChange = Provider.of<DarkThemeProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -71,7 +74,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
         title: Text(
           _course.name,
           textAlign: TextAlign.center,
-          style: customTextStyle(),
+          style: customTextStyle(themeChange.darkTheme),
           maxLines: 2,
         ),
         leading: IconButton(
@@ -92,7 +95,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
               padding: const EdgeInsets.all(15.0),
               child: FloatingActionButton(
                 elevation: 0,
-                onPressed: _promptNewSubject,
+                onPressed: () => _promptNewSubject(themeChange.darkTheme),
                 child: Icon(
                   Icons.add,
                   color: Colors.white,
@@ -103,10 +106,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
             ),
           ),
         ],
-        backgroundColor: Colors.white,
       ),
-      body: _body(),
-      backgroundColor: Colors.white,
+      body: _body(themeChange.darkTheme),
       floatingActionButton: Visibility(
         visible: _chapters?.isNotEmpty ?? true,
         child: Padding(
@@ -135,7 +136,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
     );
   }
 
-  Widget _body() {
+  Widget _body(bool darkTheme) {
     if (_chapters.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(5.0),
@@ -148,7 +149,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
               ),
               Text(
                 "Add a first chapter",
-                style: customTextStyle(),
+                style: customTextStyle(darkTheme),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 40),
@@ -162,7 +163,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   ),
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
-                  onPressed: _promptNewChapter,
+                  onPressed: () => _promptNewChapter(darkTheme),
                 ),
               ),
             ],
@@ -239,7 +240,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                       vertical: 15.0),
                                   child: Text(
                                     c.name,
-                                    style: customTextStyle(size: 20),
+                                    style: customTextStyle(darkTheme, size: 20),
                                   ),
                                 ),
                                 onPressed: () {},
@@ -259,7 +260,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                               color: Colors.black,
                             ),
                             backgroundColor: Colors.greenAccent,
-                            onPressed: _promptNewChapter,
+                            onPressed: () => _promptNewChapter(darkTheme),
                             mini: true,
                             elevation: 0,
                             heroTag: null,
@@ -296,6 +297,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                               child: Text(
                                                 s.name,
                                                 style: customTextStyle(
+                                                  darkTheme,
                                                   color: Colors.white,
                                                   size: 20,
                                                 ),
@@ -327,7 +329,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
     }
   }
 
-  Future<Widget> _promptNewSubject() async {
+  Future<Widget> _promptNewSubject(bool darkTheme) async {
     TextEditingController _textFieldController = TextEditingController();
     return showDialog(
       context: context,
@@ -338,7 +340,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: Text(
             'Add a new subject',
-            style: customTextStyle(),
+            style: customTextStyle(darkTheme),
           ),
           content: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -360,6 +362,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   label: Text(
                     "Pick chapter",
                     style: customTextStyle(
+                      darkTheme,
                       size: 20,
                       color: Colors.white,
                     ),
@@ -464,7 +467,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
     );
   }
 
-  Future<Widget> _promptNewChapter() async {
+  Future<Widget> _promptNewChapter(bool darkTheme) async {
     TextEditingController _textFieldController = TextEditingController();
     return showDialog(
       context: context,
@@ -478,7 +481,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           elevation: 0,
           title: Text(
             'Add a new chapter',
-            style: customTextStyle(),
+            style: customTextStyle(darkTheme),
           ),
           content: TextField(
             autocorrect: false,
@@ -534,7 +537,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
     );
   }
 
-  Future<Widget> _editChapter(Chapter chapter) async {
+  Future<Widget> _editChapter(Chapter chapter, bool darkTheme) async {
     TextEditingController _textFieldController = TextEditingController();
     return showDialog(
       context: context,
@@ -548,7 +551,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           elevation: 0,
           title: Text(
             'Add a new chapter',
-            style: customTextStyle(),
+            style: customTextStyle(darkTheme),
           ),
           content: TextField(
             autocorrect: false,
@@ -604,7 +607,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
     );
   }
 
-  Future<Widget> _editCourse(Course course) async {
+  Future<Widget> _editCourse(Course course, bool darkTheme) async {
     TextEditingController _textFieldController = TextEditingController();
     return showDialog(
       context: context,
@@ -618,7 +621,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           elevation: 0,
           title: Text(
             'Add a new chapter',
-            style: customTextStyle(),
+            style: customTextStyle(darkTheme),
           ),
           content: Column(
             children: [

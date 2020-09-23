@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:provider/provider.dart';
+import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/pages/courses_page.dart';
-import 'package:study_helper/pages/settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
 
@@ -17,6 +19,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -35,28 +38,23 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               widget.title,
               textAlign: TextAlign.center,
-              style: customTextStyle(size: 30),
+              style: customTextStyle(themeChange.darkTheme, size: 30),
             ),
           ],
         ),
-        backgroundColor: Colors.white,
         actions: [
           IconButton(
             icon: Icon(
-              CupertinoIcons.gear_solid,
-              color: Colors.black,
+              themeChange.darkTheme ? Icons.wb_sunny : Ionicons.ios_moon,
+              color: themeChange.darkTheme ? Colors.white : Colors.black,
               size: 30,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
+              themeChange.darkTheme = !themeChange.darkTheme;
             },
           )
         ],
       ),
-      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -68,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'Welcome back to StudyHelper !',
               textAlign: TextAlign.center,
               style: customTextStyle(
+                themeChange.darkTheme,
                 size: 30,
               ),
             ),

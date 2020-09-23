@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -12,6 +14,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Container(
       child: Scaffold(
         appBar: AppBar(
@@ -30,21 +33,19 @@ class _SettingsPageState extends State<SettingsPage> {
           title: Text(
             "Settings",
             textAlign: TextAlign.center,
-            style: customTextStyle(),
+            style: customTextStyle(themeChange.darkTheme),
           ),
-          backgroundColor: Colors.white,
         ),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Center(
             child: Text(
               "No settings available at the moment.",
-              style: customTextStyle(),
+              style: customTextStyle(themeChange.darkTheme),
               textAlign: TextAlign.center,
             ),
           ),
         ),
-        backgroundColor: Colors.white,
       ),
     );
   }

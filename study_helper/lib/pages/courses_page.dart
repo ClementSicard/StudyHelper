@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
+import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/pages/chapters_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
@@ -24,7 +25,7 @@ class CoursesPageState extends State<CoursesPage> {
     Course("Musical Improvisation, Invention and Creativity"),
   ]..sort((a, b) => a.name.compareTo(b.name));
 
-  Widget _body(List<Course> courses) {
+  Widget _body(List<Course> courses, bool darkTheme) {
     if (courses == null) {
       return Center(
         child: Container(
@@ -56,7 +57,7 @@ class CoursesPageState extends State<CoursesPage> {
               ),
               Text(
                 "Add your first course!",
-                style: customTextStyle(),
+                style: customTextStyle(darkTheme),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 40),
@@ -151,6 +152,7 @@ class CoursesPageState extends State<CoursesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     final coursesListProvider =
         Provider.of<CoursesDataHandler>(context, listen: true);
     List<Course> courses = coursesListProvider.courses;
@@ -162,7 +164,7 @@ class CoursesPageState extends State<CoursesPage> {
         title: Text(
           "Your courses",
           textAlign: TextAlign.center,
-          style: customTextStyle(),
+          style: customTextStyle(themeChange.darkTheme),
         ),
         leading: IconButton(
           icon: Icon(
@@ -175,7 +177,6 @@ class CoursesPageState extends State<CoursesPage> {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white,
         actions: [
           Visibility(
             visible: courses?.isNotEmpty ?? true,
@@ -196,8 +197,7 @@ class CoursesPageState extends State<CoursesPage> {
           ),
         ],
       ),
-      backgroundColor: Colors.white,
-      body: _body(courses),
+      body: _body(courses, themeChange.darkTheme),
       floatingActionButton: Visibility(
         visible: courses?.isNotEmpty ?? true,
         child: FloatingActionButton(

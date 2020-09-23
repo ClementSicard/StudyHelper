@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
+import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
@@ -32,6 +33,8 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -40,7 +43,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
         title: Text(
           "Add a new course",
           textAlign: TextAlign.center,
-          style: customTextStyle(),
+          style: customTextStyle(themeChange.darkTheme),
         ),
         leading: IconButton(
           icon: Icon(
@@ -53,7 +56,6 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white,
         actions: [
           IconButton(
               icon: Icon(
@@ -87,14 +89,14 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                     ),
                     labelText: 'Name of the course',
                     focusColor: Colors.blueAccent,
-                    labelStyle: customTextStyle(),
+                    labelStyle: customTextStyle(themeChange.darkTheme),
                     fillColor: Colors.blueAccent,
                   ),
                   maxLengthEnforced: true,
                   maxLength: 100,
                   maxLines: 1,
                   textCapitalization: TextCapitalization.sentences,
-                  style: customTextStyle(),
+                  style: customTextStyle(themeChange.darkTheme),
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter some text';
@@ -116,13 +118,13 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                       borderSide: BorderSide(color: Colors.green),
                     ),
                     labelText: 'Description (optional)',
-                    labelStyle: customTextStyle(),
+                    labelStyle: customTextStyle(themeChange.darkTheme),
                     fillColor: Colors.blueAccent,
                   ),
                   maxLength: 1000,
                   maxLengthEnforced: true,
                   keyboardType: TextInputType.multiline,
-                  style: customTextStyle(),
+                  style: customTextStyle(themeChange.darkTheme),
                   textCapitalization: TextCapitalization.sentences,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -137,7 +139,6 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
           ),
         ),
       ),
-      backgroundColor: Colors.white,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 40),
@@ -223,6 +224,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
           label: Text(
             'Save this course',
             style: customTextStyle(
+              themeChange.darkTheme,
               color: Colors.white,
             ),
           ),

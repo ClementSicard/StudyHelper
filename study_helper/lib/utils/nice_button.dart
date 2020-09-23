@@ -32,6 +32,7 @@ Widget NiceButton({
         child: Text(
           text,
           style: customTextStyle(
+            false,
             color: textColor,
           ),
           softWrap: true,
