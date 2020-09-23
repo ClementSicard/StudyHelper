@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             icon: Icon(
-              CupertinoIcons.gear,
+              CupertinoIcons.gear_solid,
               color: Colors.black,
               size: 30,
             ),
