@@ -22,9 +22,8 @@ class _SettingsPageState extends State<SettingsPage> {
           elevation: 0,
           centerTitle: true,
           leading: IconButton(
-            icon: Icon(
+            icon: const Icon(
               CupertinoIcons.back,
-              color: Colors.black,
             ),
             onPressed: () {
               Navigator.of(context).pop();

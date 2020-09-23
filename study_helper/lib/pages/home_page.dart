@@ -22,17 +22,17 @@ class _MyHomePageState extends State<MyHomePage> {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
+        brightness: themeChange.darkTheme ? Brightness.dark : Brightness.light,
         elevation: 0,
         centerTitle: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/icon100x100.png',
-              height: 50,
-              width: 50,
+            const Icon(
+              Ionicons.ios_school,
+              color: Colors.orange,
+              size: 40,
             ),
             SizedBox(width: 10),
             Text(
@@ -46,8 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: Icon(
               themeChange.darkTheme ? Icons.wb_sunny : Ionicons.ios_moon,
-              color: themeChange.darkTheme ? Colors.white : Colors.black,
-              size: 30,
             ),
             onPressed: () {
               themeChange.darkTheme = !themeChange.darkTheme;

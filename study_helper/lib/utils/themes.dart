@@ -21,6 +21,11 @@ class Styles {
           colorScheme: isDarkTheme ? ColorScheme.dark() : ColorScheme.light()),
       appBarTheme: AppBarTheme(
         elevation: 0.0,
+        color: isDarkTheme ? Color(0xff282728) : Colors.white,
+      ),
+      iconTheme: IconThemeData(
+        color: isDarkTheme ? Colors.white : Colors.black,
+        size: 30,
       ),
       scaffoldBackgroundColor: isDarkTheme ? Color(0xff282728) : Colors.white,
     );

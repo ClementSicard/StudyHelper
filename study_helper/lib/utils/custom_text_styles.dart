@@ -8,7 +8,7 @@ TextStyle customTextStyle(
 }) {
   return TextStyle(
     fontSize: size,
-    color: color ?? isDarkTheme ? Colors.white : Colors.black,
+    color: color ?? (isDarkTheme ? Colors.white : Colors.black),
     fontWeight: fw,
   );
 }

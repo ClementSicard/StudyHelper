@@ -56,25 +56,14 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             CupertinoIcons.back,
-            color: Colors.black,
-            size: 30,
           ),
           tooltip: "Back",
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.more_vert,
-                color: Colors.black,
-                size: 35,
-              ),
-              onPressed: () {}),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

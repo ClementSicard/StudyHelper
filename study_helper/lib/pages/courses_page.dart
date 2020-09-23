@@ -65,9 +65,8 @@ class CoursesPageState extends State<CoursesPage> {
                 radius: MediaQuery.of(context).size.height / 17.0,
                 backgroundColor: Colors.orange,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.add,
-                    color: Colors.white,
                   ),
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
@@ -167,35 +166,14 @@ class CoursesPageState extends State<CoursesPage> {
           style: customTextStyle(themeChange.darkTheme),
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             CupertinoIcons.back,
-            color: Colors.black,
-            size: 30,
           ),
           tooltip: "Back",
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          Visibility(
-            visible: courses?.isNotEmpty ?? true,
-            child: IconButton(
-              icon: Icon(
-                CupertinoIcons.add_circled,
-                color: Colors.black,
-                size: 30,
-              ),
-              color: Colors.white,
-              tooltip: "Add new course",
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => CoursePromptPage()),
-                );
-              },
-            ),
-          ),
-        ],
       ),
       body: _body(courses, themeChange.darkTheme),
       floatingActionButton: Visibility(
@@ -204,7 +182,7 @@ class CoursesPageState extends State<CoursesPage> {
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => CoursePromptPage()),
           ),
-          child: Icon(Icons.add, color: Colors.white),
+          child: const Icon(Icons.add),
           backgroundColor: Colors.blueAccent[100],
           elevation: 0,
         ),

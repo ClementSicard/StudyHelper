@@ -78,10 +78,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
           maxLines: 2,
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             CupertinoIcons.back,
-            color: Colors.black,
-            size: 30,
           ),
           tooltip: "Back",
           onPressed: () {
@@ -96,9 +94,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
               child: FloatingActionButton(
                 elevation: 0,
                 onPressed: () => _promptNewSubject(themeChange.darkTheme),
-                child: Icon(
+                child: const Icon(
                   Icons.add,
-                  color: Colors.white,
                 ),
                 backgroundColor: Colors.redAccent[100],
                 heroTag: null,
@@ -123,10 +120,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 ),
               );
             },
-            child: Icon(
+            child: const Icon(
               Icons.play_arrow,
               size: 35,
-              color: Colors.white,
             ),
             backgroundColor: Colors.greenAccent,
             heroTag: "animationToFullScreen",
@@ -157,10 +153,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 radius: MediaQuery.of(context).size.height / 17.0,
                 backgroundColor: Colors.greenAccent,
                 child: IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Colors.black,
-                  ),
+                  icon: const Icon(Icons.add),
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
                   onPressed: () => _promptNewChapter(darkTheme),
@@ -257,7 +250,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           label: FloatingActionButton(
                             child: const Icon(
                               CupertinoIcons.add,
-                              color: Colors.black,
                             ),
                             backgroundColor: Colors.greenAccent,
                             onPressed: () => _promptNewChapter(darkTheme),
