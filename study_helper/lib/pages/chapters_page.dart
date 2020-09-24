@@ -31,7 +31,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
   Chapter _selectedChapter;
   _ChaptersPageState(this._course);
 
-  List<List<Subject>> subjectsByColumn() {
+  List<List<MapEntry<Subject, Chapter>>> subjectsByColumn() {
     List<List<Subject>> subjectsByChapter =
         _chapters.map((c) => c.subjects).toList();
 
@@ -46,13 +46,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
       }
     }
 
-    List<List<Subject>> subjectsByCol = [];
+    List<List<MapEntry<Subject, Chapter>>> subjectsByCol = [];
     for (int i = 0; i < maxLength; i++) {
-      List<Subject> subList = [];
+      List<MapEntry<Subject, Chapter>> subList = [];
       for (int j = 0; j < _chapters.length; j++) {
         subList.add(_chapters[j].subjects.length > i
-            ? _chapters[j].subjects[i]
-            : Subject(""));
+            ? MapEntry(_chapters[j].subjects[i], _chapters[j])
+            : MapEntry(Subject(""), Chapter("")));
       }
 
       subjectsByCol.add(subList);
@@ -86,23 +86,16 @@ class _ChaptersPageState extends State<ChaptersPage> {
         actions: [
           Visibility(
             visible: _chapters?.isNotEmpty ?? true,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: SizedBox(
-                height: 30,
-                width: 30,
-                child: FloatingActionButton(
-                  mini: true,
-                  heroTag: null,
-                  onPressed: () => _promptNewSubject(themeChange.darkTheme),
-                  child: Icon(
-                    CupertinoIcons.add,
-                    color: themeChange.darkTheme ? Colors.black : Colors.white,
-                  ),
-                  backgroundColor: Colors.greenAccent,
-                  splashColor: Colors.transparent,
+            child: FlatButton(
+              shape: CircleBorder(),
+              onPressed: () => _promptNewSubject(themeChange.darkTheme),
+              child: Align(
+                child: Icon(
+                  CupertinoIcons.add,
+                  color: themeChange.darkTheme ? Colors.black : Colors.white,
                 ),
               ),
+              color: Colors.redAccent[100],
             ),
           ),
         ],
@@ -167,7 +160,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
         ),
       );
     } else {
-      List<List<Subject>> subjectsByCol = subjectsByColumn();
+      List<List<MapEntry<Subject, Chapter>>> subjectsByCol = subjectsByColumn();
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
@@ -276,11 +269,49 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           .map(
                             (s) => DataCell(
                               Visibility(
-                                visible: s.name != "",
+                                visible: s.key.name != "",
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: GestureDetector(
-                                    onLongPress: () {},
+                                    onLongPress: () async {
+                                      showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            CupertinoActionSheet(
+                                          title: const Text('Delete subject'),
+                                          message: const Text(
+                                              "Are you sure to delete this subject ?"),
+                                          actions: [
+                                            CupertinoActionSheetAction(
+                                              child: const Text("Delete"),
+                                              isDefaultAction: false,
+                                              onPressed: () async {
+                                                final coursesProvider = Provider
+                                                    .of<CoursesDataHandler>(
+                                                        context,
+                                                        listen: false);
+                                                await coursesProvider
+                                                    .removeSubject(_course,
+                                                        s.value, s.key);
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ],
+                                          cancelButton:
+                                              CupertinoActionSheetAction(
+                                            child: const Text(
+                                              'Cancel',
+                                              style: const TextStyle(
+                                                  color: Colors.blue),
+                                            ),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              Navigator.pop(context, 'Cancel');
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     child: Container(
                                       width: 200,
                                       height: 70,
@@ -297,7 +328,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 15.0),
                                             child: Text(
-                                              s.name,
+                                              s.key.name,
                                               style: customTextStyle(
                                                 darkTheme,
                                                 color: darkTheme
@@ -368,9 +399,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   label: Text(
                     "Pick chapter",
                     style: customTextStyle(
-                      darkTheme,
+                      !darkTheme,
                       size: 20,
-                      color: Colors.white,
                     ),
                   ),
                   heroTag: null,
@@ -496,9 +526,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: const Text(
+              child: Text(
                 'CANCEL',
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: Colors.redAccent[100]),
               ),
               onPressed: () {
                 Navigator.of(context).pop();

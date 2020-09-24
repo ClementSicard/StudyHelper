@@ -332,7 +332,9 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
-      print("Subject saved!");
+      print("Subject removed!");
+    } else {
+      print("ça marche pas encore bg");
     }
     return found;
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
@@ -37,6 +36,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
   @override
   void initState() {
     _selected = _chapters.map((c) => false).toList();
+    _selected[0] = true;
     super.initState();
   }
 
@@ -71,6 +71,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
             SizedBox(height: 30),
             Text(
               "Select chapters",
+              textAlign: TextAlign.center,
               style: customTextStyle(themeChange.darkTheme),
             ),
             SizedBox(height: 15)
@@ -78,6 +79,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
             ..addAll(
               [
                 ListTile(
+                  leading: Icon(CupertinoIcons.book_solid),
                   title: Text(
                     "All chapters",
                     style: customTextStyle(themeChange.darkTheme, size: 20),
@@ -105,10 +107,14 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
             )
             ..addAll(_chapterSelection(themeChange.darkTheme))
             ..addAll([
-              SizedBox(height: 20),
+              Visibility(
+                visible: !_all,
+                child: SizedBox(height: 60),
+              ),
               ListTile(
+                leading: Icon(CupertinoIcons.shuffle),
                 title: Text(
-                  "Random order ?",
+                  "Random order",
                   style: customTextStyle(themeChange.darkTheme, size: 20),
                 ),
                 trailing: CupertinoSwitch(
@@ -145,7 +151,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                 context,
                 PageRouteBuilder(
                     pageBuilder: (context, animation1, animation2) =>
-                        GamePage(_course, selectedChapters)),
+                        GamePage(_course, selectedChapters, _random)),
               );
             } else {
               showCupertinoModalPopup(
@@ -193,6 +199,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
         Visibility(
           visible: _all == false,
           child: ListTile(
+            leading: Icon(CupertinoIcons.book),
             title: Text(
               current.name,
               style: customTextStyle(darkTheme, size: 20),

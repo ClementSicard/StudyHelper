@@ -53,10 +53,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 100),
             Text(
               'Welcome back to StudyHelper !',
               textAlign: TextAlign.center,
@@ -74,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (context) => CoursesPage()),
                 );
               },
-              text: "Continue studying",
+              text: "Start studying",
             ),
             SizedBox(height: 60),
           ],
