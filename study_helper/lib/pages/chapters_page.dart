@@ -86,16 +86,25 @@ class _ChaptersPageState extends State<ChaptersPage> {
         actions: [
           Visibility(
             visible: _chapters?.isNotEmpty ?? true,
-            child: FlatButton(
-              shape: CircleBorder(),
-              onPressed: () => _promptNewSubject(themeChange.darkTheme),
-              child: Align(
-                child: Icon(
-                  CupertinoIcons.add,
-                  color: themeChange.darkTheme ? Colors.black : Colors.white,
+            child: Container(
+              width: 33,
+              height: 33,
+              child: FlatButton(
+                shape: CircleBorder(),
+                onPressed: () => _promptNewSubject(themeChange.darkTheme),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: Icon(
+                      CupertinoIcons.add,
+                      color:
+                          themeChange.darkTheme ? Colors.black : Colors.white,
+                    ),
+                  ),
                 ),
+                color: Colors.redAccent[100],
               ),
-              color: Colors.redAccent[100],
             ),
           ),
         ],
@@ -162,204 +171,216 @@ class _ChaptersPageState extends State<ChaptersPage> {
     } else {
       List<List<MapEntry<Subject, Chapter>>> subjectsByCol = subjectsByColumn();
       return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Center(
-            child: DataTable(
-              dataRowHeight: 90.0,
-              dividerThickness: 0.0,
-              headingRowHeight: 90.0,
-              columnSpacing: 10.0,
-              columns: _chapters
-                  .map(
-                    (c) => DataColumn(
-                      label: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onLongPress: () async {
-                            showCupertinoModalPopup(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  CupertinoActionSheet(
-                                title: const Text('Delete chapter'),
-                                message: const Text(
-                                    "Are you sure to delete this chapter ?"),
-                                actions: [
-                                  CupertinoActionSheetAction(
-                                    child: const Text("Delete"),
-                                    isDefaultAction: false,
-                                    onPressed: () async {
-                                      final coursesProvider =
-                                          Provider.of<CoursesDataHandler>(
-                                              context,
-                                              listen: false);
-                                      await coursesProvider.removeChapter(
-                                          _course, c);
-                                      Navigator.pop(context);
-                                    },
+          scrollDirection: Axis.horizontal,
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SizedBox(
+                  height: constraints.biggest.height,
+                  child: DataTable(
+                    dataRowHeight: 90.0,
+                    dividerThickness: 0.0,
+                    headingRowHeight: 90.0,
+                    columnSpacing: 0.0,
+                    columns: _chapters
+                        .map(
+                          (c) => DataColumn(
+                            label: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onLongPress: () async {
+                                  showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        CupertinoActionSheet(
+                                      title: const Text('Delete chapter'),
+                                      message: const Text(
+                                          "Are you sure to delete this chapter ?"),
+                                      actions: [
+                                        CupertinoActionSheetAction(
+                                          child: const Text("Delete"),
+                                          isDefaultAction: false,
+                                          onPressed: () async {
+                                            final coursesProvider =
+                                                Provider.of<CoursesDataHandler>(
+                                                    context,
+                                                    listen: false);
+                                            await coursesProvider.removeChapter(
+                                                _course, c);
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                      cancelButton: CupertinoActionSheetAction(
+                                        child: const Text(
+                                          'Cancel',
+                                          style: const TextStyle(
+                                              color: Colors.blue),
+                                        ),
+                                        isDefaultAction: true,
+                                        onPressed: () {
+                                          Navigator.pop(context, 'Cancel');
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 200,
+                                  height: 70,
+                                  child: FlatButton(
+                                    highlightColor: Colors.greenAccent[100],
+                                    color: Colors.greenAccent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(60.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 15.0),
+                                      child: Text(
+                                        c.name,
+                                        style: customTextStyle(
+                                          darkTheme,
+                                          color: Colors.black,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    onPressed: () {},
                                   ),
-                                ],
-                                cancelButton: CupertinoActionSheetAction(
-                                  child: const Text(
-                                    'Cancel',
-                                    style: const TextStyle(color: Colors.blue),
-                                  ),
-                                  isDefaultAction: true,
-                                  onPressed: () {
-                                    Navigator.pop(context, 'Cancel');
-                                  },
                                 ),
                               ),
-                            );
-                          },
-                          child: Container(
-                            width: 200,
-                            height: 70,
-                            child: FlatButton(
-                              highlightColor: Colors.greenAccent[100],
-                              color: Colors.greenAccent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(60.0),
-                              ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15.0),
-                                child: Text(
-                                  c.name,
-                                  style: customTextStyle(
-                                    darkTheme,
+                            ),
+                            numeric: false,
+                          ),
+                        )
+                        .toList()
+                          ..add(
+                            DataColumn(
+                              label: SizedBox(
+                                height: 45,
+                                width: 45,
+                                child: FloatingActionButton(
+                                  child: const Icon(
+                                    CupertinoIcons.add,
                                     color: Colors.black,
-                                    size: 20,
                                   ),
+                                  backgroundColor: Colors.greenAccent,
+                                  onPressed: () => _promptNewChapter(darkTheme),
+                                  mini: true,
+                                  elevation: 0,
+                                  heroTag: null,
                                 ),
                               ),
-                              onPressed: () {},
                             ),
                           ),
-                        ),
-                      ),
-                      numeric: false,
-                    ),
-                  )
-                  .toList()
-                    ..add(
-                      DataColumn(
-                        label: SizedBox(
-                          height: 45,
-                          width: 45,
-                          child: FloatingActionButton(
-                            child: const Icon(
-                              CupertinoIcons.add,
-                              color: Colors.black,
-                            ),
-                            backgroundColor: Colors.greenAccent,
-                            onPressed: () => _promptNewChapter(darkTheme),
-                            mini: true,
-                            elevation: 0,
-                            heroTag: null,
-                          ),
-                        ),
-                      ),
-                    ),
-              rows: subjectsByCol
-                  .map(
-                    (r) => DataRow(
-                      cells: r
-                          .map(
-                            (s) => DataCell(
-                              Visibility(
-                                visible: s.key.name != "",
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: GestureDetector(
-                                    onLongPress: () async {
-                                      showCupertinoModalPopup(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            CupertinoActionSheet(
-                                          title: const Text('Delete subject'),
-                                          message: const Text(
-                                              "Are you sure to delete this subject ?"),
-                                          actions: [
-                                            CupertinoActionSheetAction(
-                                              child: const Text("Delete"),
-                                              isDefaultAction: false,
-                                              onPressed: () async {
-                                                final coursesProvider = Provider
-                                                    .of<CoursesDataHandler>(
-                                                        context,
-                                                        listen: false);
-                                                await coursesProvider
-                                                    .removeSubject(_course,
-                                                        s.value, s.key);
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ],
-                                          cancelButton:
-                                              CupertinoActionSheetAction(
-                                            child: const Text(
-                                              'Cancel',
-                                              style: const TextStyle(
-                                                  color: Colors.blue),
-                                            ),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              Navigator.pop(context, 'Cancel');
-                                            },
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 200,
-                                      height: 70,
-                                      child: FlatButton(
-                                        highlightColor: Colors.redAccent,
-                                        color: Colors.redAccent[100],
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(60.0),
-                                        ),
-                                        onPressed: () {},
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 15.0),
-                                            child: Text(
-                                              s.key.name,
-                                              style: customTextStyle(
-                                                darkTheme,
-                                                color: darkTheme
-                                                    ? Colors.black
-                                                    : Colors.white,
-                                                size: 20,
+                    rows: subjectsByCol
+                        .map(
+                          (r) => DataRow(
+                            cells: r
+                                .map(
+                                  (s) => DataCell(
+                                    Visibility(
+                                      visible: s.key.name != "",
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: GestureDetector(
+                                          onLongPress: () async {
+                                            showCupertinoModalPopup(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  CupertinoActionSheet(
+                                                title: const Text(
+                                                    'Delete subject'),
+                                                message: const Text(
+                                                    "Are you sure to delete this subject ?"),
+                                                actions: [
+                                                  CupertinoActionSheetAction(
+                                                    child: const Text("Delete"),
+                                                    isDefaultAction: false,
+                                                    onPressed: () async {
+                                                      final coursesProvider =
+                                                          Provider.of<
+                                                                  CoursesDataHandler>(
+                                                              context,
+                                                              listen: false);
+                                                      await coursesProvider
+                                                          .removeSubject(
+                                                              _course,
+                                                              s.value,
+                                                              s.key);
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                                cancelButton:
+                                                    CupertinoActionSheetAction(
+                                                  child: const Text(
+                                                    'Cancel',
+                                                    style: const TextStyle(
+                                                        color: Colors.blue),
+                                                  ),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                        context, 'Cancel');
+                                                  },
+                                                ),
                                               ),
-                                              overflow: TextOverflow.ellipsis,
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 200,
+                                            height: 70,
+                                            child: FlatButton(
+                                              highlightColor: Colors.redAccent,
+                                              color: Colors.redAccent[100],
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(60.0),
+                                              ),
+                                              onPressed: () {},
+                                              child: Center(
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 15.0),
+                                                  child: Text(
+                                                    s.key.name,
+                                                    style: customTextStyle(
+                                                      darkTheme,
+                                                      color: darkTheme
+                                                          ? Colors.black
+                                                          : Colors.white,
+                                                      size: 20,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList()
-                            ..add(
-                              const DataCell(
-                                const Text(""),
-                              ),
-                            ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ),
-      );
+                                )
+                                .toList()
+                                  ..add(
+                                    const DataCell(
+                                      const Text(""),
+                                    ),
+                                  ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              );
+            },
+          ));
     }
   }
 

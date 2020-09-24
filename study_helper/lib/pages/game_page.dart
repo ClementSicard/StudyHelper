@@ -66,6 +66,20 @@ class _GamePageState extends State<GamePage> {
               Navigator.pop(context);
             },
           ),
+          actions: [
+            Visibility(
+              visible: _subjects.isNotEmpty,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: Center(
+                  child: Text(
+                    _counter.toString() + " / " + _nbOfSubjects.toString(),
+                    style: customTextStyle(false),
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
         backgroundColor: _color,
         body: _body(),
@@ -208,15 +222,17 @@ class _GamePageState extends State<GamePage> {
     for (Chapter c in _chapters) {
       _subjectsOri.addAll(c.subjects.map((s) => MapEntry(s, c)).toList());
     }
-
-    _subjects = List.from(_subjectsOri);
-    if (_random) {
-      _subjects.shuffle();
-    }
-    _nbOfSubjects = _subjects.length;
     _colors = List.from(Colors.accents);
-    _counter = 0;
-    _color = (_colors..shuffle()).first;
-    _currentSubject = _subjects.first;
+    _nbOfSubjects = _subjectsOri.length;
+
+    setState(() {
+      if (_random) {
+        _subjects.shuffle();
+      }
+      _subjects = List.from(_subjectsOri);
+      _color = (_colors..shuffle()).first;
+      _counter = 1;
+      _currentSubject = _subjects.first;
+    });
   }
 }

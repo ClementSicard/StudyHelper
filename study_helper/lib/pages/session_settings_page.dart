@@ -175,9 +175,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
           },
           label: Text(
             "Let's start!",
-            style: customTextStyle(
-              !themeChange.darkTheme,
-            ),
+            style: customTextStyle(false),
           ),
           icon: const Icon(
             CupertinoIcons.play_arrow_solid,
