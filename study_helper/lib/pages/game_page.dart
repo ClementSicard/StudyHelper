@@ -26,34 +26,21 @@ class GamePage extends StatefulWidget {
 class _GamePageState extends State<GamePage> {
   final Course _course;
   final List<Chapter> _chapters;
+  List<MapEntry<Subject, Chapter>> _subjectsOri;
   List<MapEntry<Subject, Chapter>> _subjects;
   List<Color> _colors;
   final bool _random;
   MapEntry<Subject, Chapter> _currentSubject;
   Color _color;
+  int _nbOfSubjects;
+  int _counter;
 
   _GamePageState(this._course, this._chapters, this._random);
 
   @override
   void initState() {
     super.initState();
-
-    // Set up the page
-    _subjects = [];
-    for (Chapter c in _chapters) {
-      _subjects.addAll(c.subjects.map((s) => MapEntry(s, c)).toList());
-    }
-    if (_random) {
-      _subjects.shuffle();
-    }
-    _colors = List.from(Colors.accents);
-    _color = (_colors..shuffle()).first;
-    _currentSubject = _subjects.first;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    setup();
   }
 
   @override
@@ -93,7 +80,52 @@ class _GamePageState extends State<GamePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(height: MediaQuery.of(context).size.height / 30),
-          Text("Well done!", style: customTextStyle(false, size: 40)),
+          Text(
+            "Well done!",
+            style: customTextStyle(false, size: 40),
+          ),
+          Container(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                bottom: 50.0,
+                left: 20.0,
+                right: 20.0,
+                top: 20.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: const Color(0xff272827),
+                    child: IconButton(
+                      icon: const Icon(
+                        CupertinoIcons.refresh,
+                      ),
+                      color: _color,
+                      enableFeedback: true,
+                      iconSize: 43,
+                      onPressed: () {
+                        setup();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.height / 30),
+          Text(_currentSubject.key.name,
+              style: customTextStyle(false, size: 40)),
           Container(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -104,7 +136,7 @@ class _GamePageState extends State<GamePage> {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundColor: Color(0xff272827),
+                    backgroundColor: const Color(0xff272827),
                     child: IconButton(
                       icon: const Icon(Icons.bookmark),
                       color: _color,
@@ -140,73 +172,11 @@ class _GamePageState extends State<GamePage> {
                       color: _color,
                       enableFeedback: true,
                       iconSize: 30,
-                      onPressed: () {},
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(height: MediaQuery.of(context).size.height / 30),
-          Text(_currentSubject.key.name,
-              style: customTextStyle(false, size: 40)),
-          Container(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Color(0xff272827),
-                    child: IconButton(
-                      icon: const Icon(Icons.bookmark),
-                      color: _color,
-                      enableFeedback: true,
-                      iconSize: 30,
-                      onPressed: () {
-                        showCupertinoModalPopup(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              CupertinoActionSheet(
-                            title: const Text('Not implemeted yet!'),
-                            message: const Text("Coming soon"),
-                            cancelButton: CupertinoActionSheetAction(
-                              child: const Text(
-                                "Return",
-                                style: const TextStyle(color: Colors.blue),
-                              ),
-                              isDefaultAction: true,
-                              onPressed: () {
-                                Navigator.pop(context, 'Cancel');
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Color(0xff272827),
-                    child: IconButton(
-                      icon: const Icon(Icons.check),
-                      color: _color,
-                      enableFeedback: true,
-                      iconSize: 30,
                       onPressed: () {
                         setState(
                           () {
                             _subjects.remove(_currentSubject);
+                            _counter++;
                             if (_subjects.isEmpty) {
                               _color = Colors.lightGreenAccent;
                             } else {
@@ -228,5 +198,25 @@ class _GamePageState extends State<GamePage> {
         ],
       );
     }
+  }
+
+  void setup() {
+    // Set up the page
+    _subjects = [];
+    _subjectsOri = [];
+
+    for (Chapter c in _chapters) {
+      _subjectsOri.addAll(c.subjects.map((s) => MapEntry(s, c)).toList());
+    }
+
+    _subjects = List.from(_subjectsOri);
+    if (_random) {
+      _subjects.shuffle();
+    }
+    _nbOfSubjects = _subjects.length;
+    _colors = List.from(Colors.accents);
+    _counter = 0;
+    _color = (_colors..shuffle()).first;
+    _currentSubject = _subjects.first;
   }
 }
