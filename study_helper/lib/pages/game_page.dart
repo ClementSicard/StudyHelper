@@ -26,10 +26,11 @@ class GamePage extends StatefulWidget {
 class _GamePageState extends State<GamePage> {
   final Course _course;
   final List<Chapter> _chapters;
-  List<Subject> _subjects;
+  List<MapEntry<Subject, Chapter>> _subjects;
   List<Color> _colors;
   final bool _random;
-  Subject _currentSubject;
+  MapEntry<Subject, Chapter> _currentSubject;
+  Color _color;
 
   _GamePageState(this._course, this._chapters, this._random);
 
@@ -40,12 +41,13 @@ class _GamePageState extends State<GamePage> {
     // Set up the page
     _subjects = [];
     for (Chapter c in _chapters) {
-      _subjects.addAll(c.subjects);
+      _subjects.addAll(c.subjects.map((s) => MapEntry(s, c)).toList());
     }
     if (_random) {
       _subjects.shuffle();
     }
     _colors = List.from(Colors.accents);
+    _color = (_colors..shuffle()).first;
     _currentSubject = _subjects.first;
   }
 
@@ -56,13 +58,12 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    Color randomColor = (_colors..shuffle()).first;
     return Hero(
       tag: "animationToFullScreen",
       child: Scaffold(
         appBar: AppBar(
           brightness: Brightness.light,
-          backgroundColor: randomColor,
+          backgroundColor: _color,
           centerTitle: true,
           title: Text(
             _course.name,
@@ -79,61 +80,153 @@ class _GamePageState extends State<GamePage> {
             },
           ),
         ),
-        backgroundColor: randomColor,
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(height: MediaQuery.of(context).size.height / 30),
-            Text(_currentSubject.name, style: customTextStyle(false, size: 40)),
-            Container(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Color(0xff272827),
-                      child: IconButton(
-                        icon: const Icon(Icons.bookmark),
-                        color: randomColor,
-                        enableFeedback: true,
-                        iconSize: 30,
-                        onPressed: () {},
-                      ),
-                    ),
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Color(0xff272827),
-                      child: IconButton(
-                        icon: const Icon(Icons.check),
-                        color: randomColor,
-                        enableFeedback: true,
-                        iconSize: 30,
-                        onPressed: () {
-                          setState(
-                            () {
-                              _subjects.remove(_currentSubject);
-                              _currentSubject = _subjects.first;
-                              Color oldColor = randomColor;
-                              while (randomColor == oldColor) {
-                                randomColor = (_colors..shuffle()).first;
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+        backgroundColor: _color,
+        body: _body(),
       ),
     );
+  }
+
+  Widget _body() {
+    if (_subjects.isEmpty) {
+      return Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.height / 30),
+          Text("Well done!", style: customTextStyle(false, size: 40)),
+          Container(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Color(0xff272827),
+                    child: IconButton(
+                      icon: const Icon(Icons.bookmark),
+                      color: _color,
+                      enableFeedback: true,
+                      iconSize: 30,
+                      onPressed: () {
+                        showCupertinoModalPopup(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              CupertinoActionSheet(
+                            title: const Text('Not implemeted yet!'),
+                            message: const Text("Coming soon"),
+                            cancelButton: CupertinoActionSheetAction(
+                              child: const Text(
+                                "Return",
+                                style: const TextStyle(color: Colors.blue),
+                              ),
+                              isDefaultAction: true,
+                              onPressed: () {
+                                Navigator.pop(context, 'Cancel');
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: const Color(0xff272827),
+                    child: IconButton(
+                      icon: const Icon(Icons.check),
+                      color: _color,
+                      enableFeedback: true,
+                      iconSize: 30,
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.height / 30),
+          Text(_currentSubject.key.name,
+              style: customTextStyle(false, size: 40)),
+          Container(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Color(0xff272827),
+                    child: IconButton(
+                      icon: const Icon(Icons.bookmark),
+                      color: _color,
+                      enableFeedback: true,
+                      iconSize: 30,
+                      onPressed: () {
+                        showCupertinoModalPopup(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              CupertinoActionSheet(
+                            title: const Text('Not implemeted yet!'),
+                            message: const Text("Coming soon"),
+                            cancelButton: CupertinoActionSheetAction(
+                              child: const Text(
+                                "Return",
+                                style: const TextStyle(color: Colors.blue),
+                              ),
+                              isDefaultAction: true,
+                              onPressed: () {
+                                Navigator.pop(context, 'Cancel');
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Color(0xff272827),
+                    child: IconButton(
+                      icon: const Icon(Icons.check),
+                      color: _color,
+                      enableFeedback: true,
+                      iconSize: 30,
+                      onPressed: () {
+                        setState(
+                          () {
+                            _subjects.remove(_currentSubject);
+                            if (_subjects.isEmpty) {
+                              _color = Colors.lightGreenAccent;
+                            } else {
+                              _currentSubject = _subjects.first;
+                              Color oldColor = _color;
+                              while (_color == oldColor) {
+                                _color = (_colors..shuffle()).first;
+                              }
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
   }
 }
