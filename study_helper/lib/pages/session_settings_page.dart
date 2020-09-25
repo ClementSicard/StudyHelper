@@ -129,7 +129,8 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                     _random = !_random;
                   });
                 },
-              )
+              ),
+              SizedBox(height: 90)
             ]),
         ),
       ),
@@ -227,6 +228,8 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
             title: Text(
               current.name,
               style: customTextStyle(darkTheme, size: 20),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             trailing: CupertinoSwitch(
               value: _selected[i],
