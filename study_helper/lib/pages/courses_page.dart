@@ -65,8 +65,9 @@ class CoursesPageState extends State<CoursesPage> {
                 radius: MediaQuery.of(context).size.height / 17.0,
                 backgroundColor: Colors.orange,
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.add,
+                    color: darkTheme ? Color(0xff282728) : Colors.white,
                   ),
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
