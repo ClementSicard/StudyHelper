@@ -114,23 +114,30 @@ class _ChaptersPageState extends State<ChaptersPage> {
         visible: _chapters?.isNotEmpty ?? true,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: FloatingActionButton(
-            elevation: 0,
-            onPressed: () {
-              print(_chapters[0].subjects.map((s) => s.name));
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SessionSettingsPage(_course, _chapters),
-                ),
-              );
-            },
-            child: const Icon(
-              Icons.play_arrow,
-              size: 35,
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              highlightColor: Colors.transparent,
+              splashColor: Colors.white54,
             ),
-            backgroundColor: Colors.greenAccent,
-            heroTag: "animationToFullScreen",
+            child: FloatingActionButton(
+              elevation: 0,
+              onPressed: () {
+                print(_chapters[0].subjects.map((s) => s.name));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        SessionSettingsPage(_course, _chapters),
+                  ),
+                );
+              },
+              child: const Icon(
+                Icons.play_arrow,
+                size: 35,
+              ),
+              backgroundColor: Colors.greenAccent,
+              heroTag: "animationToFullScreen",
+            ),
           ),
         ),
       ),
@@ -261,16 +268,23 @@ class _ChaptersPageState extends State<ChaptersPage> {
                               label: SizedBox(
                                 height: 45,
                                 width: 45,
-                                child: FloatingActionButton(
-                                  child: const Icon(
-                                    CupertinoIcons.add,
-                                    color: Colors.black,
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                    highlightColor: Colors.transparent,
+                                    splashColor: Colors.white54,
                                   ),
-                                  backgroundColor: Colors.greenAccent,
-                                  onPressed: () => _promptNewChapter(darkTheme),
-                                  mini: true,
-                                  elevation: 0,
-                                  heroTag: null,
+                                  child: FloatingActionButton(
+                                    child: const Icon(
+                                      CupertinoIcons.add,
+                                      color: Colors.black,
+                                    ),
+                                    backgroundColor: Colors.greenAccent,
+                                    onPressed: () =>
+                                        _promptNewChapter(darkTheme),
+                                    mini: true,
+                                    elevation: 0,
+                                    heroTag: null,
+                                  ),
                                 ),
                               ),
                             ),
@@ -414,90 +428,97 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   textCapitalization: TextCapitalization.sentences,
                 ),
                 SizedBox(height: 40),
-                FloatingActionButton.extended(
-                  elevation: 0,
-                  backgroundColor: Colors.redAccent[100],
-                  label: Text(
-                    "Pick chapter",
-                    style: customTextStyle(
-                      !darkTheme,
-                      size: 20,
-                    ),
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.white54,
                   ),
-                  heroTag: null,
-                  onPressed: () => showCupertinoModalPopup(
-                    context: context,
-                    builder: (BuildContext context) => CupertinoActionSheet(
-                      title: const Text('Pick chapter'),
-                      actions: _chapters
-                          .map(
-                            (c) => CupertinoActionSheetAction(
-                              child: Text(
-                                c.name,
-                                style: TextStyle(color: Colors.blue),
+                  child: FloatingActionButton.extended(
+                    elevation: 0,
+                    backgroundColor: Colors.redAccent[100],
+                    label: Text(
+                      "Pick chapter",
+                      style: customTextStyle(
+                        !darkTheme,
+                        size: 20,
+                      ),
+                    ),
+                    heroTag: null,
+                    onPressed: () => showCupertinoModalPopup(
+                      context: context,
+                      builder: (BuildContext context) => CupertinoActionSheet(
+                        title: const Text('Pick chapter'),
+                        actions: _chapters
+                            .map(
+                              (c) => CupertinoActionSheetAction(
+                                child: Text(
+                                  c.name,
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                onPressed: () async {
+                                  setState(() {
+                                    _selectedChapter = c;
+                                  });
+                                  print(_selectedChapter.name);
+                                  String inputName = _textFieldController.text;
+                                  if (_selectedChapter.subjects
+                                      .map((c) => c.name)
+                                      .toSet()
+                                      .contains(inputName)) {
+                                    return AlertDialog(
+                                      elevation: 0,
+                                      title: const Text(
+                                          'There already exists a subject with the same name in the same chapter'),
+                                      content: const Text(
+                                          "Please try a different one"),
+                                      actions: [
+                                        FlatButton(
+                                          child: const Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  } else if (inputName == "") {
+                                    return AlertDialog(
+                                      elevation: 0,
+                                      title: const Text(
+                                          "A subject cannot have an empty name"),
+                                      content:
+                                          Text("Please try a different one"),
+                                      actions: [
+                                        FlatButton(
+                                          child: const Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    final coursesData =
+                                        Provider.of<CoursesDataHandler>(context,
+                                            listen: false);
+                                    await coursesData.addSubject(
+                                      _course,
+                                      _selectedChapter,
+                                      Subject(_textFieldController.text),
+                                    );
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  }
+                                },
                               ),
-                              onPressed: () async {
-                                setState(() {
-                                  _selectedChapter = c;
-                                });
-                                print(_selectedChapter.name);
-                                String inputName = _textFieldController.text;
-                                if (_selectedChapter.subjects
-                                    .map((c) => c.name)
-                                    .toSet()
-                                    .contains(inputName)) {
-                                  return AlertDialog(
-                                    elevation: 0,
-                                    title: const Text(
-                                        'There already exists a subject with the same name in the same chapter'),
-                                    content: const Text(
-                                        "Please try a different one"),
-                                    actions: [
-                                      FlatButton(
-                                        child: const Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                } else if (inputName == "") {
-                                  return AlertDialog(
-                                    elevation: 0,
-                                    title: const Text(
-                                        "A subject cannot have an empty name"),
-                                    content: Text("Please try a different one"),
-                                    actions: [
-                                      FlatButton(
-                                        child: const Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  final coursesData =
-                                      Provider.of<CoursesDataHandler>(context,
-                                          listen: false);
-                                  await coursesData.addSubject(
-                                    _course,
-                                    _selectedChapter,
-                                    Subject(_textFieldController.text),
-                                  );
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                }
-                              },
-                            ),
-                          )
-                          .toList(),
-                      cancelButton: CupertinoActionSheetAction(
-                        child: const Text('Cancel'),
-                        isDefaultAction: true,
-                        onPressed: () {
-                          Navigator.pop(context, 'Cancel');
-                        },
+                            )
+                            .toList(),
+                        cancelButton: CupertinoActionSheetAction(
+                          child: const Text('Cancel'),
+                          isDefaultAction: true,
+                          onPressed: () {
+                            Navigator.pop(context, 'Cancel');
+                          },
+                        ),
                       ),
                     ),
                   ),

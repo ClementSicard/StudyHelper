@@ -176,13 +176,19 @@ class CoursesPageState extends State<CoursesPage> {
       body: _body(courses, themeChange.darkTheme),
       floatingActionButton: Visibility(
         visible: courses?.isNotEmpty ?? true,
-        child: FloatingActionButton(
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CoursePromptPage()),
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.white54,
           ),
-          child: const Icon(Icons.add),
-          backgroundColor: Colors.blueAccent[100],
-          elevation: 0,
+          child: FloatingActionButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => CoursePromptPage()),
+            ),
+            child: const Icon(Icons.add),
+            backgroundColor: Colors.blueAccent[100],
+            elevation: 0,
+          ),
         ),
       ),
     );

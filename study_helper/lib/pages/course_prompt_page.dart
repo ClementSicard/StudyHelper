@@ -64,13 +64,13 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   autocorrect: false,
                   controller: _nameController,
                   autofocus: true,
-                  cursorColor: Colors.blueAccent,
+                  cursorColor: Colors.greenAccent,
                   decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blueAccent),
+                      borderSide: BorderSide(color: Colors.blueAccent[100]),
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
+                      borderSide: BorderSide(color: Colors.greenAccent),
                     ),
                     labelText: 'Name of the course',
                     focusColor: Colors.blueAccent,
@@ -94,22 +94,22 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
                   controller: _descriptionController,
-                  cursorColor: Colors.blueAccent,
+                  cursorColor: Colors.greenAccent,
                   decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.blueAccent),
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
+                      borderSide: BorderSide(color: Colors.greenAccent),
                     ),
                     labelText: 'Description (optional)',
                     labelStyle: customTextStyle(themeChange.darkTheme),
-                    fillColor: Colors.blueAccent,
+                    fillColor: Colors.blueAccent[100],
                   ),
                   maxLength: 1000,
                   maxLengthEnforced: true,
                   keyboardType: TextInputType.multiline,
-                  style: customTextStyle(themeChange.darkTheme),
+                  style: customTextStyle(themeChange.darkTheme, size: 20),
                   textCapitalization: TextCapitalization.sentences,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -127,95 +127,104 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 40),
-        child: FloatingActionButton.extended(
-          onPressed: () async {
-            final coursesData =
-                Provider.of<CoursesDataHandler>(context, listen: false);
-            List<Course> courses = coursesData.courses;
-            String givenName = _nameController.text;
-            String description = _descriptionController.text;
-            if (givenName == "") {
-              await showCupertinoModalPopup(
-                context: context,
-                builder: (BuildContext context) {
-                  return CupertinoActionSheet(
-                    title: const Text("Please give a name for your course"),
-                    message: const Text("The name cannot be empty"),
-                    actions: [
-                      CupertinoActionSheetAction(
-                        child: const Text(
-                          "Try again",
-                          style: TextStyle(color: Colors.green),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            } else if (courses.map((c) => c.name).toSet().contains(givenName)) {
-              await showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return CustomAlertDialog.alertdialog(
-                    title: "You already have a course of with the name \"" +
-                        givenName +
-                        "\"",
-                    content: "Please choose another name",
-                    actions: [
-                      MapEntry(
-                        "Try again",
-                        () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            } else {
-              Course newCourse = Course(
-                givenName,
-                description: description,
-              );
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.white54,
+          ),
+          child: FloatingActionButton.extended(
+            onPressed: () async {
               final coursesData =
                   Provider.of<CoursesDataHandler>(context, listen: false);
-              bool success = await coursesData.save(newCourse);
-              print("bien joué maggle");
-              if (!success) {
-                Fluttertoast.showToast(
-                  msg:
-                      "The course couldn't be saved on your device: Please try later",
-                  backgroundColor: Colors.blueAccent,
-                  gravity: ToastGravity.BOTTOM,
-                  fontSize: 20.0,
-                  timeInSecForIosWeb: 1,
+              List<Course> courses = coursesData.courses;
+              String givenName = _nameController.text;
+              String description = _descriptionController.text;
+              if (givenName == "") {
+                await showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CupertinoActionSheet(
+                      title: const Text("Please give a name for your course"),
+                      message: const Text("The name cannot be empty"),
+                      actions: [
+                        CupertinoActionSheetAction(
+                          child: const Text(
+                            "Try again",
+                            style: TextStyle(color: Colors.green),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else if (courses
+                  .map((c) => c.name)
+                  .toSet()
+                  .contains(givenName)) {
+                await showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return CustomAlertDialog.alertdialog(
+                      title: "You already have a course of with the name \"" +
+                          givenName +
+                          "\"",
+                      content: "Please choose another name",
+                      actions: [
+                        MapEntry(
+                          "Try again",
+                          () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 );
               } else {
-                Fluttertoast.showToast(
-                  msg: givenName + " was successfully saved!",
-                  backgroundColor: Colors.blueAccent,
-                  gravity: ToastGravity.BOTTOM,
-                  fontSize: 20.0,
-                  timeInSecForIosWeb: 1,
+                Course newCourse = Course(
+                  givenName,
+                  description: description,
                 );
+                final coursesData =
+                    Provider.of<CoursesDataHandler>(context, listen: false);
+                bool success = await coursesData.save(newCourse);
+                print("bien joué maggle");
+                if (!success) {
+                  Fluttertoast.showToast(
+                    msg:
+                        "The course couldn't be saved on your device: Please try later",
+                    backgroundColor: Colors.blueAccent,
+                    gravity: ToastGravity.BOTTOM,
+                    fontSize: 20.0,
+                    timeInSecForIosWeb: 1,
+                  );
+                } else {
+                  Fluttertoast.showToast(
+                    msg: givenName + " was successfully saved!",
+                    backgroundColor: Colors.blueAccent,
+                    gravity: ToastGravity.BOTTOM,
+                    fontSize: 20.0,
+                    timeInSecForIosWeb: 1,
+                  );
+                }
+                Navigator.of(context).pop();
               }
-              Navigator.of(context).pop();
-            }
-          },
-          label: Text(
-            'Save this course',
-            style: customTextStyle(!themeChange.darkTheme),
+            },
+            label: Text(
+              'Save this course',
+              style: customTextStyle(!themeChange.darkTheme),
+            ),
+            icon: const Icon(
+              CupertinoIcons.check_mark,
+              size: 50,
+            ),
+            backgroundColor: Colors.blueAccent[100],
+            elevation: 0,
           ),
-          icon: const Icon(
-            CupertinoIcons.check_mark,
-            size: 50,
-          ),
-          backgroundColor: Colors.blueAccent[100],
-          elevation: 0,
         ),
       ),
     );
