@@ -191,26 +191,8 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 );
                 final coursesData =
                     Provider.of<CoursesDataHandler>(context, listen: false);
-                bool success = await coursesData.save(newCourse);
+                await coursesData.save(newCourse);
                 print("bien joué maggle");
-                if (!success) {
-                  Fluttertoast.showToast(
-                    msg:
-                        "The course couldn't be saved on your device: Please try later",
-                    backgroundColor: Colors.blueAccent,
-                    gravity: ToastGravity.BOTTOM,
-                    fontSize: 20.0,
-                    timeInSecForIosWeb: 1,
-                  );
-                } else {
-                  Fluttertoast.showToast(
-                    msg: givenName + " was successfully saved!",
-                    backgroundColor: Colors.blueAccent,
-                    gravity: ToastGravity.BOTTOM,
-                    fontSize: 20.0,
-                    timeInSecForIosWeb: 1,
-                  );
-                }
                 Navigator.of(context).pop();
               }
             },
