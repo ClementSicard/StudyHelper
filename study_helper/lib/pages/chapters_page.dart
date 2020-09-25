@@ -86,25 +86,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
         actions: [
           Visibility(
             visible: _chapters?.isNotEmpty ?? true,
-            child: Container(
-              width: 33,
-              height: 33,
-              child: FlatButton(
-                shape: CircleBorder(),
-                onPressed: () => _promptNewSubject(themeChange.darkTheme),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 30),
-                    child: Icon(
-                      CupertinoIcons.add,
-                      color:
-                          themeChange.darkTheme ? Colors.black : Colors.white,
-                    ),
-                  ),
-                ),
-                color: Colors.redAccent[100],
-              ),
+            child: IconButton(
+              icon: Icon(Icons.add),
+              color: Colors.redAccent[100],
+              onPressed: () => _promptNewSubject(themeChange.darkTheme),
             ),
           ),
         ],
