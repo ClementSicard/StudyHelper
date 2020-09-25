@@ -186,10 +186,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 child: SizedBox(
                   height: constraints.biggest.height,
                   child: DataTable(
-                    dataRowHeight: 90.0,
+                    dataRowHeight: 110.0,
                     dividerThickness: 0.0,
-                    headingRowHeight: 90.0,
-                    columnSpacing: 0.0,
+                    headingRowHeight: 120.0,
+                    columnSpacing: 5.0,
                     columns: _chapters
                         .map(
                           (c) => DataColumn(
@@ -235,7 +235,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                 },
                                 child: Container(
                                   width: 200,
-                                  height: 70,
+                                  height: 90,
                                   child: FlatButton(
                                     highlightColor: Colors.greenAccent[100],
                                     color: Colors.greenAccent,
@@ -244,7 +244,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          vertical: 15.0),
+                                          vertical: 5.0),
                                       child: Text(
                                         c.name,
                                         style: customTextStyle(
@@ -252,6 +252,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                           color: Colors.black,
                                           size: 20,
                                         ),
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                     onPressed: () {},
@@ -346,7 +350,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                           },
                                           child: Container(
                                             width: 200,
-                                            height: 70,
+                                            height: 90,
                                             child: FlatButton(
                                               highlightColor: Colors.redAccent,
                                               color: Colors.redAccent[100],
@@ -371,6 +375,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                                     ),
                                                     overflow:
                                                         TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
                                                   ),
                                                 ),
                                               ),

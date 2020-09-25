@@ -139,21 +139,40 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
         child: FloatingActionButton.extended(
           onPressed: () {
             List<Chapter> selectedChapters = [];
+            bool emptyChapter = false;
             for (int i = 0; i < _chapters.length; i++) {
               if (_selected[i]) {
                 selectedChapters.add(_chapters[i]);
               }
             }
             print(selectedChapters.map((c) => c.name).toList());
+            for (Chapter c in selectedChapters) {
+              if (c.subjects.isEmpty) {
+                emptyChapter = true;
+                break;
+              }
+            }
 
-            if (selectedChapters.isNotEmpty) {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                    pageBuilder: (context, animation1, animation2) =>
-                        GamePage(_course, selectedChapters, _random)),
+            if (emptyChapter) {
+              showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) => CupertinoActionSheet(
+                  title: const Text('Chapter with no subjects selected'),
+                  message:
+                      const Text("You must only select chapters with subjects"),
+                  cancelButton: CupertinoActionSheetAction(
+                    child: const Text(
+                      'Cancel',
+                      style: const TextStyle(color: Colors.blue),
+                    ),
+                    isDefaultAction: true,
+                    onPressed: () {
+                      Navigator.pop(context, 'Cancel');
+                    },
+                  ),
+                ),
               );
-            } else {
+            } else if (selectedChapters.isEmpty) {
               showCupertinoModalPopup(
                 context: context,
                 builder: (BuildContext context) => CupertinoActionSheet(
@@ -170,6 +189,13 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                     },
                   ),
                 ),
+              );
+            } else {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) =>
+                        GamePage(_course, selectedChapters, _random)),
               );
             }
           },

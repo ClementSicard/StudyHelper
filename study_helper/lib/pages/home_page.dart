@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(
               themeChange.darkTheme ? Icons.wb_sunny : Ionicons.ios_moon,
             ),
+            splashColor: Colors.transparent,
             onPressed: () {
               themeChange.darkTheme = !themeChange.darkTheme;
             },
