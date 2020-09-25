@@ -1,4 +1,4 @@
-package com.example.study_helper
+package com.clementsicard.study_helper
 
 import io.flutter.embedding.android.FlutterActivity
 
