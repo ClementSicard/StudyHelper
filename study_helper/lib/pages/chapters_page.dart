@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -65,36 +67,37 @@ class _ChaptersPageState extends State<ChaptersPage> {
     final coursesData = Provider.of<CoursesDataHandler>(context, listen: true);
     _chapters = coursesData.getChapters(_course);
     final themeChange = Provider.of<DarkThemeProvider>(context);
+    AppBar appBar = AppBar(
+      title: Text(
+        _course.name,
+        textAlign: TextAlign.center,
+        style: customTextStyle(themeChange.darkTheme),
+        maxLines: 2,
+      ),
+      leading: IconButton(
+        icon: const Icon(
+          CupertinoIcons.back,
+        ),
+        tooltip: "Back",
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      actions: [
+        Visibility(
+          visible: _chapters?.isNotEmpty ?? true,
+          child: IconButton(
+            icon: Icon(Icons.add),
+            color: Colors.redAccent[100],
+            onPressed: () => _promptNewSubject(themeChange.darkTheme),
+          ),
+        ),
+      ],
+    );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _course.name,
-          textAlign: TextAlign.center,
-          style: customTextStyle(themeChange.darkTheme),
-          maxLines: 2,
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            CupertinoIcons.back,
-          ),
-          tooltip: "Back",
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          Visibility(
-            visible: _chapters?.isNotEmpty ?? true,
-            child: IconButton(
-              icon: Icon(Icons.add),
-              color: Colors.redAccent[100],
-              onPressed: () => _promptNewSubject(themeChange.darkTheme),
-            ),
-          ),
-        ],
-      ),
-      body: _body(themeChange.darkTheme),
+      appBar: appBar,
+      body: _body(themeChange.darkTheme, appBar.preferredSize.height),
       floatingActionButton: Visibility(
         visible: _chapters?.isNotEmpty ?? true,
         child: Padding(
@@ -129,7 +132,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
     );
   }
 
-  Widget _body(bool darkTheme) {
+  Widget _body(bool darkTheme, double appBarSize) {
     if (_chapters.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(5.0),
@@ -163,219 +166,231 @@ class _ChaptersPageState extends State<ChaptersPage> {
       );
     } else {
       List<List<MapEntry<Subject, Chapter>>> subjectsByCol = subjectsByColumn();
-      return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: DataTable(
-              dataRowHeight: 110.0,
-              dividerThickness: 0.0,
-              headingRowHeight: 120.0,
-              columnSpacing: 5.0,
-              columns: _chapters
-                  .map(
-                    (c) => DataColumn(
-                      label: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onLongPress: () async {
-                            showCupertinoModalPopup(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  CupertinoActionSheet(
-                                title: const Text('Delete chapter'),
-                                message: const Text(
-                                    "Are you sure to delete this chapter ?"),
-                                actions: [
-                                  CupertinoActionSheetAction(
-                                    child: const Text("Delete"),
-                                    isDefaultAction: false,
-                                    onPressed: () async {
-                                      final coursesProvider =
-                                          Provider.of<CoursesDataHandler>(
-                                              context,
-                                              listen: false);
-                                      await coursesProvider.removeChapter(
-                                          _course, c);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                                cancelButton: CupertinoActionSheetAction(
-                                  child: const Text(
-                                    'Cancel',
-                                    style: const TextStyle(color: Colors.blue),
-                                  ),
-                                  isDefaultAction: true,
-                                  onPressed: () {
-                                    Navigator.pop(context, 'Cancel');
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: 200,
-                            height: 90,
-                            child: FlatButton(
-                              highlightColor: Colors.greenAccent[100],
-                              color: Colors.greenAccent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(60.0),
-                              ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5.0),
-                                child: Text(
-                                  c.name,
-                                  style: customTextStyle(
-                                    darkTheme,
-                                    color: Colors.black,
-                                    size: 20,
-                                  ),
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              onPressed: () {},
+      double dataRowHeight = 110;
+      double headingRowHeight = 120;
+      DataTable dataTable = DataTable(
+        dataRowHeight: dataRowHeight,
+        headingRowHeight: headingRowHeight,
+        dividerThickness: 0.0,
+        columnSpacing: 5.0,
+        columns: _chapters
+            .map(
+              (c) => DataColumn(
+                label: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onLongPress: () async {
+                      showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) => CupertinoActionSheet(
+                          title: const Text('Delete chapter'),
+                          message: const Text(
+                              "Are you sure to delete this chapter ?"),
+                          actions: [
+                            CupertinoActionSheetAction(
+                              child: const Text("Delete"),
+                              isDefaultAction: false,
+                              onPressed: () async {
+                                final coursesProvider =
+                                    Provider.of<CoursesDataHandler>(context,
+                                        listen: false);
+                                await coursesProvider.removeChapter(_course, c);
+                                Navigator.pop(context);
+                              },
                             ),
+                          ],
+                          cancelButton: CupertinoActionSheetAction(
+                            child: const Text(
+                              'Cancel',
+                              style: const TextStyle(color: Colors.blue),
+                            ),
+                            isDefaultAction: true,
+                            onPressed: () {
+                              Navigator.pop(context, 'Cancel');
+                            },
                           ),
                         ),
-                      ),
-                      numeric: false,
-                    ),
-                  )
-                  .toList()
-                    ..add(
-                      DataColumn(
-                        label: SizedBox(
-                          height: 45,
-                          width: 45,
-                          child: Theme(
-                            data: Theme.of(context).copyWith(
-                              highlightColor: Colors.transparent,
-                              splashColor: Colors.white54,
+                      );
+                    },
+                    child: Container(
+                      width: 200,
+                      height: 90,
+                      child: FlatButton(
+                        highlightColor: Colors.greenAccent[100],
+                        color: Colors.greenAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(60.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text(
+                            c.name,
+                            style: customTextStyle(
+                              darkTheme,
+                              color: Colors.black,
+                              size: 20,
                             ),
-                            child: FloatingActionButton(
-                              child: const Icon(
-                                CupertinoIcons.add,
-                                color: Colors.black,
-                              ),
-                              backgroundColor: Colors.greenAccent,
-                              onPressed: () => _promptNewChapter(darkTheme),
-                              mini: true,
-                              elevation: 0,
-                              heroTag: null,
-                            ),
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
                           ),
                         ),
+                        onPressed: () {},
                       ),
                     ),
-              rows: subjectsByCol
-                  .map(
-                    (r) => DataRow(
-                      cells: r
-                          .map(
-                            (s) => DataCell(
-                              Visibility(
-                                visible: s.key.name != "",
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: GestureDetector(
-                                    onLongPress: () async {
-                                      showCupertinoModalPopup(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            CupertinoActionSheet(
-                                          title: const Text('Delete subject'),
-                                          message: const Text(
-                                              "Are you sure to delete this subject ?"),
-                                          actions: [
-                                            CupertinoActionSheetAction(
-                                              child: const Text("Delete"),
-                                              isDefaultAction: false,
-                                              onPressed: () async {
-                                                final coursesProvider = Provider
-                                                    .of<CoursesDataHandler>(
-                                                        context,
-                                                        listen: false);
-                                                await coursesProvider
-                                                    .removeSubject(_course,
-                                                        s.value, s.key);
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ],
-                                          cancelButton:
-                                              CupertinoActionSheetAction(
-                                            child: const Text(
-                                              'Cancel',
-                                              style: const TextStyle(
-                                                  color: Colors.blue),
-                                            ),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              Navigator.pop(context, 'Cancel');
-                                            },
-                                          ),
+                  ),
+                ),
+                numeric: false,
+              ),
+            )
+            .toList()
+              ..add(
+                DataColumn(
+                  label: SizedBox(
+                    height: 45,
+                    width: 45,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.white54,
+                      ),
+                      child: FloatingActionButton(
+                        child: const Icon(
+                          CupertinoIcons.add,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.greenAccent,
+                        onPressed: () => _promptNewChapter(darkTheme),
+                        mini: true,
+                        elevation: 0,
+                        heroTag: null,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+        rows: subjectsByCol
+            .map(
+              (r) => DataRow(
+                cells: r
+                    .map(
+                      (s) => DataCell(
+                        Visibility(
+                          visible: s.key.name != "",
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onLongPress: () async {
+                                showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      CupertinoActionSheet(
+                                    title: const Text('Delete subject'),
+                                    message: const Text(
+                                        "Are you sure to delete this subject ?"),
+                                    actions: [
+                                      CupertinoActionSheetAction(
+                                        child: const Text("Delete"),
+                                        isDefaultAction: false,
+                                        onPressed: () async {
+                                          final coursesProvider =
+                                              Provider.of<CoursesDataHandler>(
+                                                  context,
+                                                  listen: false);
+                                          await coursesProvider.removeSubject(
+                                              _course, s.value, s.key);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                    cancelButton: CupertinoActionSheetAction(
+                                      child: const Text(
+                                        'Cancel',
+                                        style:
+                                            const TextStyle(color: Colors.blue),
+                                      ),
+                                      isDefaultAction: true,
+                                      onPressed: () {
+                                        Navigator.pop(context, 'Cancel');
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: 200,
+                                height: 90,
+                                child: FlatButton(
+                                  highlightColor: Colors.redAccent,
+                                  color: Colors.redAccent[100],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(60.0),
+                                  ),
+                                  onPressed: () {},
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 15.0),
+                                      child: Text(
+                                        s.key.name,
+                                        style: customTextStyle(
+                                          darkTheme,
+                                          color: darkTheme
+                                              ? Colors.black
+                                              : Colors.white,
+                                          size: 18,
                                         ),
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 200,
-                                      height: 90,
-                                      child: FlatButton(
-                                        highlightColor: Colors.redAccent,
-                                        color: Colors.redAccent[100],
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(60.0),
-                                        ),
-                                        onPressed: () {},
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 15.0),
-                                            child: Text(
-                                              s.key.name,
-                                              style: customTextStyle(
-                                                darkTheme,
-                                                color: darkTheme
-                                                    ? Colors.black
-                                                    : Colors.white,
-                                                size: 18,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                            ),
-                                          ),
-                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          )
-                          .toList()
-                            ..add(
-                              const DataCell(
-                                const Text(""),
-                              ),
-                            ),
-                    ),
-                  )
-                  .toList(),
-            ),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList()
+                      ..add(
+                        const DataCell(
+                          const Text(""),
+                        ),
+                      ),
+              ),
+            )
+            .toList(),
+      );
+
+      return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SizedBox(
+            height: scrollHeight(
+                context, appBarSize, dataRowHeight, headingRowHeight),
+            child: dataTable,
           ),
         ),
       );
     }
+  }
+
+  double scrollHeight(BuildContext context, double appBarHeight,
+      double dataRowHeight, double headingRowHeight) {
+    int maxSubjects = 0;
+    for (Chapter c in _chapters) {
+      if (c.subjects.length > maxSubjects) {
+        maxSubjects = c.subjects.length;
+      }
+    }
+    MediaQueryData query = MediaQuery.of(context);
+    double bodyHeight = query.size.height - appBarHeight - query.padding.top;
+    double tableHeight = maxSubjects * dataRowHeight + headingRowHeight;
+    return max(bodyHeight, tableHeight);
   }
 
   Future<Widget> _promptNewSubject(bool darkTheme) async {
@@ -441,10 +456,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                   });
                                   print(_selectedChapter.name);
                                   String inputName = _textFieldController.text;
-                                  if (_selectedChapter.subjects
+                                  Set<String> names = _selectedChapter.subjects
                                       .map((c) => c.name)
-                                      .toSet()
-                                      .contains(inputName)) {
+                                      .toSet();
+                                  print(names);
+                                  if (names.contains(inputName)) {
                                     return AlertDialog(
                                       elevation: 0,
                                       title: const Text(
