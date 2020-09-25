@@ -88,7 +88,7 @@ class CoursesPageState extends State<CoursesPage> {
     } else {
       courses.sort((a, b) => a.name.compareTo(b.name));
       return Padding(
-        padding: const EdgeInsets.all(35.0),
+        padding: const EdgeInsets.symmetric(horizontal: 35.0),
         child: ListView.builder(
           shrinkWrap: true,
           primary: false,
@@ -188,7 +188,7 @@ class CoursesPageState extends State<CoursesPage> {
             ),
             child: const Icon(Icons.add),
             backgroundColor: Colors.blueAccent[100],
-            elevation: 0,
+            elevation: 10,
           ),
         ),
       ),

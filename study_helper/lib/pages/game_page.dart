@@ -138,8 +138,16 @@ class _GamePageState extends State<GamePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(height: MediaQuery.of(context).size.height / 30),
-          Text(_currentSubject.key.name,
-              style: customTextStyle(false, size: 40)),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
+              _currentSubject.key.name,
+              style: customTextStyle(false, size: 40),
+              textAlign: TextAlign.center,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
           Container(
             alignment: Alignment.bottomCenter,
             child: Padding(
