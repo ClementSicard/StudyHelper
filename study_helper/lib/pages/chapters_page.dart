@@ -151,6 +151,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 backgroundColor: Colors.greenAccent,
                 child: IconButton(
                   icon: const Icon(Icons.add),
+                  color: darkTheme ? Color(0xff282728) : Colors.white,
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
                   onPressed: () => _promptNewChapter(darkTheme),

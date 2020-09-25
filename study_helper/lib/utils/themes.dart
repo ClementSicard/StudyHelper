@@ -9,6 +9,7 @@ class Styles {
       highlightColor: isDarkTheme ? const Color(0xff282728) : Colors.white,
       hoverColor: isDarkTheme ? const Color(0xff282728) : Colors.white,
       splashColor: isDarkTheme ? const Color(0xff282728) : Colors.white,
+      accentColor: Colors.transparent,
       disabledColor: Colors.grey,
       textSelectionColor: isDarkTheme ? Colors.white : Colors.black,
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,

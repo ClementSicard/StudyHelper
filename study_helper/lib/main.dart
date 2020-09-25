@@ -45,6 +45,10 @@ class _MyAppState extends State<MyApp> {
       child: Consumer<DarkThemeProvider>(
         builder: (context, value, child) {
           return MaterialApp(
+            builder: (context, child) => ScrollConfiguration(
+              behavior: MyBehavior(),
+              child: child,
+            ),
             debugShowCheckedModeBanner: false,
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
             home: MyHomePage(title: 'StudyHelper'),
@@ -52,5 +56,13 @@ class _MyAppState extends State<MyApp> {
         },
       ),
     );
+  }
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
   }
 }
