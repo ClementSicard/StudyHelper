@@ -173,6 +173,58 @@ class CoursesPageState extends State<CoursesPage> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.more_horiz_rounded),
+            onPressed: () async {
+              showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) => CupertinoActionSheet(
+                  title: const Text('Additional features'),
+                  actions: [
+                    CupertinoActionSheetAction(
+                      child: const Text("Import from JSON file"),
+                      isDefaultAction: false,
+                      onPressed: () async {
+                        final coursesProvider = Provider.of<CoursesDataHandler>(
+                            context,
+                            listen: false);
+                      },
+                    ),
+                    CupertinoActionSheetAction(
+                      child: const Text("Import from CSV file"),
+                      isDefaultAction: false,
+                      onPressed: () async {
+                        final coursesProvider = Provider.of<CoursesDataHandler>(
+                            context,
+                            listen: false);
+                      },
+                    ),
+                    CupertinoActionSheetAction(
+                      child: const Text("Export data to JSON file"),
+                      isDefaultAction: false,
+                      onPressed: () async {
+                        final coursesProvider = Provider.of<CoursesDataHandler>(
+                            context,
+                            listen: false);
+                      },
+                    ),
+                  ],
+                  cancelButton: CupertinoActionSheetAction(
+                    child: const Text(
+                      'Cancel',
+                      style: const TextStyle(color: Colors.blue),
+                    ),
+                    isDefaultAction: true,
+                    onPressed: () {
+                      Navigator.pop(context, 'Cancel');
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: _body(courses, themeChange.darkTheme),
       floatingActionButton: Visibility(

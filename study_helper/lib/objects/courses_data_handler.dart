@@ -350,4 +350,18 @@ class CoursesDataHandler with ChangeNotifier {
     print("On a pas trouvé le cours");
     return [];
   }
+
+  Future<File> getJSONFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+    String contents;
+    if (await file.exists()) {
+      contents = await file.readAsString();
+    } else {
+      contents = "";
+    }
+
+    final File backupFile = File("${dir.path}/courses_data_export.json");
+    await backupFile.writeAsString(contents);
+  }
 }
