@@ -51,33 +51,35 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Welcome back to StudyHelper !',
-              textAlign: TextAlign.center,
-              style: customTextStyle(
-                themeChange.darkTheme,
-                size: 30,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Welcome back to StudyHelper !',
+                textAlign: TextAlign.center,
+                style: customTextStyle(
+                  themeChange.darkTheme,
+                  size: 30,
+                ),
               ),
-            ),
-            SizedBox(height: 60),
-            NiceButton(
-              themeChange.darkTheme,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CoursesPage()),
-                );
-              },
-              text: "Start studying",
-            ),
-            SizedBox(height: 60),
-          ],
+              SizedBox(height: 60),
+              NiceButton(
+                themeChange.darkTheme,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CoursesPage()),
+                  );
+                },
+                text: "Start studying",
+              ),
+              SizedBox(height: 60),
+            ],
+          ),
         ),
       ),
     );

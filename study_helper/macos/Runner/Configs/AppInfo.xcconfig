@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = study_helper
+PRODUCT_NAME = StudyHelper
 
 // The application's bundle identifier
 PRODUCT_BUNDLE_IDENTIFIER = com.clementsicard.studyHelper
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2020 com.clementsicard. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2020 Clément Sicard. All rights reserved.
