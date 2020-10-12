@@ -90,6 +90,7 @@ class CoursesPageState extends State<CoursesPage> {
       return Padding(
         padding: const EdgeInsets.only(left: 35.0, right: 35.0, top: 25.0),
         child: ListView.builder(
+          physics: BouncingScrollPhysics(),
           shrinkWrap: true,
           primary: false,
           itemCount: courses.length,

@@ -7,7 +7,7 @@ class Styles {
       primaryColor: isDarkTheme ? const Color(0xff121212) : Colors.white,
       backgroundColor: isDarkTheme ? const Color(0xff121212) : Colors.white,
       highlightColor: isDarkTheme ? const Color(0xff282728) : Colors.white,
-      hoverColor: isDarkTheme ? const Color(0xff282728) : Colors.white,
+      hoverColor: isDarkTheme ? Colors.transparent : Colors.transparent,
       splashColor: isDarkTheme ? const Color(0xff282728) : Colors.white,
       accentColor: Colors.transparent,
       disabledColor: Colors.grey,
@@ -15,9 +15,9 @@ class Styles {
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
             colorScheme: isDarkTheme ? ColorScheme.dark() : ColorScheme.light(),
-            highlightColor: null,
-            splashColor: null,
-            disabledColor: null,
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            disabledColor: Colors.transparent,
           ),
       appBarTheme: AppBarTheme(
         centerTitle: true,
