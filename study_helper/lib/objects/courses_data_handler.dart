@@ -280,8 +280,6 @@ class CoursesDataHandler with ChangeNotifier {
     for (int i = 0; i < decodedContents.length; i++) {
       if (decodedContents[i]["name"] == course.name) {
         for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
-          print(decodedContents[i]["chapters"]);
-          print(decodedContents[i]["chapters"][j]["name"][0]);
           if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
             found = true;
             decodedContents[i]["chapters"][j]["subjects"].add(subject.name);
@@ -314,8 +312,6 @@ class CoursesDataHandler with ChangeNotifier {
     for (int i = 0; i < decodedContents.length; i++) {
       if (decodedContents[i]["name"] == course.name) {
         for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
-          print(decodedContents[i]["chapters"]);
-          print(decodedContents[i]["chapters"][j]["name"][0]);
           if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
             found = true;
             List subjects = decodedContents[i]["chapters"][j]["subjects"];
