@@ -110,7 +110,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
             child: FloatingActionButton(
               elevation: 0,
               onPressed: () {
-                print(_chapters[0].subjects.map((s) => s.name));
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -454,12 +453,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                   setState(() {
                                     _selectedChapter = c;
                                   });
-                                  print(_selectedChapter.name);
                                   String inputName = _textFieldController.text;
                                   Set<String> names = _selectedChapter.subjects
                                       .map((c) => c.name)
                                       .toSet();
-                                  print(names);
                                   if (names.contains(inputName)) {
                                     return AlertDialog(
                                       elevation: 0,
