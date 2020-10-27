@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
@@ -184,12 +189,20 @@ class CoursesPageState extends State<CoursesPage> {
                   title: const Text('Additional features'),
                   actions: [
                     CupertinoActionSheetAction(
-                      child: const Text("Import from JSON file"),
+                      child: const Text("Export to clipboard"),
                       isDefaultAction: false,
                       onPressed: () async {
-                        final coursesProvider = Provider.of<CoursesDataHandler>(
-                            context,
-                            listen: false);
+                        final dir = await getApplicationDocumentsDirectory();
+                        final File file = File("${dir.path}/courses_data.json");
+                        String contents;
+                        if (await file.exists()) {
+                          contents = await file.readAsString();
+                        } else {
+                          contents = "";
+                        }
+                        Clipboard.setData(ClipboardData(text: contents));
+                        print("Done!");
+                        Navigator.pop(context);
                       },
                     ),
                     CupertinoActionSheetAction(

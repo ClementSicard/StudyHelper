@@ -363,5 +363,6 @@ class CoursesDataHandler with ChangeNotifier {
 
     final File backupFile = File("${dir.path}/courses_data_export.json");
     await backupFile.writeAsString(contents);
+    return backupFile;
   }
 }
