@@ -28,12 +28,14 @@ class _GamePageState extends State<GamePage> {
   final List<Chapter> _chapters;
   List<MapEntry<Subject, Chapter>> _subjectsOri;
   List<MapEntry<Subject, Chapter>> _subjects;
+  List<MapEntry<Subject, Chapter>> _putAsideSubjects;
   List<Color> _colors;
   final bool _random;
   MapEntry<Subject, Chapter> _currentSubject;
   Color _color;
   int _nbOfSubjects;
   int _counter;
+  int _putAsideCounter;
 
   _GamePageState(this._course, this._chapters, this._random);
 
@@ -156,35 +158,103 @@ class _GamePageState extends State<GamePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: const Color(0xff272827),
-                    child: IconButton(
-                      icon: const Icon(Icons.bookmark),
-                      color: _color,
-                      enableFeedback: true,
-                      iconSize: 30,
-                      onPressed: () {
-                        showCupertinoModalPopup(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              CupertinoActionSheet(
-                            title: const Text('Not implemeted yet!'),
-                            message: const Text("Coming soon"),
-                            cancelButton: CupertinoActionSheetAction(
-                              child: const Text(
-                                "Return",
-                                style: const TextStyle(color: Colors.blue),
-                              ),
-                              isDefaultAction: true,
-                              onPressed: () {
-                                Navigator.pop(context, 'Cancel');
-                              },
-                            ),
+                  Stack(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: const Color(0xff272827),
+                        child: IconButton(
+                          icon: const Icon(Icons.bookmark),
+                          color: _color,
+                          enableFeedback: true,
+                          iconSize: 30,
+                          onPressed: () {
+                            if (!_putAsideSubjects.contains(_currentSubject)) {
+                              setState(
+                                () {
+                                  _putAsideSubjects.add(_currentSubject);
+                                  _putAsideCounter++;
+                                },
+                              );
+                            } else {
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    CupertinoActionSheet(
+                                  title: const Text('Oh oh...'),
+                                  message: Text(_currentSubject.key.name +
+                                      " was already put aside to be further studied!"),
+                                  actions: [
+                                    CupertinoActionSheetAction(
+                                      child: const Text(
+                                        "OK",
+                                        style:
+                                            const TextStyle(color: Colors.blue),
+                                      ),
+                                      isDefaultAction: true,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    CupertinoActionSheetAction(
+                                      child: const Text(
+                                        "Remove it",
+                                        style:
+                                            const TextStyle(color: Colors.red),
+                                      ),
+                                      isDestructiveAction: true,
+                                      onPressed: () {
+                                        setState(
+                                          () {
+                                            _putAsideCounter--;
+                                            _putAsideSubjects
+                                                .remove(_currentSubject);
+                                          },
+                                        );
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                  cancelButton: CupertinoActionSheetAction(
+                                    child: const Text(
+                                      "Cancel",
+                                      style:
+                                          const TextStyle(color: Colors.blue),
+                                    ),
+                                    isDefaultAction: true,
+                                    onPressed: () {
+                                      Navigator.pop(context, 'Cancel');
+                                    },
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        );
-                      },
-                    ),
+                          constraints: BoxConstraints(
+                            minWidth: 20,
+                            minHeight: 20,
+                          ),
+                          child: Text(
+                            '$_putAsideCounter',
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   CircleAvatar(
                     radius: 30,
@@ -226,6 +296,7 @@ class _GamePageState extends State<GamePage> {
     // Set up the page
     _subjects = [];
     _subjectsOri = [];
+    _putAsideSubjects = [];
 
     for (Chapter c in _chapters) {
       _subjectsOri.addAll(c.subjects.map((s) => MapEntry(s, c)).toList());
@@ -240,6 +311,7 @@ class _GamePageState extends State<GamePage> {
       _subjects = List.from(_subjectsOri);
       _color = (_colors..shuffle()).first;
       _counter = 1;
+      _putAsideCounter = 0;
       _currentSubject = _subjects.first;
     });
   }

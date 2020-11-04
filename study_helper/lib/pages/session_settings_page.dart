@@ -88,11 +88,11 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                     activeColor: Colors.red,
                     value: _all,
                     onChanged: (bool value) {
-                      print(value);
                       setState(() {
-                        print(value);
                         _all = value;
-                        _selected = _chapters.map((c) => value).toList();
+                        _selected = _chapters
+                            .map((c) => c.subjects.isEmpty ? !value : value)
+                            .toList();
                       });
                     },
                   ),
@@ -146,7 +146,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                 selectedChapters.add(_chapters[i]);
               }
             }
-            print(selectedChapters.map((c) => c.name).toList());
+
             for (Chapter c in selectedChapters) {
               if (c.subjects.isEmpty) {
                 emptyChapter = true;
