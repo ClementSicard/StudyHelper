@@ -182,12 +182,141 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       showCupertinoModalPopup(
                         context: context,
                         builder: (BuildContext context) => CupertinoActionSheet(
-                          title: const Text('Delete chapter'),
-                          message: const Text(
-                              "Are you sure to delete this chapter ?"),
+                          title: const Text('Rename or delete chapter'),
+                          message: const Text("Select an action"),
                           actions: [
                             CupertinoActionSheetAction(
+                              child: const Text(
+                                "Rename",
+                                style: const TextStyle(color: Colors.blue),
+                              ),
+                              isDefaultAction: false,
+                              isDestructiveAction: false,
+                              onPressed: () async {
+                                Navigator.pop(context);
+                                TextEditingController _textFieldController =
+                                    TextEditingController();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20.0))),
+                                      title: Text(
+                                        'Rename the chapter',
+                                        style: customTextStyle(darkTheme),
+                                      ),
+                                      content: Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextField(
+                                              autocorrect: false,
+                                              autofocus: true,
+                                              controller: _textFieldController,
+                                              decoration: InputDecoration(
+                                                hintText: "Input the name",
+                                                hintStyle: customTextStyle(
+                                                    darkTheme,
+                                                    size: 17),
+                                              ),
+                                              textCapitalization:
+                                                  TextCapitalization.sentences,
+                                            ),
+                                            SizedBox(height: 40),
+                                            Theme(
+                                              data: Theme.of(context).copyWith(
+                                                highlightColor:
+                                                    Colors.transparent,
+                                                splashColor: Colors.white54,
+                                              ),
+                                              child:
+                                                  FloatingActionButton.extended(
+                                                elevation: 0,
+                                                backgroundColor:
+                                                    Colors.greenAccent,
+                                                icon: Icon(Icons.save_sharp),
+                                                label: Text(
+                                                  "Save changes",
+                                                  style: customTextStyle(
+                                                    !darkTheme,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                                heroTag: null,
+                                                onPressed: () async {
+                                                  if (_textFieldController
+                                                          .text ==
+                                                      c.name) {
+                                                    showCupertinoModalPopup(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          CupertinoActionSheet(
+                                                        title: const Text(
+                                                            'Oops...'),
+                                                        message: const Text(
+                                                            "The input name is the same has the previous one."),
+                                                        cancelButton:
+                                                            CupertinoActionSheetAction(
+                                                          isDefaultAction: true,
+                                                          isDestructiveAction:
+                                                              true,
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: const Text(
+                                                              "Cancel"),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    final coursesProvider = Provider
+                                                        .of<CoursesDataHandler>(
+                                                            context,
+                                                            listen: false);
+                                                    await coursesProvider
+                                                        .renameChapter(
+                                                            _course,
+                                                            c,
+                                                            _textFieldController
+                                                                .text);
+                                                    Navigator.pop(context);
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        FlatButton(
+                                          child: Text(
+                                            'CANCEL',
+                                            style: TextStyle(
+                                              color: Colors.greenAccent[100],
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            _selectedChapter = null;
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                            CupertinoActionSheetAction(
                               child: const Text("Delete"),
+                              isDestructiveAction: true,
                               isDefaultAction: false,
                               onPressed: () async {
                                 final coursesProvider =
@@ -556,6 +685,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           ),
           content: TextField(
             autocorrect: false,
+            autofocus: true,
             controller: _textFieldController,
             decoration: InputDecoration(hintText: "Input the name"),
           ),
@@ -626,6 +756,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           ),
           content: TextField(
             autocorrect: false,
+            autofocus: true,
             controller: _textFieldController,
             decoration: InputDecoration(hintText: "Input the name"),
           ),
@@ -697,6 +828,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           content: Column(
             children: [
               TextField(
+                autofocus: true,
                 autocorrect: false,
                 controller: _textFieldController,
                 decoration: const InputDecoration(hintText: "Input the name"),

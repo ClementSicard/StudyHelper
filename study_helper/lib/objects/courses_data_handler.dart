@@ -264,6 +264,38 @@ class CoursesDataHandler with ChangeNotifier {
     return found;
   }
 
+  Future<bool> renameChapter(
+      Course course, Chapter chapter, String newName) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final File file = File("${dir.path}/courses_data.json");
+    String contents;
+    if (await file.exists()) {
+      contents = await file.readAsString();
+    } else {
+      return false;
+    }
+
+    List decodedContents = jsonDecode(contents);
+    bool found = false;
+    for (int i = 0; i < decodedContents.length; i++) {
+      if (decodedContents[i]["name"] == course.name) {
+        List chapters = decodedContents[i]["chapters"];
+        for (int j = 0; j < chapters.length; j++) {
+          if (chapters[j]["name"][0] == chapter.name) {
+            chapters[j]["name"][0] = newName;
+            found = true;
+          }
+        }
+      }
+    }
+    if (found) {
+      contents = jsonEncode(decodedContents);
+      await file.writeAsString(contents);
+      _update();
+    }
+    return found;
+  }
+
   Future<bool> addSubject(
       Course course, Chapter chapter, Subject subject) async {
     final dir = await getApplicationDocumentsDirectory();
