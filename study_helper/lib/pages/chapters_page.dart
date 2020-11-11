@@ -86,10 +86,41 @@ class _ChaptersPageState extends State<ChaptersPage> {
       actions: [
         Visibility(
           visible: _chapters?.isNotEmpty ?? true,
-          child: IconButton(
-            icon: Icon(Icons.add),
-            color: Colors.redAccent[100],
-            onPressed: () => _promptNewSubject(themeChange.darkTheme),
+          child: Hero(
+            tag: "animationToFullScreen",
+            child: Card(
+              shape: CircleBorder(),
+              child: IconButton(
+                icon: Icon(Icons.play_arrow_rounded),
+                color: Colors.greenAccent,
+                onPressed: () {
+                  Set subjects =
+                      _chapters.map((c) => c.subjects.isNotEmpty).toSet();
+                  if (!subjects.contains(true)) {
+                    showCupertinoDialog(
+                      context: context,
+                      builder: (BuildContext context) => CupertinoActionSheet(
+                        title: const Text("Oops..."),
+                        message: const Text(
+                            "You must have at least one added subject to start a session"),
+                        cancelButton: CupertinoActionSheetAction(
+                          child: const Text("OK"),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SessionSettingsPage(_course, _chapters),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
           ),
         ),
       ],
@@ -109,21 +140,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
             ),
             child: FloatingActionButton(
               elevation: 0,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        SessionSettingsPage(_course, _chapters),
-                  ),
-                );
-              },
+              onPressed: () => _promptNewSubject(themeChange.darkTheme),
               child: const Icon(
-                Icons.play_arrow,
+                Icons.add,
                 size: 35,
               ),
-              backgroundColor: Colors.greenAccent,
-              heroTag: "animationToFullScreen",
+              backgroundColor: Colors.redAccent[100],
+              heroTag: null,
             ),
           ),
         ),
