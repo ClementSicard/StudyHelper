@@ -405,10 +405,130 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                   context: context,
                                   builder: (BuildContext context) =>
                                       CupertinoActionSheet(
-                                    title: const Text('Delete subject'),
+                                    title: const Text('Edit subject'),
                                     message: const Text(
-                                        "Are you sure to delete this subject ?"),
+                                        "Are you sure to rename/delete this subject ?"),
                                     actions: [
+                                      CupertinoActionSheetAction(
+                                        child: const Text(
+                                          "Rename",
+                                          style: const TextStyle(
+                                              color: Colors.blue),
+                                        ),
+                                        isDefaultAction: false,
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          TextEditingController
+                                              _textFieldController =
+                                              TextEditingController();
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0))),
+                                                title: Text(
+                                                  'Rename the subject',
+                                                  style: customTextStyle(
+                                                      darkTheme),
+                                                ),
+                                                content: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      20.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .stretch,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      TextField(
+                                                        autocorrect: false,
+                                                        autofocus: true,
+                                                        controller:
+                                                            _textFieldController,
+                                                        onEditingComplete: () =>
+                                                            _renameSubject(
+                                                                s.value,
+                                                                s.key,
+                                                                _textFieldController
+                                                                    .text),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          hintText:
+                                                              "Input the name",
+                                                          hintStyle:
+                                                              customTextStyle(
+                                                                  darkTheme,
+                                                                  size: 17),
+                                                        ),
+                                                        textCapitalization:
+                                                            TextCapitalization
+                                                                .sentences,
+                                                      ),
+                                                      SizedBox(height: 40),
+                                                      Theme(
+                                                        data: Theme.of(context)
+                                                            .copyWith(
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          splashColor:
+                                                              Colors.white54,
+                                                        ),
+                                                        child:
+                                                            FloatingActionButton
+                                                                .extended(
+                                                          elevation: 0,
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .greenAccent,
+                                                          icon: Icon(
+                                                              Icons.save_sharp),
+                                                          label: Text(
+                                                            "Save changes",
+                                                            style:
+                                                                customTextStyle(
+                                                              !darkTheme,
+                                                              size: 20,
+                                                            ),
+                                                          ),
+                                                          heroTag: null,
+                                                          onPressed: () =>
+                                                              _renameSubject(
+                                                                  s.value,
+                                                                  s.key,
+                                                                  _textFieldController
+                                                                      .text),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  FlatButton(
+                                                    child: Text(
+                                                      'CANCEL',
+                                                      style: TextStyle(
+                                                        color: Colors
+                                                            .greenAccent[100],
+                                                      ),
+                                                    ),
+                                                    onPressed: () {
+                                                      _selectedChapter = null;
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
                                       CupertinoActionSheetAction(
                                         child: const Text("Delete"),
                                         isDefaultAction: false,
@@ -534,6 +654,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 TextField(
                   autocorrect: false,
                   autofocus: true,
+                  onEditingComplete: () =>
+                      _showChapterSelection(_textFieldController.text),
                   controller: _textFieldController,
                   decoration: InputDecoration(
                     hintText: "Input the name",
@@ -558,82 +680,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       ),
                     ),
                     heroTag: null,
-                    onPressed: () => showCupertinoModalPopup(
-                      context: context,
-                      builder: (BuildContext context) => CupertinoActionSheet(
-                        title: const Text('Pick chapter'),
-                        actions: _chapters
-                            .map(
-                              (c) => CupertinoActionSheetAction(
-                                child: Text(
-                                  c.name,
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                                onPressed: () async {
-                                  setState(() {
-                                    _selectedChapter = c;
-                                  });
-                                  String inputName = _textFieldController.text;
-                                  Set<String> names = _selectedChapter.subjects
-                                      .map((c) => c.name)
-                                      .toSet();
-                                  if (names.contains(inputName)) {
-                                    return AlertDialog(
-                                      elevation: 0,
-                                      title: const Text(
-                                          'There already exists a subject with the same name in the same chapter'),
-                                      content: const Text(
-                                          "Please try a different one"),
-                                      actions: [
-                                        FlatButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  } else if (inputName == "") {
-                                    return AlertDialog(
-                                      elevation: 0,
-                                      title: const Text(
-                                          "A subject cannot have an empty name"),
-                                      content:
-                                          Text("Please try a different one"),
-                                      actions: [
-                                        FlatButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  } else {
-                                    final coursesData =
-                                        Provider.of<CoursesDataHandler>(context,
-                                            listen: false);
-                                    await coursesData.addSubject(
-                                      _course,
-                                      _selectedChapter,
-                                      Subject(_textFieldController.text),
-                                    );
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  }
-                                },
-                              ),
-                            )
-                            .toList(),
-                        cancelButton: CupertinoActionSheetAction(
-                          child: const Text('Cancel'),
-                          isDefaultAction: true,
-                          onPressed: () {
-                            Navigator.pop(context, 'Cancel');
-                          },
-                        ),
-                      ),
-                    ),
+                    onPressed: () =>
+                        _showChapterSelection(_textFieldController.text),
                   ),
                 ),
               ],
@@ -703,152 +751,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
     );
   }
 
-  Future<Widget> _editChapter(Chapter chapter, bool darkTheme) async {
-    TextEditingController _textFieldController = TextEditingController();
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
-            ),
-          ),
-          elevation: 0,
-          title: Text(
-            'Add a new chapter',
-            style: customTextStyle(darkTheme),
-          ),
-          content: TextField(
-            autocorrect: false,
-            autofocus: true,
-            controller: _textFieldController,
-            decoration: InputDecoration(hintText: "Input the name"),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text(
-                'CANCEL',
-                style: TextStyle(color: Colors.red),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.greenAccent),
-              ),
-              onPressed: () async {
-                String inputName = _textFieldController.text;
-                if (_course.getChapters
-                    .map((c) => c.name)
-                    .toSet()
-                    .contains(inputName)) {
-                  return AlertDialog(
-                    elevation: 0,
-                    title: const Text(
-                        'There already exists a chapter with the same name'),
-                    content: const Text("Please try a different one"),
-                    actions: [
-                      FlatButton(
-                        child: const Text('OK'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  );
-                } else {
-                  final coursesData =
-                      Provider.of<CoursesDataHandler>(context, listen: false);
-                  await coursesData.addChapter(_course, Chapter(inputName));
-                  Navigator.of(context).pop();
-                }
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  Future<Widget> _editCourse(Course course, bool darkTheme) async {
-    TextEditingController _textFieldController = TextEditingController();
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(20.0),
-            ),
-          ),
-          elevation: 0,
-          title: Text(
-            'Add a new chapter',
-            style: customTextStyle(darkTheme),
-          ),
-          content: Column(
-            children: [
-              TextField(
-                autofocus: true,
-                autocorrect: false,
-                controller: _textFieldController,
-                decoration: const InputDecoration(hintText: "Input the name"),
-              ),
-            ],
-          ),
-          actions: [
-            FlatButton(
-              child: const Text(
-                'CANCEL',
-                style: const TextStyle(color: Colors.red),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: const Text(
-                'OK',
-                style: const TextStyle(color: Colors.greenAccent),
-              ),
-              onPressed: () async {
-                String inputName = _textFieldController.text;
-                if (_course.getChapters
-                    .map((c) => c.name)
-                    .toSet()
-                    .contains(inputName)) {
-                  return AlertDialog(
-                    elevation: 0,
-                    title: const Text(
-                        'There already exists a chapter with the same name'),
-                    content: const Text("Please try a different one"),
-                    actions: [
-                      FlatButton(
-                        child: const Text('OK'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  );
-                } else {
-                  final coursesData =
-                      Provider.of<CoursesDataHandler>(context, listen: false);
-                  await coursesData.addChapter(_course, Chapter(inputName));
-                  Navigator.of(context).pop();
-                }
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
   void _renameChapter(Chapter chapter, String newName) async {
     if (newName == chapter.name) {
       showCupertinoModalPopup(
@@ -871,6 +773,32 @@ class _ChaptersPageState extends State<ChaptersPage> {
       final coursesProvider =
           Provider.of<CoursesDataHandler>(context, listen: false);
       await coursesProvider.renameChapter(_course, chapter, newName);
+      Navigator.pop(context);
+    }
+  }
+
+  void _renameSubject(Chapter chapter, Subject subject, String newName) async {
+    if (newName == chapter.name) {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) => CupertinoActionSheet(
+          title: const Text('Oops...'),
+          message:
+              const Text("The input name is the same has the previous one."),
+          cancelButton: CupertinoActionSheetAction(
+            isDefaultAction: true,
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Cancel"),
+          ),
+        ),
+      );
+    } else {
+      final coursesProvider =
+          Provider.of<CoursesDataHandler>(context, listen: false);
+      await coursesProvider.renameSubject(_course, chapter, subject, newName);
       Navigator.pop(context);
     }
   }
@@ -899,5 +827,78 @@ class _ChaptersPageState extends State<ChaptersPage> {
       await coursesData.addChapter(_course, Chapter(name));
       Navigator.of(context).pop();
     }
+  }
+
+  void _showChapterSelection(String subjectName) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Pick chapter'),
+        actions: _chapters
+            .map(
+              (c) => CupertinoActionSheetAction(
+                child: Text(
+                  c.name,
+                  style: TextStyle(color: Colors.blue),
+                ),
+                onPressed: () async {
+                  setState(() {
+                    _selectedChapter = c;
+                  });
+                  Set<String> names =
+                      _selectedChapter.subjects.map((c) => c.name).toSet();
+                  if (names.contains(subjectName)) {
+                    return AlertDialog(
+                      elevation: 0,
+                      title: const Text(
+                          'There already exists a subject with the same name in the same chapter'),
+                      content: const Text("Please try a different one"),
+                      actions: [
+                        FlatButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  } else if (subjectName == "") {
+                    return AlertDialog(
+                      elevation: 0,
+                      title: const Text("A subject cannot have an empty name"),
+                      content: Text("Please try a different one"),
+                      actions: [
+                        FlatButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  } else {
+                    final coursesData =
+                        Provider.of<CoursesDataHandler>(context, listen: false);
+                    await coursesData.addSubject(
+                      _course,
+                      _selectedChapter,
+                      Subject(subjectName),
+                    );
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            )
+            .toList(),
+        cancelButton: CupertinoActionSheetAction(
+          child: const Text('Cancel'),
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context, 'Cancel');
+          },
+        ),
+      ),
+    );
   }
 }

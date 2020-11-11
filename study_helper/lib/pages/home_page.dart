@@ -41,15 +41,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         actions: [
-          // IconButton(
-          //   icon: Icon(
-          //     themeChange.darkTheme ? Icons.wb_sunny : Ionicons.ios_moon,
-          //   ),
-          //   splashColor: Colors.transparent,
-          //   onPressed: () {
-          //     themeChange.darkTheme = !themeChange.darkTheme;
-          //   },
-          // ),
           IconButton(
             icon: Icon(
               CupertinoIcons.gear_alt,
