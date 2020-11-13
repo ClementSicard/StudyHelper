@@ -11,7 +11,6 @@ class Styles {
       splashColor: isDarkTheme ? const Color(0xff282728) : Colors.white,
       accentColor: Colors.transparent,
       disabledColor: Colors.grey,
-      textSelectionColor: isDarkTheme ? Colors.white : Colors.black,
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
             colorScheme: isDarkTheme ? ColorScheme.dark() : ColorScheme.light(),
@@ -19,12 +18,18 @@ class Styles {
             splashColor: Colors.transparent,
             disabledColor: Colors.transparent,
           ),
+      cardTheme: CardTheme(
+          elevation: 0,
+          color: isDarkTheme ? Color(0xff282728) : Colors.grey[100]),
       appBarTheme: AppBarTheme(
-        centerTitle: true,
-        elevation: 0.0,
-        color: isDarkTheme ? const Color(0xff282728) : Colors.white,
-        brightness: isDarkTheme ? Brightness.dark : Brightness.light,
-      ),
+          centerTitle: true,
+          elevation: 0.0,
+          color: isDarkTheme ? const Color(0xff282728) : Colors.white,
+          brightness: isDarkTheme ? Brightness.dark : Brightness.light,
+          actionsIconTheme: IconThemeData(
+            color: isDarkTheme ? Colors.white : Colors.black,
+            size: 30,
+          )),
       iconTheme: IconThemeData(
         color: isDarkTheme ? Colors.white : Colors.black,
         size: 30,
