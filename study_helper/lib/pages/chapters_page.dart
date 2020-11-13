@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -91,13 +90,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
             child: Card(
               shape: CircleBorder(),
               child: IconButton(
-                icon: Icon(Icons.play_arrow_rounded),
+                icon: Icon(Icons.play_arrow_rounded, size: 35),
                 color: Colors.greenAccent,
                 onPressed: () {
                   Set subjects =
                       _chapters.map((c) => c.subjects.isNotEmpty).toSet();
                   if (!subjects.contains(true)) {
-                    showCupertinoDialog(
+                    showCupertinoModalPopup(
                       context: context,
                       builder: (BuildContext context) => CupertinoActionSheet(
                         title: const Text("Oops..."),
@@ -384,6 +383,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                         elevation: 0,
                         heroTag: null,
                         autofocus: true,
+                        focusElevation: 0,
                       ),
                     ),
                   ),
