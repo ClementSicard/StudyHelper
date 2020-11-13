@@ -20,7 +20,7 @@ class Styles {
           ),
       cardTheme: CardTheme(
           elevation: 0,
-          color: isDarkTheme ? Color(0xff282728) : Colors.grey[100]),
+          color: isDarkTheme ? Colors.grey[850] : Colors.grey[100]),
       appBarTheme: AppBarTheme(
           centerTitle: true,
           elevation: 0.0,

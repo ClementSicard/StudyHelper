@@ -93,7 +93,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
               child: Card(
                 shape: CircleBorder(),
                 child: IconButton(
-                  icon: Icon(Icons.play_arrow_rounded, size: 35),
+                  icon: Icon(
+                    Icons.play_arrow_rounded,
+                    size: 30,
+                  ),
                   color: Colors.greenAccent,
                   onPressed: () {
                     Set subjects =
