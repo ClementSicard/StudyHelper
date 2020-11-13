@@ -179,63 +179,68 @@ class CoursesPageState extends State<CoursesPage> {
           },
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.more_horiz_rounded),
-            onPressed: () async {
-              showCupertinoModalPopup(
-                context: context,
-                builder: (BuildContext context) => CupertinoActionSheet(
-                  title: const Text('Additional features'),
-                  actions: [
-                    CupertinoActionSheetAction(
-                      child: const Text("Export to clipboard"),
-                      isDefaultAction: false,
-                      onPressed: () async {
-                        final dir = await getApplicationDocumentsDirectory();
-                        final File file = File("${dir.path}/courses_data.json");
-                        String contents;
-                        if (await file.exists()) {
-                          contents = await file.readAsString();
-                        } else {
-                          contents = "";
-                        }
-                        Clipboard.setData(ClipboardData(text: contents));
-                        print("Done!");
-                        Navigator.pop(context);
+          Padding(
+            padding: EdgeInsets.only(
+                right: 10.0 / 360.0 * MediaQuery.of(context).size.width),
+            child: IconButton(
+              icon: Icon(Icons.more_horiz_rounded),
+              onPressed: () async {
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) => CupertinoActionSheet(
+                    title: const Text('Additional features'),
+                    actions: [
+                      CupertinoActionSheetAction(
+                        child: const Text("Export to clipboard"),
+                        isDefaultAction: false,
+                        onPressed: () async {
+                          final dir = await getApplicationDocumentsDirectory();
+                          final File file =
+                              File("${dir.path}/courses_data.json");
+                          String contents;
+                          if (await file.exists()) {
+                            contents = await file.readAsString();
+                          } else {
+                            contents = "";
+                          }
+                          Clipboard.setData(ClipboardData(text: contents));
+                          print("Done!");
+                          Navigator.pop(context);
+                        },
+                      ),
+                      CupertinoActionSheetAction(
+                        child: const Text("Import from CSV file"),
+                        isDefaultAction: false,
+                        onPressed: () async {
+                          final coursesProvider =
+                              Provider.of<CoursesDataHandler>(context,
+                                  listen: false);
+                        },
+                      ),
+                      CupertinoActionSheetAction(
+                        child: const Text("Export data to JSON file"),
+                        isDefaultAction: false,
+                        onPressed: () async {
+                          final coursesProvider =
+                              Provider.of<CoursesDataHandler>(context,
+                                  listen: false);
+                        },
+                      ),
+                    ],
+                    cancelButton: CupertinoActionSheetAction(
+                      child: const Text(
+                        'Cancel',
+                        style: const TextStyle(color: Colors.blue),
+                      ),
+                      isDefaultAction: true,
+                      onPressed: () {
+                        Navigator.pop(context, 'Cancel');
                       },
                     ),
-                    CupertinoActionSheetAction(
-                      child: const Text("Import from CSV file"),
-                      isDefaultAction: false,
-                      onPressed: () async {
-                        final coursesProvider = Provider.of<CoursesDataHandler>(
-                            context,
-                            listen: false);
-                      },
-                    ),
-                    CupertinoActionSheetAction(
-                      child: const Text("Export data to JSON file"),
-                      isDefaultAction: false,
-                      onPressed: () async {
-                        final coursesProvider = Provider.of<CoursesDataHandler>(
-                            context,
-                            listen: false);
-                      },
-                    ),
-                  ],
-                  cancelButton: CupertinoActionSheetAction(
-                    child: const Text(
-                      'Cancel',
-                      style: const TextStyle(color: Colors.blue),
-                    ),
-                    isDefaultAction: true,
-                    onPressed: () {
-                      Navigator.pop(context, 'Cancel');
-                    },
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ],
       ),

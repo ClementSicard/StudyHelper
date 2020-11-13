@@ -85,39 +85,43 @@ class _ChaptersPageState extends State<ChaptersPage> {
       actions: [
         Visibility(
           visible: _chapters?.isNotEmpty ?? true,
-          child: Hero(
-            tag: "animationToFullScreen",
-            child: Card(
-              shape: CircleBorder(),
-              child: IconButton(
-                icon: Icon(Icons.play_arrow_rounded, size: 35),
-                color: Colors.greenAccent,
-                onPressed: () {
-                  Set subjects =
-                      _chapters.map((c) => c.subjects.isNotEmpty).toSet();
-                  if (!subjects.contains(true)) {
-                    showCupertinoModalPopup(
-                      context: context,
-                      builder: (BuildContext context) => CupertinoActionSheet(
-                        title: const Text("Oops..."),
-                        message: const Text(
-                            "You must have at least one added subject to start a session"),
-                        cancelButton: CupertinoActionSheetAction(
-                          child: const Text("OK"),
-                          onPressed: () => Navigator.pop(context),
+          child: Padding(
+            padding: EdgeInsets.only(
+                right: 10.0 / 360.0 * MediaQuery.of(context).size.width),
+            child: Hero(
+              tag: "animationToFullScreen",
+              child: Card(
+                shape: CircleBorder(),
+                child: IconButton(
+                  icon: Icon(Icons.play_arrow_rounded, size: 35),
+                  color: Colors.greenAccent,
+                  onPressed: () {
+                    Set subjects =
+                        _chapters.map((c) => c.subjects.isNotEmpty).toSet();
+                    if (!subjects.contains(true)) {
+                      showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) => CupertinoActionSheet(
+                          title: const Text("Oops..."),
+                          message: const Text(
+                              "You must have at least one added subject to start a session"),
+                          cancelButton: CupertinoActionSheetAction(
+                            child: const Text("OK"),
+                            onPressed: () => Navigator.pop(context),
+                          ),
                         ),
-                      ),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            SessionSettingsPage(_course, _chapters),
-                      ),
-                    );
-                  }
-                },
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SessionSettingsPage(_course, _chapters),
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
             ),
           ),

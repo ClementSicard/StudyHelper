@@ -72,7 +72,8 @@ class _GamePageState extends State<GamePage> {
             Visibility(
               visible: _subjects.isNotEmpty,
               child: Padding(
-                padding: const EdgeInsets.only(right: 15.0),
+                padding: EdgeInsets.only(
+                    right: 15.0 / 360.0 * MediaQuery.of(context).size.width),
                 child: Center(
                   child: Text(
                     _counter.toString() + " / " + _nbOfSubjects.toString(),

@@ -41,18 +41,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              CupertinoIcons.gear_alt,
-              size: 35,
+          Padding(
+            padding: EdgeInsets.only(
+                right: 10.0 / 360.0 * MediaQuery.of(context).size.width),
+            child: IconButton(
+              icon: Icon(
+                CupertinoIcons.gear_alt,
+                size: 35,
+              ),
+              splashColor: Colors.transparent,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
             ),
-            splashColor: Colors.transparent,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
           )
         ],
       ),
