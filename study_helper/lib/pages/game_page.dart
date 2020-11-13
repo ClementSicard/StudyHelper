@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,16 +34,24 @@ class _GamePageState extends State<GamePage> {
   final bool _random;
   MapEntry<Subject, Chapter> _currentSubject;
   Color _color;
+  bool _done;
   int _nbOfSubjects;
   int _counter;
   int _putAsideCounter;
+  ConfettiController _confettiController;
 
   _GamePageState(this._course, this._chapters, this._random);
 
   @override
   void initState() {
-    super.initState();
     setup();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,7 +74,12 @@ class _GamePageState extends State<GamePage> {
             color: Colors.black,
             tooltip: "Back",
             onPressed: () {
-              Navigator.pop(context);
+              if (_done) {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+              }
             },
           ),
           actions: [
@@ -92,46 +106,64 @@ class _GamePageState extends State<GamePage> {
 
   Widget _body() {
     if (_subjects.isEmpty) {
-      return Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      _done = true;
+      _confettiController.play();
+      return Stack(
         children: [
-          SizedBox(height: MediaQuery.of(context).size.height / 30),
-          Text(
-            "Well done!",
-            style: customTextStyle(false, size: 40),
-          ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: 50.0,
-                left: 20.0,
-                right: 20.0,
-                top: 20.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: const Color(0xff272827),
-                    child: IconButton(
-                      icon: const Icon(
-                        CupertinoIcons.refresh,
-                      ),
-                      color: _color,
-                      enableFeedback: true,
-                      iconSize: 43,
-                      onPressed: () {
-                        setup();
-                      },
-                    ),
-                  ),
-                ],
-              ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              maxBlastForce: 5, // set a lower max blast force
+              minBlastForce: 2, // set a lower min blast force
+              emissionFrequency: 0.05,
+              numberOfParticles: 30, // a lot of particles at once
+              gravity: 0.5,
             ),
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height / 30),
+              Text(
+                "Well done!",
+                style: customTextStyle(false, size: 40),
+              ),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 50.0,
+                    left: 20.0,
+                    right: 20.0,
+                    top: 20.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: const Color(0xff272827),
+                        child: IconButton(
+                          icon: const Icon(
+                            CupertinoIcons.refresh,
+                          ),
+                          color: _color,
+                          enableFeedback: true,
+                          iconSize: 43,
+                          onPressed: () {
+                            setup();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       );
@@ -295,6 +327,7 @@ class _GamePageState extends State<GamePage> {
 
   void setup() {
     // Set up the page
+    _done = false;
     _subjects = [];
     _subjectsOri = [];
     _putAsideSubjects = [];
@@ -305,15 +338,20 @@ class _GamePageState extends State<GamePage> {
     _colors = List.from(Colors.accents);
     _nbOfSubjects = _subjectsOri.length;
 
-    setState(() {
-      if (_random) {
-        _subjects.shuffle();
-      }
-      _subjects = List.from(_subjectsOri);
-      _color = (_colors..shuffle()).first;
-      _counter = 1;
-      _putAsideCounter = 0;
-      _currentSubject = _subjects.first;
-    });
+    setState(
+      () {
+        if (_random) {
+          _subjects.shuffle();
+        }
+        _subjects = List.from(_subjectsOri);
+        _color = (_colors..shuffle()).first;
+        _counter = 1;
+        _putAsideCounter = 0;
+        _currentSubject = _subjects.first;
+        _confettiController = ConfettiController(
+          duration: const Duration(seconds: 3),
+        );
+      },
+    );
   }
 }
