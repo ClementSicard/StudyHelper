@@ -121,7 +121,7 @@ packages:
     source: hosted
     version: "5.2.1"
   file_chooser:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: file_chooser
       url: "https://pub.dartlang.org"

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -212,9 +213,13 @@ class CoursesPageState extends State<CoursesPage> {
                         child: const Text("Import from CSV file"),
                         isDefaultAction: false,
                         onPressed: () async {
-                          final coursesProvider =
-                              Provider.of<CoursesDataHandler>(context,
-                                  listen: false);
+                          print("on est là");
+                          FilePickerCross file =
+                              await FilePickerCross.importFromStorage(
+                            type: FileTypeCross.any,
+                            fileExtension: ".csv",
+                          );
+                          print("Working !");
                         },
                       ),
                       CupertinoActionSheetAction(
