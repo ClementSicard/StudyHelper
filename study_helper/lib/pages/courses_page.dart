@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker_cross/file_picker_cross.dart';
@@ -213,13 +214,29 @@ class CoursesPageState extends State<CoursesPage> {
                         child: const Text("Import from CSV file"),
                         isDefaultAction: false,
                         onPressed: () async {
-                          print("on est là");
+                          Navigator.pop(context);
                           FilePickerCross file =
                               await FilePickerCross.importFromStorage(
-                            type: FileTypeCross.any,
                             fileExtension: ".csv",
                           );
-                          print("Working !");
+                          String content = file.toString();
+                          try {
+                            var json = jsonDecode(content);
+                          } catch (e) {
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CupertinoActionSheet(
+                                title: const Text(
+                                    "The JSON file you selected is invalid"),
+                                cancelButton: CupertinoActionSheetAction(
+                                  child: const Text("Cancel"),
+                                  isDefaultAction: true,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ),
+                            );
+                          }
                         },
                       ),
                       CupertinoActionSheetAction(
