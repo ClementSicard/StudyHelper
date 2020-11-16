@@ -207,160 +207,273 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 label: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
-                    onLongPress: () async {
-                      showCupertinoModalPopup(
-                        context: context,
-                        builder: (BuildContext context) => CupertinoActionSheet(
-                          title: const Text('Rename or delete chapter'),
-                          message: const Text("Select an action"),
-                          actions: [
-                            CupertinoActionSheetAction(
+                    // onLongPress: () async {
+                    //   showCupertinoModalPopup(
+                    //     context: context,
+                    //     builder: (BuildContext context) => CupertinoActionSheet(
+                    //       title: const Text('Rename or delete chapter'),
+                    //       message: const Text("Select an action"),
+                    //       actions: [
+                    //         CupertinoActionSheetAction(
+                    //           child: const Text(
+                    //             "Rename",
+                    //             style: const TextStyle(color: Colors.blue),
+                    //           ),
+                    //           isDefaultAction: false,
+                    //           isDestructiveAction: false,
+                    //           onPressed: () async {
+                    //             Navigator.pop(context);
+                    //             TextEditingController _textFieldController =
+                    //                 TextEditingController();
+                    //             showDialog(
+                    //               context: context,
+                    //               builder: (context) {
+                    //                 return AlertDialog(
+                    //                   elevation: 0,
+                    //                   shape: RoundedRectangleBorder(
+                    //                       borderRadius: BorderRadius.all(
+                    //                           Radius.circular(20.0))),
+                    //                   title: Text(
+                    //                     'Rename the chapter',
+                    //                     style: customTextStyle(darkTheme),
+                    //                   ),
+                    //                   content: Padding(
+                    //                     padding: const EdgeInsets.all(20.0),
+                    //                     child: Column(
+                    //                       crossAxisAlignment:
+                    //                           CrossAxisAlignment.stretch,
+                    //                       mainAxisSize: MainAxisSize.min,
+                    //                       children: [
+                    //                         TextField(
+                    //                           autocorrect: false,
+                    //                           autofocus: true,
+                    //                           controller: _textFieldController,
+                    //                           onEditingComplete: () =>
+                    //                               _renameChapter(
+                    //                                   c,
+                    //                                   _textFieldController
+                    //                                       .text),
+                    //                           decoration: InputDecoration(
+                    //                             hintText: "Input the name",
+                    //                             hintStyle: customTextStyle(
+                    //                                 darkTheme,
+                    //                                 size: 17),
+                    //                           ),
+                    //                           textCapitalization:
+                    //                               TextCapitalization.sentences,
+                    //                         ),
+                    //                         SizedBox(height: 40),
+                    //                         Theme(
+                    //                           data: Theme.of(context).copyWith(
+                    //                             highlightColor:
+                    //                                 Colors.transparent,
+                    //                             splashColor: Colors.white54,
+                    //                           ),
+                    //                           child:
+                    //                               FloatingActionButton.extended(
+                    //                             elevation: 0,
+                    //                             backgroundColor:
+                    //                                 Colors.greenAccent,
+                    //                             icon: Icon(Icons.save_sharp),
+                    //                             label: Text(
+                    //                               "Save changes",
+                    //                               style: customTextStyle(
+                    //                                 !darkTheme,
+                    //                                 size: 20,
+                    //                               ),
+                    //                             ),
+                    //                             heroTag: null,
+                    //                             onPressed: () => _renameChapter(
+                    //                                 c,
+                    //                                 _textFieldController.text),
+                    //                           ),
+                    //                         ),
+                    //                       ],
+                    //                     ),
+                    //                   ),
+                    //                   actions: [
+                    //                     FlatButton(
+                    //                       child: Text(
+                    //                         'CANCEL',
+                    //                         style: TextStyle(
+                    //                           color: Colors.greenAccent[100],
+                    //                         ),
+                    //                       ),
+                    //                       onPressed: () {
+                    //                         _selectedChapter = null;
+                    //                         Navigator.of(context).pop();
+                    //                       },
+                    //                     ),
+                    //                   ],
+                    //                 );
+                    //               },
+                    //             );
+                    //           },
+                    //         ),
+                    //         CupertinoActionSheetAction(
+                    //           child: const Text("Delete"),
+                    //           isDestructiveAction: true,
+                    //           isDefaultAction: false,
+                    //           onPressed: () async {
+                    //             final coursesProvider =
+                    //                 Provider.of<CoursesDataHandler>(context,
+                    //                     listen: false);
+                    //             await coursesProvider.removeChapter(_course, c);
+                    //             Navigator.pop(context);
+                    //           },
+                    //         ),
+                    //       ],
+                    //       cancelButton: CupertinoActionSheetAction(
+                    //         child: const Text(
+                    //           'Cancel',
+                    //           style: const TextStyle(color: Colors.blue),
+                    //         ),
+                    //         isDefaultAction: true,
+                    //         onPressed: () {
+                    //           Navigator.pop(context, 'Cancel');
+                    //         },
+                    //       ),
+                    //     ),
+                    //   );
+                    // },
+                    child: Container(
+                      width: 200,
+                      height: 90,
+                      child: CupertinoContextMenu(
+                        actions: [
+                          CupertinoContextMenuAction(
+                            child: const Center(
                               child: const Text(
                                 "Rename",
                                 style: const TextStyle(color: Colors.blue),
                               ),
-                              isDefaultAction: false,
-                              isDestructiveAction: false,
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                TextEditingController _textFieldController =
-                                    TextEditingController();
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20.0))),
-                                      title: Text(
-                                        'Rename the chapter',
-                                        style: customTextStyle(darkTheme),
-                                      ),
-                                      content: Padding(
-                                        padding: const EdgeInsets.all(20.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            TextField(
-                                              autocorrect: false,
-                                              autofocus: true,
-                                              controller: _textFieldController,
-                                              onEditingComplete: () =>
-                                                  _renameChapter(
-                                                      c,
-                                                      _textFieldController
-                                                          .text),
-                                              decoration: InputDecoration(
-                                                hintText: "Input the name",
-                                                hintStyle: customTextStyle(
-                                                    darkTheme,
-                                                    size: 17),
-                                              ),
-                                              textCapitalization:
-                                                  TextCapitalization.sentences,
-                                            ),
-                                            SizedBox(height: 40),
-                                            Theme(
-                                              data: Theme.of(context).copyWith(
-                                                highlightColor:
-                                                    Colors.transparent,
-                                                splashColor: Colors.white54,
-                                              ),
-                                              child:
-                                                  FloatingActionButton.extended(
-                                                elevation: 0,
-                                                backgroundColor:
-                                                    Colors.greenAccent,
-                                                icon: Icon(Icons.save_sharp),
-                                                label: Text(
-                                                  "Save changes",
-                                                  style: customTextStyle(
-                                                    !darkTheme,
-                                                    size: 20,
-                                                  ),
-                                                ),
-                                                heroTag: null,
-                                                onPressed: () => _renameChapter(
-                                                    c,
+                            ),
+                            isDefaultAction: false,
+                            trailingIcon: CupertinoIcons.pencil,
+                            isDestructiveAction: false,
+                            onPressed: () async {
+                              TextEditingController _textFieldController =
+                                  TextEditingController();
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    elevation: 0,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20.0))),
+                                    title: Text(
+                                      'Rename the chapter',
+                                      style: customTextStyle(darkTheme),
+                                    ),
+                                    content: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextField(
+                                            autocorrect: false,
+                                            autofocus: true,
+                                            controller: _textFieldController,
+                                            onEditingComplete: () =>
+                                                _renameChapter(c,
                                                     _textFieldController.text),
-                                              ),
+                                            decoration: InputDecoration(
+                                              hintText: "Input the name",
+                                              hintStyle: customTextStyle(
+                                                  darkTheme,
+                                                  size: 17),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: [
-                                        FlatButton(
-                                          child: Text(
-                                            'CANCEL',
-                                            style: TextStyle(
-                                              color: Colors.greenAccent[100],
+                                            textCapitalization:
+                                                TextCapitalization.sentences,
+                                          ),
+                                          const SizedBox(height: 40),
+                                          Theme(
+                                            data: Theme.of(context).copyWith(
+                                              highlightColor:
+                                                  Colors.transparent,
+                                              splashColor: Colors.white54,
+                                            ),
+                                            child:
+                                                FloatingActionButton.extended(
+                                              elevation: 0,
+                                              backgroundColor:
+                                                  Colors.greenAccent,
+                                              icon:
+                                                  const Icon(Icons.save_sharp),
+                                              label: Text(
+                                                "Save changes",
+                                                style: customTextStyle(
+                                                  !darkTheme,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                              heroTag: null,
+                                              onPressed: () => _renameChapter(
+                                                  c, _textFieldController.text),
                                             ),
                                           ),
-                                          onPressed: () {
-                                            _selectedChapter = null;
-                                            Navigator.of(context).pop();
-                                          },
+                                        ],
+                                      ),
+                                    ),
+                                    actions: [
+                                      FlatButton(
+                                        child: Text(
+                                          'CANCEL',
+                                          style: TextStyle(
+                                            color: Colors.greenAccent[100],
+                                          ),
                                         ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                            CupertinoActionSheetAction(
-                              child: const Text("Delete"),
-                              isDestructiveAction: true,
-                              isDefaultAction: false,
-                              onPressed: () async {
-                                final coursesProvider =
-                                    Provider.of<CoursesDataHandler>(context,
-                                        listen: false);
-                                await coursesProvider.removeChapter(_course, c);
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                          cancelButton: CupertinoActionSheetAction(
-                            child: const Text(
-                              'Cancel',
-                              style: const TextStyle(color: Colors.blue),
-                            ),
-                            isDefaultAction: true,
-                            onPressed: () {
-                              Navigator.pop(context, 'Cancel');
+                                        onPressed: () {
+                                          _selectedChapter = null;
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      width: 200,
-                      height: 90,
-                      child: FlatButton(
-                        highlightColor: Colors.greenAccent[100],
-                        color: Colors.greenAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(60.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text(
-                            c.name,
-                            style: customTextStyle(
-                              darkTheme,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
+                          CupertinoContextMenuAction(
+                            child: const Center(child: const Text("Delete")),
+                            trailingIcon: CupertinoIcons.delete,
+                            isDefaultAction: false,
+                            isDestructiveAction: true,
+                            onPressed: () async {
+                              final coursesProvider =
+                                  Provider.of<CoursesDataHandler>(context,
+                                      listen: false);
+                              await coursesProvider.removeChapter(_course, c);
+                              Navigator.pop(context);
+                            },
                           ),
+                        ],
+                        child: FlatButton(
+                          highlightColor: Colors.greenAccent[100],
+                          color: Colors.greenAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(60.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: Text(
+                              c.name,
+                              style: customTextStyle(
+                                darkTheme,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          onPressed: () {},
                         ),
-                        onPressed: () {},
                       ),
                     ),
                   ),
@@ -407,189 +520,332 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
-                              onLongPress: () async {
-                                showCupertinoModalPopup(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      CupertinoActionSheet(
-                                    title: const Text('Edit subject'),
-                                    message: const Text(
-                                        "Are you sure to rename/delete this subject ?"),
-                                    actions: [
-                                      CupertinoActionSheetAction(
+                              // onLongPress: () async {
+                              //   showCupertinoModalPopup(
+                              //     context: context,
+                              //     builder: (BuildContext context) =>
+                              //         CupertinoActionSheet(
+                              //       title: const Text('Edit subject'),
+                              //       message: const Text(
+                              //           "Are you sure to rename/delete this subject ?"),
+                              //       actions: [
+                              //         CupertinoActionSheetAction(
+                              //           child: const Text(
+                              //             "Rename",
+                              //             style: const TextStyle(
+                              //                 color: Colors.blue),
+                              //           ),
+                              //           isDefaultAction: false,
+                              //           onPressed: () async {
+                              //             Navigator.pop(context);
+                              //             TextEditingController
+                              //                 _textFieldController =
+                              //                 TextEditingController();
+                              //             showDialog(
+                              //               context: context,
+                              //               builder: (context) {
+                              //                 return AlertDialog(
+                              //                   elevation: 0,
+                              //                   shape: RoundedRectangleBorder(
+                              //                       borderRadius:
+                              //                           BorderRadius.all(
+                              //                               Radius.circular(
+                              //                                   20.0))),
+                              //                   title: Text(
+                              //                     'Rename the subject',
+                              //                     style: customTextStyle(
+                              //                         darkTheme),
+                              //                   ),
+                              //                   content: Padding(
+                              //                     padding: const EdgeInsets.all(
+                              //                         20.0),
+                              //                     child: Column(
+                              //                       crossAxisAlignment:
+                              //                           CrossAxisAlignment
+                              //                               .stretch,
+                              //                       mainAxisSize:
+                              //                           MainAxisSize.min,
+                              //                       children: [
+                              //                         TextField(
+                              //                           autocorrect: false,
+                              //                           autofocus: true,
+                              //                           controller:
+                              //                               _textFieldController,
+                              //                           onEditingComplete: () =>
+                              //                               _renameSubject(
+                              //                                   s.value,
+                              //                                   s.key,
+                              //                                   _textFieldController
+                              //                                       .text),
+                              //                           decoration:
+                              //                               InputDecoration(
+                              //                             hintText:
+                              //                                 "Input the name",
+                              //                             hintStyle:
+                              //                                 customTextStyle(
+                              //                                     darkTheme,
+                              //                                     size: 17),
+                              //                           ),
+                              //                           textCapitalization:
+                              //                               TextCapitalization
+                              //                                   .sentences,
+                              //                         ),
+                              //                         SizedBox(height: 40),
+                              //                         Theme(
+                              //                           data: Theme.of(context)
+                              //                               .copyWith(
+                              //                             highlightColor: Colors
+                              //                                 .transparent,
+                              //                             splashColor:
+                              //                                 Colors.white54,
+                              //                           ),
+                              //                           child:
+                              //                               FloatingActionButton
+                              //                                   .extended(
+                              //                             elevation: 0,
+                              //                             backgroundColor:
+                              //                                 Colors
+                              //                                     .greenAccent,
+                              //                             icon: Icon(
+                              //                                 Icons.save_sharp),
+                              //                             label: Text(
+                              //                               "Save changes",
+                              //                               style:
+                              //                                   customTextStyle(
+                              //                                 !darkTheme,
+                              //                                 size: 20,
+                              //                               ),
+                              //                             ),
+                              //                             heroTag: null,
+                              //                             onPressed: () =>
+                              //                                 _renameSubject(
+                              //                                     s.value,
+                              //                                     s.key,
+                              //                                     _textFieldController
+                              //                                         .text),
+                              //                           ),
+                              //                         ),
+                              //                       ],
+                              //                     ),
+                              //                   ),
+                              //                   actions: [
+                              //                     FlatButton(
+                              //                       child: Text(
+                              //                         'CANCEL',
+                              //                         style: TextStyle(
+                              //                           color: Colors
+                              //                               .greenAccent[100],
+                              //                         ),
+                              //                       ),
+                              //                       onPressed: () {
+                              //                         _selectedChapter = null;
+                              //                         Navigator.of(context)
+                              //                             .pop();
+                              //                       },
+                              //                     ),
+                              //                   ],
+                              //                 );
+                              //               },
+                              //             );
+                              //           },
+                              //         ),
+                              //         CupertinoActionSheetAction(
+                              //           child: const Text("Delete"),
+                              //           isDefaultAction: false,
+                              //           onPressed: () async {
+                              //             final coursesProvider =
+                              //                 Provider.of<CoursesDataHandler>(
+                              //                     context,
+                              //                     listen: false);
+                              //             await coursesProvider.removeSubject(
+                              //                 _course, s.value, s.key);
+                              //             Navigator.pop(context);
+                              //           },
+                              //         ),
+                              //       ],
+                              //       cancelButton: CupertinoActionSheetAction(
+                              //         child: const Text(
+                              //           'Cancel',
+                              //           style:
+                              //               const TextStyle(color: Colors.blue),
+                              //         ),
+                              //         isDefaultAction: true,
+                              //         onPressed: () {
+                              //           Navigator.pop(context, 'Cancel');
+                              //         },
+                              //       ),
+                              //     ),
+                              //   );
+                              // },
+                              child: Container(
+                                width: 200,
+                                height: 90,
+                                child: CupertinoContextMenu(
+                                  actions: [
+                                    CupertinoContextMenuAction(
+                                      child: const Center(
                                         child: const Text(
                                           "Rename",
                                           style: const TextStyle(
                                               color: Colors.blue),
                                         ),
-                                        isDefaultAction: false,
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-                                          TextEditingController
-                                              _textFieldController =
-                                              TextEditingController();
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                elevation: 0,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0))),
-                                                title: Text(
-                                                  'Rename the subject',
-                                                  style: customTextStyle(
-                                                      darkTheme),
-                                                ),
-                                                content: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      20.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .stretch,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      TextField(
-                                                        autocorrect: false,
-                                                        autofocus: true,
-                                                        controller:
-                                                            _textFieldController,
-                                                        onEditingComplete: () =>
+                                      ),
+                                      trailingIcon: CupertinoIcons.pencil,
+                                      isDefaultAction: false,
+                                      isDestructiveAction: false,
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        TextEditingController
+                                            _textFieldController =
+                                            TextEditingController();
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              elevation: 0,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              20.0))),
+                                              title: Text(
+                                                'Rename the subject',
+                                                style:
+                                                    customTextStyle(darkTheme),
+                                              ),
+                                              content: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(20.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .stretch,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    TextField(
+                                                      autocorrect: false,
+                                                      autofocus: true,
+                                                      controller:
+                                                          _textFieldController,
+                                                      onEditingComplete: () =>
+                                                          _renameSubject(
+                                                              s.value,
+                                                              s.key,
+                                                              _textFieldController
+                                                                  .text),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        hintText:
+                                                            "Input the name",
+                                                        hintStyle:
+                                                            customTextStyle(
+                                                                darkTheme,
+                                                                size: 17),
+                                                      ),
+                                                      textCapitalization:
+                                                          TextCapitalization
+                                                              .sentences,
+                                                    ),
+                                                    SizedBox(height: 40),
+                                                    Theme(
+                                                      data: Theme.of(context)
+                                                          .copyWith(
+                                                        highlightColor:
+                                                            Colors.transparent,
+                                                        splashColor:
+                                                            Colors.white54,
+                                                      ),
+                                                      child:
+                                                          FloatingActionButton
+                                                              .extended(
+                                                        elevation: 0,
+                                                        backgroundColor:
+                                                            Colors.greenAccent,
+                                                        icon: Icon(
+                                                            Icons.save_sharp),
+                                                        label: Text(
+                                                          "Save changes",
+                                                          style:
+                                                              customTextStyle(
+                                                            !darkTheme,
+                                                            size: 20,
+                                                          ),
+                                                        ),
+                                                        heroTag: null,
+                                                        onPressed: () =>
                                                             _renameSubject(
                                                                 s.value,
                                                                 s.key,
                                                                 _textFieldController
                                                                     .text),
-                                                        decoration:
-                                                            InputDecoration(
-                                                          hintText:
-                                                              "Input the name",
-                                                          hintStyle:
-                                                              customTextStyle(
-                                                                  darkTheme,
-                                                                  size: 17),
-                                                        ),
-                                                        textCapitalization:
-                                                            TextCapitalization
-                                                                .sentences,
-                                                      ),
-                                                      SizedBox(height: 40),
-                                                      Theme(
-                                                        data: Theme.of(context)
-                                                            .copyWith(
-                                                          highlightColor: Colors
-                                                              .transparent,
-                                                          splashColor:
-                                                              Colors.white54,
-                                                        ),
-                                                        child:
-                                                            FloatingActionButton
-                                                                .extended(
-                                                          elevation: 0,
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .greenAccent,
-                                                          icon: Icon(
-                                                              Icons.save_sharp),
-                                                          label: Text(
-                                                            "Save changes",
-                                                            style:
-                                                                customTextStyle(
-                                                              !darkTheme,
-                                                              size: 20,
-                                                            ),
-                                                          ),
-                                                          heroTag: null,
-                                                          onPressed: () =>
-                                                              _renameSubject(
-                                                                  s.value,
-                                                                  s.key,
-                                                                  _textFieldController
-                                                                      .text),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  FlatButton(
-                                                    child: Text(
-                                                      'CANCEL',
-                                                      style: TextStyle(
-                                                        color: Colors
-                                                            .greenAccent[100],
                                                       ),
                                                     ),
-                                                    onPressed: () {
-                                                      _selectedChapter = null;
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: [
+                                                FlatButton(
+                                                  child: Text(
+                                                    'CANCEL',
+                                                    style: TextStyle(
+                                                      color: Colors
+                                                          .greenAccent[100],
+                                                    ),
                                                   ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      CupertinoActionSheetAction(
-                                        child: const Text("Delete"),
-                                        isDefaultAction: false,
-                                        onPressed: () async {
-                                          final coursesProvider =
-                                              Provider.of<CoursesDataHandler>(
-                                                  context,
-                                                  listen: false);
-                                          await coursesProvider.removeSubject(
-                                              _course, s.value, s.key);
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                    cancelButton: CupertinoActionSheetAction(
-                                      child: const Text(
-                                        'Cancel',
-                                        style:
-                                            const TextStyle(color: Colors.blue),
-                                      ),
-                                      isDefaultAction: true,
-                                      onPressed: () {
-                                        Navigator.pop(context, 'Cancel');
+                                                  onPressed: () {
+                                                    _selectedChapter = null;
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
                                       },
                                     ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 200,
-                                height: 90,
-                                child: FlatButton(
-                                  highlightColor: Colors.redAccent,
-                                  color: Colors.redAccent[100],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(60.0),
-                                  ),
-                                  onPressed: () {},
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 15.0),
-                                      child: Text(
-                                        s.key.name,
-                                        style: customTextStyle(
-                                          darkTheme,
-                                          color: darkTheme
-                                              ? Colors.black
-                                              : Colors.white,
-                                          size: 18,
+                                    CupertinoContextMenuAction(
+                                      child: const Center(
+                                        child: const Text("Delete"),
+                                      ),
+                                      isDefaultAction: false,
+                                      trailingIcon: CupertinoIcons.delete,
+                                      isDestructiveAction: true,
+                                      onPressed: () async {
+                                        final coursesProvider =
+                                            Provider.of<CoursesDataHandler>(
+                                                context,
+                                                listen: false);
+                                        await coursesProvider.removeSubject(
+                                            _course, s.value, s.key);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                  child: FlatButton(
+                                    highlightColor: Colors.redAccent,
+                                    color: Colors.redAccent[100],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(60.0),
+                                    ),
+                                    onPressed: () {},
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15.0),
+                                        child: Text(
+                                          s.key.name,
+                                          style: customTextStyle(
+                                            darkTheme,
+                                            color: darkTheme
+                                                ? Colors.black
+                                                : Colors.white,
+                                            size: 18,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.center,
-                                        maxLines: 2,
                                       ),
                                     ),
                                   ),

@@ -105,49 +105,69 @@ class CoursesPageState extends State<CoursesPage> {
             return Column(
               children: [
                 GestureDetector(
-                  child: NiceButton(
-                    darkTheme,
-                    text: current.name,
-                    color: Colors.blueAccent[100],
-                    width: 500,
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => ChaptersPage(current)),
-                      );
-                    },
-                  ),
-                  onLongPress: () async {
-                    await showCupertinoModalPopup(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CupertinoActionSheet(
-                          title: const Text("Confirm delete"),
-                          message:
-                              const Text("Are you sure to delete this course?"),
-                          actions: [
-                            CupertinoActionSheetAction(
-                              child: const Text("Delete"),
-                              onPressed: () async {
-                                final coursesProvider =
-                                    Provider.of<CoursesDataHandler>(context,
-                                        listen: false);
-                                await coursesProvider.removeCourse(current);
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                          cancelButton: CupertinoActionSheetAction(
-                            child: const Text("Cancel",
-                                style: TextStyle(color: Colors.blue)),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
+                  child: CupertinoContextMenu(
+                    actions: [
+                      CupertinoContextMenuAction(
+                        child: const Text(
+                          "Remove course",
+                          textAlign: TextAlign.center,
+                        ),
+                        isDefaultAction: false,
+                        isDestructiveAction: true,
+                        trailingIcon: CupertinoIcons.delete,
+                        onPressed: () async {
+                          final coursesProvider =
+                              Provider.of<CoursesDataHandler>(context,
+                                  listen: false);
+                          await coursesProvider.removeCourse(current);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                    child: NiceButton(
+                      darkTheme,
+                      text: current.name,
+                      color: Colors.blueAccent[100],
+                      width: 500,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => ChaptersPage(current)),
                         );
                       },
-                    );
-                  },
+                    ),
+                  ),
+                  //   onLongPress: () async {
+                  //     await showCupertinoModalPopup(
+                  //       context: context,
+                  //       builder: (BuildContext context) {
+                  //         return CupertinoActionSheet(
+                  //           title: const Text("Confirm delete"),
+                  //           message:
+                  //               const Text("Are you sure to delete this course?"),
+                  //           actions: [
+                  //             CupertinoActionSheetAction(
+                  //               child: const Text("Delete"),
+                  //               onPressed: () async {
+                  //                 final coursesProvider =
+                  //                     Provider.of<CoursesDataHandler>(context,
+                  //                         listen: false);
+                  //                 await coursesProvider.removeCourse(current);
+                  //                 Navigator.of(context).pop();
+                  //               },
+                  //             ),
+                  //           ],
+                  //           cancelButton: CupertinoActionSheetAction(
+                  //             child: const Text("Cancel",
+                  //                 style: TextStyle(color: Colors.blue)),
+                  //             onPressed: () {
+                  //               Navigator.pop(context);
+                  //             },
+                  //           ),
+                  //         );
+                  //       },
+                  //     );
+                  //   },
                 ),
                 SizedBox(height: 40),
               ],
