@@ -4,6 +4,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
+import 'package:study_helper/utils/nice_button.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -55,6 +56,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                     value: themeChange.darkTheme,
                   ),
+                ),
+                const SizedBox(height: 50),
+                NiceButton(
+                  themeChange.darkTheme,
+                  text: "Reset data",
+                  color: Colors.redAccent,
                 ),
               ],
             ),
