@@ -19,7 +19,8 @@ class CoursesDataHandler with ChangeNotifier {
     }
 
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    print(dir.path);
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -66,7 +67,7 @@ class CoursesDataHandler with ChangeNotifier {
     }
 
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -100,7 +101,7 @@ class CoursesDataHandler with ChangeNotifier {
 
   Future<bool> _update() async {
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
 
     if (!await file.exists()) {
       _courses = [];
@@ -138,7 +139,7 @@ class CoursesDataHandler with ChangeNotifier {
     assert(index >= 0);
 
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
 
     if (!await file.exists()) {
       _courses = [];
@@ -162,7 +163,7 @@ class CoursesDataHandler with ChangeNotifier {
     assert(course != null);
 
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
 
     if (!await file.exists()) {
       _courses = [];
@@ -186,7 +187,7 @@ class CoursesDataHandler with ChangeNotifier {
 
   Future<bool> clear() async {
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -205,7 +206,7 @@ class CoursesDataHandler with ChangeNotifier {
 
   Future<bool> addChapter(Course course, Chapter chapter) async {
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -235,7 +236,7 @@ class CoursesDataHandler with ChangeNotifier {
 
   Future<bool> removeChapter(Course course, Chapter chapter) async {
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -267,7 +268,7 @@ class CoursesDataHandler with ChangeNotifier {
   Future<bool> renameChapter(
       Course course, Chapter chapter, String newName) async {
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -299,7 +300,7 @@ class CoursesDataHandler with ChangeNotifier {
   Future<bool> addSubject(
       Course course, Chapter chapter, Subject subject) async {
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -331,7 +332,7 @@ class CoursesDataHandler with ChangeNotifier {
   Future<bool> removeSubject(
       Course course, Chapter chapter, Subject subject) async {
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -370,7 +371,7 @@ class CoursesDataHandler with ChangeNotifier {
   Future<bool> renameSubject(
       Course course, Chapter chapter, Subject subject, String newName) async {
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -420,7 +421,7 @@ class CoursesDataHandler with ChangeNotifier {
 
   Future<File> exportJSONFile() async {
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = await file.readAsString();
@@ -428,9 +429,16 @@ class CoursesDataHandler with ChangeNotifier {
       contents = "";
     }
 
-    final File backupFile = File("${dir.path}/courses_data_export.shfile");
+    final File backupFile = File("${dir.path}/courses_data_export.json");
     await backupFile.writeAsString(contents);
     return backupFile;
+  }
+
+  void deleteData() async {
+    _courses = [];
+    notifyListeners();
+    _update();
+    print("Deleted data !");
   }
 
   Future<bool> overwriteData(String newContent) async {
@@ -440,7 +448,7 @@ class CoursesDataHandler with ChangeNotifier {
       throw Exception("Not well structured JSON file for this application");
     }
     final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.shfile");
+    final File file = File("${dir.path}/courses_data.json");
     String contents;
     if (await file.exists()) {
       contents = newContent;

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
@@ -62,6 +63,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   themeChange.darkTheme,
                   text: "Reset data",
                   color: Colors.redAccent,
+                  height: 80,
+                  onPressed: () {
+                    final coursesProvider =
+                        Provider.of<CoursesDataHandler>(context, listen: false);
+                    coursesProvider.deleteData();
+                  },
                 ),
               ],
             ),

@@ -249,6 +249,60 @@ class CoursesPageState extends State<CoursesPage> {
                           // Checks if correctly formated JSON file
                           try {
                             var json = jsonDecode(content);
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CupertinoActionSheet(
+                                title: const Text(
+                                    "How do you want to import this JSON file ?"),
+                                actions: [
+                                  CupertinoActionSheetAction(
+                                    child:
+                                        const Text("Merge with existing data"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      // TODO
+                                    },
+                                  ),
+                                  CupertinoActionSheetAction(
+                                    child:
+                                        const Text("Overwrite existing data"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      final coursesProvider =
+                                          Provider.of<CoursesDataHandler>(
+                                              context,
+                                              listen: false);
+                                      try {
+                                        coursesProvider.overwriteData(content);
+                                        print("Done !");
+                                      } catch (e) {
+                                        return showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              CupertinoActionSheet(
+                                            title: const Text(
+                                                "Error importing this file"),
+                                            cancelButton:
+                                                CupertinoActionSheetAction(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: const Text("Cancel"),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    isDestructiveAction: true,
+                                  )
+                                ],
+                                cancelButton: CupertinoActionSheetAction(
+                                  child: const Text("Cancel"),
+                                  isDefaultAction: true,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ),
+                            );
                           } catch (e) {
                             return showCupertinoModalPopup(
                               context: context,
@@ -264,57 +318,6 @@ class CoursesPageState extends State<CoursesPage> {
                               ),
                             );
                           }
-                          showCupertinoModalPopup(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                CupertinoActionSheet(
-                              title: const Text(
-                                  "How do you want to import this JSON file ?"),
-                              actions: [
-                                CupertinoActionSheetAction(
-                                  child: const Text("Merge with existing data"),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    // TODO
-                                  },
-                                ),
-                                CupertinoActionSheetAction(
-                                  child: const Text("Overwrite existing data"),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    final coursesProvider =
-                                        Provider.of<CoursesDataHandler>(context,
-                                            listen: false);
-                                    try {
-                                      coursesProvider.overwriteData(content);
-                                      print("Done !");
-                                    } catch (e) {
-                                      return showCupertinoModalPopup(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            CupertinoActionSheet(
-                                          title: const Text(
-                                              "Error importing this file"),
-                                          cancelButton:
-                                              CupertinoActionSheetAction(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: const Text("Cancel"),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  isDestructiveAction: true,
-                                )
-                              ],
-                              cancelButton: CupertinoActionSheetAction(
-                                child: const Text("Cancel"),
-                                isDefaultAction: true,
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                            ),
-                          );
                         },
                       ),
                       CupertinoActionSheetAction(
