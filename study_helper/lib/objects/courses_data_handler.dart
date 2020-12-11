@@ -459,4 +459,36 @@ class CoursesDataHandler with ChangeNotifier {
     _update();
     return true;
   }
+
+  Future<int> mergeData(String newContent) async {
+    int count = 0;
+    var json = jsonDecode(newContent);
+    List test = json[0]["chapters"];
+    if (test == null) {
+      throw Exception("Not well structured JSON file for this application");
+    }
+    if (_courses == null || _courses.isEmpty) {
+      overwriteData(newContent);
+      return json.length;
+    } else {
+      for (int i = 0; i < json.length; i++) {
+        var current = json[i];
+        if (!_courses.map((c) => c.name).toSet().contains(current["name"])) {
+          count++;
+          List<Chapter> chapters = [];
+          for (int j = 0; j < current["chapters"].length; j++) {
+            var chap = current["chapters"][j];
+            Chapter chapter = Chapter(chap["name"][0]);
+            for (String s in chap["subjects"]) {
+              chapter.addSubject(Subject(s));
+            }
+            print(chapter.subjects);
+          }
+          Course course = Course(current["name"], chapters: chapters);
+          await save(course);
+        }
+      }
+      return count;
+    }
+  }
 }

@@ -65,9 +65,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   color: Colors.redAccent,
                   height: 80,
                   onPressed: () {
-                    // final coursesProvider =
-                    //     Provider.of<CoursesDataHandler>(context, listen: false);
-                    // coursesProvider.deleteData();
                     showCupertinoModalPopup(
                       context: context,
                       builder: (context) => CupertinoActionSheet(

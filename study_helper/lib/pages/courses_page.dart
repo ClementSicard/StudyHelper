@@ -206,7 +206,6 @@ class CoursesPageState extends State<CoursesPage> {
                             return Navigator.pop(newContext);
                           }
                           String content = file.toString();
-                          print(content);
                           // Checks if correctly formated JSON file
                           try {
                             var json = jsonDecode(content);
@@ -220,9 +219,17 @@ class CoursesPageState extends State<CoursesPage> {
                                   CupertinoActionSheetAction(
                                     child:
                                         const Text("Merge with existing data"),
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      final coursesProvider =
+                                          Provider.of<CoursesDataHandler>(
+                                              aContext,
+                                              listen: false);
+                                      int count = await coursesProvider
+                                          .mergeData(content);
+                                      print("Added " +
+                                          count.toString() +
+                                          " courses!");
                                       Navigator.pop(aContext);
-                                      // TODO
                                     },
                                   ),
                                   CupertinoActionSheetAction(
