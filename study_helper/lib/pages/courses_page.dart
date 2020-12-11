@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -179,7 +180,7 @@ class CoursesPageState extends State<CoursesPage> {
                         onPressed: () async {
                           final dir = await getApplicationDocumentsDirectory();
                           final File file =
-                              File("${dir.path}/courses_data.shfile");
+                              File("${dir.path}/courses_data.json");
                           String contents;
                           if (await file.exists()) {
                             contents = await file.readAsString();
@@ -295,7 +296,18 @@ class CoursesPageState extends State<CoursesPage> {
                           final coursesProvider =
                               Provider.of<CoursesDataHandler>(context,
                                   listen: false);
-                          print("Not done yet");
+                          final dir = await getApplicationDocumentsDirectory();
+                          final String path = "${dir.path}/courses_data";
+                          final File file = File(path + ".json");
+                          Uint8List bytes = await file.readAsBytes();
+                          FilePickerCross fp = FilePickerCross(bytes,
+                              path: path, fileExtension: "json");
+                          try {
+                            await fp.exportToStorage();
+                            Navigator.pop(newContext);
+                          } catch (err) {
+                            print("ici");
+                          }
                         },
                       ),
                     ],
