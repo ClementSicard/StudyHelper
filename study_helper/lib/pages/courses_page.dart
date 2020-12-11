@@ -23,14 +23,6 @@ class CoursesPage extends StatefulWidget {
 }
 
 class CoursesPageState extends State<CoursesPage> {
-  List<Course> coursesTest = [
-    Course("Analyse IV"),
-    Course("Programmation orientée système"),
-    Course("Probabilities & Statistics"),
-    Course("Signals and Systems"),
-    Course("Musical Improvisation, Invention and Creativity"),
-  ]..sort((a, b) => a.name.compareTo(b.name));
-
   Widget _body(List<Course> courses, bool darkTheme) {
     if (courses == null) {
       return Center(
