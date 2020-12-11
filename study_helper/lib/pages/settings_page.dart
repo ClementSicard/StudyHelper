@@ -65,9 +65,40 @@ class _SettingsPageState extends State<SettingsPage> {
                   color: Colors.redAccent,
                   height: 80,
                   onPressed: () {
-                    final coursesProvider =
-                        Provider.of<CoursesDataHandler>(context, listen: false);
-                    coursesProvider.deleteData();
+                    // final coursesProvider =
+                    //     Provider.of<CoursesDataHandler>(context, listen: false);
+                    // coursesProvider.deleteData();
+                    showCupertinoModalPopup(
+                      context: context,
+                      builder: (context) => CupertinoActionSheet(
+                        title: const Text("Warning"),
+                        message: const Text(
+                            "Are you sure that you want to delete all saved data ?"),
+                        actions: [
+                          CupertinoActionSheetAction(
+                            child: const Text("OK"),
+                            isDestructiveAction: true,
+                            onPressed: () async {
+                              final coursesProvider =
+                                  Provider.of<CoursesDataHandler>(context,
+                                      listen: false);
+                              await coursesProvider.deleteData();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                        cancelButton: CupertinoActionSheetAction(
+                          child: const Text(
+                            "Cancel",
+                            style: const TextStyle(color: Colors.blue),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],

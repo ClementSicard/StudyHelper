@@ -434,11 +434,11 @@ class CoursesDataHandler with ChangeNotifier {
     return backupFile;
   }
 
-  void deleteData() async {
-    _courses = [];
-    notifyListeners();
-    _update();
-    print("Deleted data !");
+  Future<void> deleteData() async {
+    for (Course c in this._courses) {
+      await removeCourse(c);
+    }
+    print("Data deleted!");
   }
 
   Future<bool> overwriteData(String newContent) async {
