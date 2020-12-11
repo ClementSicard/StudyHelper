@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -124,42 +123,12 @@ class CoursesPageState extends State<CoursesPage> {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => ChaptersPage(current)),
+                            builder: (context) => ChaptersPage(current),
+                          ),
                         );
                       },
                     ),
                   ),
-                  //   onLongPress: () async {
-                  //     await showCupertinoModalPopup(
-                  //       context: context,
-                  //       builder: (BuildContext context) {
-                  //         return CupertinoActionSheet(
-                  //           title: const Text("Confirm delete"),
-                  //           message:
-                  //               const Text("Are you sure to delete this course?"),
-                  //           actions: [
-                  //             CupertinoActionSheetAction(
-                  //               child: const Text("Delete"),
-                  //               onPressed: () async {
-                  //                 final coursesProvider =
-                  //                     Provider.of<CoursesDataHandler>(context,
-                  //                         listen: false);
-                  //                 await coursesProvider.removeCourse(current);
-                  //                 Navigator.of(context).pop();
-                  //               },
-                  //             ),
-                  //           ],
-                  //           cancelButton: CupertinoActionSheetAction(
-                  //             child: const Text("Cancel",
-                  //                 style: TextStyle(color: Colors.blue)),
-                  //             onPressed: () {
-                  //               Navigator.pop(context);
-                  //             },
-                  //           ),
-                  //         );
-                  //       },
-                  //     );
-                  //   },
                 ),
                 SizedBox(height: 40),
               ],
@@ -201,7 +170,7 @@ class CoursesPageState extends State<CoursesPage> {
               onPressed: () async {
                 showCupertinoModalPopup(
                   context: context,
-                  builder: (BuildContext context) => CupertinoActionSheet(
+                  builder: (BuildContext newContext) => CupertinoActionSheet(
                     title: const Text('Additional features'),
                     actions: [
                       CupertinoActionSheetAction(
@@ -219,14 +188,14 @@ class CoursesPageState extends State<CoursesPage> {
                           }
                           Clipboard.setData(ClipboardData(text: contents));
                           print("Done!");
-                          Navigator.pop(context);
+                          Navigator.pop(newContext);
                         },
                       ),
                       CupertinoActionSheetAction(
                         child: const Text("Import data from JSON file"),
                         isDefaultAction: false,
                         onPressed: () async {
-                          Navigator.pop(context);
+                          Navigator.pop(newContext);
                           FilePickerCross file;
 
                           // Try opening file from explorer
@@ -234,7 +203,7 @@ class CoursesPageState extends State<CoursesPage> {
                             file = await FilePickerCross.importFromStorage();
                           } catch (e) {
                             // Handles the case where no file is selected
-                            return Navigator.pop(context);
+                            return Navigator.pop(newContext);
                           }
                           String content = file.toString();
                           print(content);
@@ -243,7 +212,7 @@ class CoursesPageState extends State<CoursesPage> {
                             var json = jsonDecode(content);
                             showCupertinoModalPopup(
                               context: context,
-                              builder: (BuildContext context) =>
+                              builder: (BuildContext aContext) =>
                                   CupertinoActionSheet(
                                 title: const Text(
                                     "How do you want to import this JSON file ?"),
@@ -252,7 +221,7 @@ class CoursesPageState extends State<CoursesPage> {
                                     child:
                                         const Text("Merge with existing data"),
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      Navigator.pop(aContext);
                                       // TODO
                                     },
                                   ),
@@ -260,25 +229,25 @@ class CoursesPageState extends State<CoursesPage> {
                                     child:
                                         const Text("Overwrite existing data"),
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      Navigator.pop(aContext);
                                       final coursesProvider =
                                           Provider.of<CoursesDataHandler>(
-                                              context,
+                                              aContext,
                                               listen: false);
                                       try {
                                         coursesProvider.overwriteData(content);
                                         print("Done !");
                                       } catch (e) {
                                         return showCupertinoModalPopup(
-                                          context: context,
-                                          builder: (BuildContext context) =>
+                                          context: aContext,
+                                          builder: (BuildContext bContext) =>
                                               CupertinoActionSheet(
                                             title: const Text(
                                                 "Error importing this file"),
                                             cancelButton:
                                                 CupertinoActionSheetAction(
                                               onPressed: () =>
-                                                  Navigator.pop(context),
+                                                  Navigator.pop(bContext),
                                               child: const Text("Cancel"),
                                             ),
                                           ),
@@ -298,14 +267,14 @@ class CoursesPageState extends State<CoursesPage> {
                           } catch (e) {
                             return showCupertinoModalPopup(
                               context: context,
-                              builder: (BuildContext context) =>
+                              builder: (BuildContext nContext) =>
                                   CupertinoActionSheet(
                                 title: const Text(
                                     "The JSON file you selected is invalid"),
                                 cancelButton: CupertinoActionSheetAction(
                                   child: const Text("Cancel"),
                                   isDefaultAction: true,
-                                  onPressed: () => Navigator.pop(context),
+                                  onPressed: () => Navigator.pop(nContext),
                                 ),
                               ),
                             );
@@ -319,6 +288,7 @@ class CoursesPageState extends State<CoursesPage> {
                           final coursesProvider =
                               Provider.of<CoursesDataHandler>(context,
                                   listen: false);
+                          print("Not done yet");
                         },
                       ),
                     ],

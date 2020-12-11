@@ -443,7 +443,7 @@ class CoursesDataHandler with ChangeNotifier {
 
   Future<bool> overwriteData(String newContent) async {
     var json = jsonDecode(newContent);
-    String test = json[0]["chapters"];
+    List test = json[0]["chapters"];
     if (test == null) {
       throw Exception("Not well structured JSON file for this application");
     }
