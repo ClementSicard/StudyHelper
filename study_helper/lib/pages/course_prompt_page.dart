@@ -46,77 +46,70 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
             CupertinoIcons.back,
           ),
           tooltip: "Back",
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: ListView(
+            padding: const EdgeInsets.all(16.0),
             shrinkWrap: true,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextFormField(
-                  autocorrect: false,
-                  controller: _nameController,
-                  autofocus: true,
-                  cursorColor: Colors.greenAccent,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blueAccent[100]),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.greenAccent),
-                    ),
-                    labelText: 'Name of the course',
-                    focusColor: Colors.blueAccent,
-                    labelStyle: customTextStyle(themeChange.darkTheme),
-                    fillColor: Colors.blueAccent,
+              TextFormField(
+                autocorrect: false,
+                controller: _nameController,
+                autofocus: true,
+                cursorColor: Colors.greenAccent,
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueAccent[100]),
                   ),
-                  maxLengthEnforced: true,
-                  maxLength: 100,
-                  maxLines: 1,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: customTextStyle(themeChange.darkTheme),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.greenAccent),
+                  ),
+                  labelText: 'Name of the course',
+                  focusColor: Colors.blueAccent,
+                  labelStyle: customTextStyle(themeChange.darkTheme),
+                  fillColor: Colors.blueAccent,
                 ),
+                maxLengthEnforced: true,
+                maxLength: 100,
+                maxLines: 1,
+                textCapitalization: TextCapitalization.sentences,
+                style: customTextStyle(themeChange.darkTheme),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextFormField(
-                  controller: _descriptionController,
-                  cursorColor: Colors.greenAccent,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blueAccent),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.greenAccent),
-                    ),
-                    labelText: 'Description (optional)',
-                    labelStyle: customTextStyle(themeChange.darkTheme),
-                    fillColor: Colors.blueAccent[100],
+              TextFormField(
+                controller: _descriptionController,
+                cursorColor: Colors.greenAccent,
+                decoration: InputDecoration(
+                  enabledBorder: const UnderlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.blueAccent),
                   ),
-                  maxLength: 1000,
-                  maxLengthEnforced: true,
-                  keyboardType: TextInputType.multiline,
-                  style: customTextStyle(themeChange.darkTheme, size: 20),
-                  textCapitalization: TextCapitalization.sentences,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.greenAccent),
+                  ),
+                  labelText: 'Description (optional)',
+                  labelStyle: customTextStyle(themeChange.darkTheme),
+                  fillColor: Colors.blueAccent[100],
                 ),
+                maxLength: 1000,
+                maxLengthEnforced: true,
+                keyboardType: TextInputType.multiline,
+                style: customTextStyle(themeChange.darkTheme, size: 20),
+                textCapitalization: TextCapitalization.sentences,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 100),
             ],
@@ -176,7 +169,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                         MapEntry(
                           "Try again",
                           () {
-                            Navigator.of(context).pop();
+                            Navigator.pop(context);
                           },
                         ),
                       ],
@@ -184,7 +177,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   },
                 );
               } else {
-                Course newCourse = Course(
+                final Course newCourse = Course(
                   givenName,
                   description: description,
                 );
@@ -192,7 +185,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                     Provider.of<CoursesDataHandler>(context, listen: false);
                 await coursesData.save(newCourse);
                 print("bien joué maggle");
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               }
             },
             label: Text(
