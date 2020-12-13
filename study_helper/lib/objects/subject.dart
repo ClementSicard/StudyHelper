@@ -17,7 +17,13 @@ class Subject {
     return _name;
   }
 
+  Mastered get mas {
+    return _mas;
+  }
+
   set name(String name) {
     _name = name;
   }
 }
+
+enum Mastered { Good, Moderately, Poorly }

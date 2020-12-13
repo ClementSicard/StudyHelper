@@ -29,5 +29,3 @@ class Course {
     _name = newName;
   }
 }
-
-enum Mastered { Good, Moderately, Poorly }

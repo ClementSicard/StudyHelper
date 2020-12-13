@@ -17,38 +17,35 @@ Widget NiceButton(
 }) {
   return Container(
     child: RaisedButton(
-      onPressed: () {},
+      onPressed: onPressed ?? () {},
       padding: const EdgeInsets.all(0.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       color: color,
       elevation: elevation,
-      child: InkWell(
-        onTap: onPressed ?? () {},
-        child: Container(
-          alignment: Alignment.center,
-          constraints: const BoxConstraints(
-            minWidth: 88.0,
-            minHeight: 36.0,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              text,
-              style: customTextStyle(
-                false,
-                color: textColor ?? (darkTheme ? Colors.black : Colors.white),
-              ),
-              softWrap: true,
-              maxLines: 2,
-              overflow: TextOverflow.fade,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          height: height,
-          width: width,
+      child: Container(
+        alignment: Alignment.center,
+        constraints: const BoxConstraints(
+          minWidth: 88.0,
+          minHeight: 36.0,
         ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            text,
+            style: customTextStyle(
+              false,
+              color: textColor ?? (darkTheme ? Colors.black : Colors.white),
+            ),
+            softWrap: true,
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        height: height,
+        width: width,
       ),
     ),
   );

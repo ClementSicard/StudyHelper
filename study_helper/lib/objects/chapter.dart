@@ -3,10 +3,13 @@ import 'package:study_helper/objects/subject.dart';
 class Chapter {
   String _name;
   List<Subject> _subjects;
+  Mastered _mas;
 
-  Chapter(String name, {List<Subject> subjects = const []}) {
+  Chapter(String name,
+      {List<Subject> subjects = const [], Mastered mas = Mastered.Poorly}) {
     this._name = name;
     this._subjects = List.from(subjects);
+    this._mas = mas;
   }
 
   List<Subject> get subjects {
@@ -23,7 +26,15 @@ class Chapter {
     return _name;
   }
 
+  Mastered get mas {
+    return _mas;
+  }
+
   set name(String newName) {
     _name = newName;
+  }
+
+  set mas(Mastered newMas) {
+    _mas = newMas;
   }
 }

@@ -33,7 +33,6 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
