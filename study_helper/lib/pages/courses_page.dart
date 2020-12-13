@@ -131,7 +131,7 @@ class CoursesPageState extends State<CoursesPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
               ],
             );
           },
