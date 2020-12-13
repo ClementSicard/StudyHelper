@@ -183,7 +183,6 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 final coursesData =
                     Provider.of<CoursesDataHandler>(context, listen: false);
                 await coursesData.save(newCourse);
-                print("bien joué maggle");
                 Navigator.pop(context);
               }
             },

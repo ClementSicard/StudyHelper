@@ -59,6 +59,7 @@ class CoursesDataHandler with ChangeNotifier {
     await file.writeAsString(contents);
 
     _update();
+    print("Saved course!");
     return true;
   }
 
@@ -89,6 +90,7 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
+      print("Renamed course!");
     }
 
     return found;
@@ -185,6 +187,7 @@ class CoursesDataHandler with ChangeNotifier {
     await file.writeAsString(contents);
 
     _update();
+    print("Removed course!");
     return true;
   }
 
@@ -233,6 +236,7 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
+      print("Chapter added!");
     }
     return found;
   }
@@ -264,6 +268,7 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
+      print("Chapter removed!");
     }
     return found;
   }
@@ -296,6 +301,7 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
+      print("Chapter renamed!");
     }
     return found;
   }
@@ -366,7 +372,7 @@ class CoursesDataHandler with ChangeNotifier {
       _update();
       print("Subject removed!");
     } else {
-      print("ça marche pas encore bg");
+      print("Error removing subject");
     }
     return found;
   }
@@ -405,7 +411,7 @@ class CoursesDataHandler with ChangeNotifier {
       _update();
       print("Subject renamed!");
     } else {
-      print("ça marche pas encore bg");
+      print("Error renaming subject");
     }
     return found;
   }
