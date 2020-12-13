@@ -28,19 +28,14 @@ class CoursesDataHandler with ChangeNotifier {
       contents = "";
     }
 
-    List<Map<String, Map<String, Mastered>>> chapters =
-        List<Map<String, Map<String, Mastered>>>.generate(
+    List<Map<String, List<String>>> chapters =
+        List<Map<String, List<String>>>.generate(
       course.getChapters.length,
       (index) {
-        final Chapter currentChapter = course.getChapters[index];
+        Chapter currentChapter = course.getChapters[index];
         return {
-          "name": Map.fromIterable(
-              [MapEntry(currentChapter.name, currentChapter.mas)]),
-          "subjects": Map<String, Mastered>.fromIterable(
-              currentChapter.subjects.map((s) => MapEntry(s.name, s.mas))),
-          // "subjects": currentChapter.subjects
-          //     .map((s) => MapEntry(s.name, s.mas.toString()))
-          //     .toList()
+          "name": [currentChapter.name],
+          "subjects": currentChapter.subjects.map((s) => s.name).toList()
         };
       },
     );
@@ -124,15 +119,11 @@ class CoursesDataHandler with ChangeNotifier {
         List<Chapter> chapters = List<Chapter>.generate(
           decodedChapters.length,
           (i) {
-            print(decodedChapters[i]["name"]);
-            var subs = decodedChapters[i]["subjects"];
             return Chapter(
-              decodedChapters[i]["name"]
-                  [decodedChapters[i]["name"][0].keys()[0]],
-              subjects: List<Subject>.generate(subs.keys().length, (j) {
-                var name = subs.keys()[j];
-                var mas = subs[subs.keys()[j]];
-                return Subject(name, mas: mas);
+              decodedChapters[i]["name"][0],
+              subjects: List<Subject>.generate(
+                  decodedChapters[i]["subjects"].length, (j) {
+                return Subject(decodedChapters[i]["subjects"][j]);
               }),
             );
           },
@@ -231,10 +222,9 @@ class CoursesDataHandler with ChangeNotifier {
     for (int i = 0; i < decodedContents.length; i++) {
       if (decodedContents[i]["name"] == course.name) {
         found = true;
-        Map<String, Map<String, Mastered>> cMap = {
-          "name": Map.fromIterable([chapter.name, chapter.mas]),
-          "subjects": Map.fromIterable(
-              chapter.subjects.map((s) => MapEntry(s.name, s.mas)))
+        Map<String, List<String>> cMap = {
+          "name": [chapter.name],
+          "subjects": chapter.subjects.map((s) => s.name).toList()
         };
         decodedContents[i]["chapters"].add(cMap);
       }
@@ -263,8 +253,7 @@ class CoursesDataHandler with ChangeNotifier {
       if (decodedContents[i]["name"] == course.name) {
         List chapters = decodedContents[i]["chapters"];
         for (int j = 0; j < chapters.length; j++) {
-          if (chapters[j]["name"][chapters[j]["name"].keys()[0]] ==
-              chapter.name) {
+          if (chapters[j]["name"][0] == chapter.name) {
             decodedContents[i]["chapters"].removeAt(j);
             found = true;
           }
@@ -296,10 +285,8 @@ class CoursesDataHandler with ChangeNotifier {
       if (decodedContents[i]["name"] == course.name) {
         List chapters = decodedContents[i]["chapters"];
         for (int j = 0; j < chapters.length; j++) {
-          var currentChapName = chapters[j]["name"];
-          if (currentChapName[currentChapName.keys()[0]] == chapter.name) {
-            chapters[j]["name"] =
-                Map.fromIterable([MapEntry(newName, chapter.mas)]);
+          if (chapters[j]["name"][0] == chapter.name) {
+            chapters[j]["name"][0] = newName;
             found = true;
           }
         }
@@ -329,11 +316,9 @@ class CoursesDataHandler with ChangeNotifier {
     for (int i = 0; i < decodedContents.length; i++) {
       if (decodedContents[i]["name"] == course.name) {
         for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
-          var currentChapName = decodedContents[i]["chapters"][j]["name"];
-          if (currentChapName[currentChapName.keys()[0]] == chapter.name) {
+          if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
             found = true;
-            decodedContents[i]["chapters"][j]["subjects"]
-                .add(MapEntry(subject.name, subject.mas));
+            decodedContents[i]["chapters"][j]["subjects"].add(subject.name);
           }
         }
       }
@@ -363,14 +348,12 @@ class CoursesDataHandler with ChangeNotifier {
     for (int i = 0; i < decodedContents.length; i++) {
       if (decodedContents[i]["name"] == course.name) {
         for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
-          var currentChapName = decodedContents[i]["chapters"][j]["name"];
-          if (currentChapName[currentChapName.keys()[0]] == chapter.name) {
+          if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
             found = true;
-            Map subjects = decodedContents[i]["chapters"][j]["subjects"];
+            List subjects = decodedContents[i]["chapters"][j]["subjects"];
             for (int k = 0; k < subjects.length; k++) {
-              if (subjects[subjects.keys()[k]] == subject.name) {
-                decodedContents[i]["chapters"][j]["subjects"]
-                    .remove(subjects[k]);
+              if (subjects[k] == subject.name) {
+                decodedContents[i]["chapters"][j]["subjects"].removeAt(k);
               }
             }
           }
@@ -404,17 +387,14 @@ class CoursesDataHandler with ChangeNotifier {
     for (int i = 0; i < decodedContents.length; i++) {
       if (decodedContents[i]["name"] == course.name) {
         for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
-          var currentChapName = decodedContents[i]["chapters"][j]["name"];
-          if (currentChapName[currentChapName.keys()[0]] == chapter.name) {
+          if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
             found = true;
-            Map subjects = decodedContents[i]["chapters"][j]["subjects"];
+            List subjects = decodedContents[i]["chapters"][j]["subjects"];
             for (int k = 0; k < subjects.length; k++) {
-              if (subjects[k].key == subject.name) {
-                decodedContents[i]["chapters"][j]["subjects"][k] =
-                    MapEntry(newName, subject.mas);
+              if (subjects[k] == subject.name) {
+                decodedContents[i]["chapters"][j]["subjects"][k] = newName;
               }
             }
-            for (MapEntry s in subjects) {}
           }
         }
       }
@@ -501,10 +481,11 @@ class CoursesDataHandler with ChangeNotifier {
           List<Chapter> chapters = [];
           for (int j = 0; j < current["chapters"].length; j++) {
             var chap = current["chapters"][j];
-            Chapter chapter = Chapter(chap["name"][chap["name"].keys()[0]]);
-            for (MapEntry s in chap["subjects"]) {
-              chapter.addSubject(Subject(s.key, mas: s.value));
+            Chapter chapter = Chapter(chap["name"][0]);
+            for (String s in chap["subjects"]) {
+              chapter.addSubject(Subject(s));
             }
+            print(chapter.subjects);
           }
           Course course = Course(current["name"], chapters: chapters);
           await save(course);
