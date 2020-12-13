@@ -118,7 +118,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   },
                 ),
               ),
-              SizedBox(height: 100),
+              const SizedBox(height: 100),
             ],
           ),
         ),
@@ -135,9 +135,9 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
             onPressed: () async {
               final coursesData =
                   Provider.of<CoursesDataHandler>(context, listen: false);
-              List<Course> courses = coursesData.courses;
-              String givenName = _nameController.text;
-              String description = _descriptionController.text;
+              final List<Course> courses = coursesData.courses;
+              final String givenName = _nameController.text;
+              final String description = _descriptionController.text;
               if (givenName == "") {
                 await showCupertinoModalPopup(
                   context: context,

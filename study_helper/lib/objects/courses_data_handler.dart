@@ -43,6 +43,7 @@ class CoursesDataHandler with ChangeNotifier {
     final Map toAdd = {
       "name": course.name,
       "chapters": chapters,
+      "description": course.description,
     };
 
     dynamic previousSave;
@@ -127,7 +128,9 @@ class CoursesDataHandler with ChangeNotifier {
             );
           },
         );
-        return Course(decodedContents[index]["name"], chapters: chapters);
+        return Course(decodedContents[index]["name"],
+            description: decodedContents[index]["description"],
+            chapters: chapters);
       },
     );
     _courses = courses;

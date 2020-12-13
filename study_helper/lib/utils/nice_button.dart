@@ -17,7 +17,7 @@ Widget NiceButton(
 }) {
   return Container(
     child: RaisedButton(
-      onPressed: onPressed ?? () {},
+      onPressed: () {},
       padding: const EdgeInsets.all(0.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(borderRadius),
@@ -25,6 +25,7 @@ Widget NiceButton(
       color: color,
       elevation: elevation,
       child: InkWell(
+        onTap: onPressed ?? () {},
         child: Container(
           alignment: Alignment.center,
           constraints: const BoxConstraints(

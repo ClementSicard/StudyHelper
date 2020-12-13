@@ -10,6 +10,7 @@ class Styles {
       hoverColor: Colors.transparent,
       splashColor: Colors.white24,
       accentColor: Colors.transparent,
+      focusColor: Colors.transparent,
       disabledColor: Colors.grey,
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
@@ -22,14 +23,15 @@ class Styles {
           elevation: 0,
           color: isDarkTheme ? Colors.grey[850] : Colors.grey[100]),
       appBarTheme: AppBarTheme(
-          centerTitle: true,
-          elevation: 0.0,
-          color: isDarkTheme ? const Color(0xff282728) : Colors.white,
-          brightness: isDarkTheme ? Brightness.dark : Brightness.light,
-          actionsIconTheme: IconThemeData(
-            color: isDarkTheme ? Colors.white : Colors.black,
-            size: 30,
-          )),
+        centerTitle: true,
+        elevation: 0.0,
+        color: isDarkTheme ? const Color(0xff282728) : Colors.white,
+        brightness: isDarkTheme ? Brightness.dark : Brightness.light,
+        actionsIconTheme: IconThemeData(
+          color: isDarkTheme ? Colors.white : Colors.black,
+          size: 30,
+        ),
+      ),
       iconTheme: IconThemeData(
         color: isDarkTheme ? Colors.white : Colors.black,
         size: 30,

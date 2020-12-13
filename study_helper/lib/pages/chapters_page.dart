@@ -9,6 +9,7 @@ import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/pages/session_settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
+import 'package:study_helper/utils/nice_button.dart';
 
 class ChaptersPage extends StatefulWidget {
   final Course _course;
@@ -67,20 +68,72 @@ class _ChaptersPageState extends State<ChaptersPage> {
     _chapters = coursesData.getChapters(_course);
     final themeChange = Provider.of<DarkThemeProvider>(context);
     AppBar appBar = AppBar(
-      title: Text(
-        _course.name,
-        textAlign: TextAlign.center,
-        style: customTextStyle(themeChange.darkTheme),
-        maxLines: 2,
+      title: InkWell(
+        splashColor: Colors.transparent,
+        onTap: () => _course.description == ""
+            ? null
+            : showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    elevation: 0,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(20.0),
+                      ),
+                    ),
+                    title: Text(
+                      'Description',
+                      textAlign: TextAlign.center,
+                      style: customTextStyle(themeChange.darkTheme),
+                    ),
+                    content: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 20),
+                          Text(_course.description,
+                              style: customTextStyle(themeChange.darkTheme,
+                                  size: 20)),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                    actionsPadding: const EdgeInsets.all(8.0),
+                    actions: [
+                      NiceButton(
+                        themeChange.darkTheme,
+                        text: 'OK',
+                        textColor: Colors.black,
+                        onPressed: () => Navigator.of(context).pop(),
+                        height: 60,
+                        color: Colors.greenAccent,
+                      ),
+                    ],
+                  );
+                },
+              ),
+        child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(60)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              _course.name,
+              textAlign: TextAlign.center,
+              style: customTextStyle(themeChange.darkTheme),
+              maxLines: 2,
+            ),
+          ),
+        ),
       ),
       leading: IconButton(
         icon: const Icon(
           CupertinoIcons.back,
         ),
         tooltip: "Back",
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: () => Navigator.pop(context),
       ),
       actions: [
         Visibility(
@@ -91,9 +144,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
             child: Hero(
               tag: "animationToFullScreen",
               child: Card(
-                shape: CircleBorder(),
+                shape: const CircleBorder(),
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.play_arrow_rounded,
                     size: 30,
                   ),
@@ -222,7 +275,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           trailingIcon: CupertinoIcons.pencil,
                           isDestructiveAction: false,
                           onPressed: () async {
-                            TextEditingController _textFieldController =
+                            final TextEditingController _textFieldController =
                                 TextEditingController();
                             showDialog(
                               context: context,
@@ -292,6 +345,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                           color: Colors.greenAccent[100],
                                         ),
                                       ),
+                                      highlightColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
                                       onPressed: () {
                                         _selectedChapter = null;
                                         Navigator.of(context).pop();
@@ -319,6 +374,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       ],
                       child: FlatButton(
                         highlightColor: Colors.greenAccent[100],
+                        splashColor: Colors.transparent,
                         color: Colors.greenAccent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(60.0),
@@ -496,6 +552,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                                   _selectedChapter = null;
                                                   Navigator.of(context).pop();
                                                 },
+                                                highlightColor:
+                                                    Colors.transparent,
+                                                splashColor: Colors.transparent,
                                               ),
                                             ],
                                           );
@@ -660,6 +719,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 _selectedChapter = null;
                 Navigator.of(context).pop();
               },
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
             ),
           ],
         );
@@ -699,13 +760,18 @@ class _ChaptersPageState extends State<ChaptersPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
             ),
             FlatButton(
-                child: const Text(
-                  'OK',
-                  style: TextStyle(color: Colors.greenAccent),
-                ),
-                onPressed: () => _addNewChapter(_textFieldController.text))
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.greenAccent),
+              ),
+              onPressed: () => _addNewChapter(_textFieldController.text),
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+            ),
           ],
         );
       },
@@ -817,9 +883,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       actions: [
                         FlatButton(
                           child: const Text('OK'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: () => Navigator.of(context).pop(),
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
                         ),
                       ],
                     );
@@ -831,9 +897,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       actions: [
                         FlatButton(
                           child: const Text('OK'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: () => Navigator.of(context).pop(),
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
                         ),
                       ],
                     );
