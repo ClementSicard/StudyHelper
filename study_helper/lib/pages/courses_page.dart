@@ -167,7 +167,7 @@ class CoursesPageState extends State<CoursesPage> {
             padding: EdgeInsets.only(
                 right: 10.0 / 360.0 * MediaQuery.of(context).size.width),
             child: IconButton(
-              icon: Icon(Icons.more_horiz_rounded),
+              icon: const Icon(Icons.more_horiz_rounded),
               onPressed: () async {
                 showCupertinoModalPopup(
                   context: context,
@@ -299,7 +299,7 @@ class CoursesPageState extends State<CoursesPage> {
                           final dir = await getApplicationDocumentsDirectory();
                           final String path = "${dir.path}/courses_data";
                           final File file = File(path + ".json");
-                          Uint8List bytes = await file.readAsBytes();
+                          final Uint8List bytes = await file.readAsBytes();
                           FilePickerCross fp = FilePickerCross(bytes,
                               path: path, fileExtension: "json");
                           try {

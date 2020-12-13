@@ -24,28 +24,30 @@ Widget NiceButton(
       ),
       color: color,
       elevation: elevation,
-      child: Container(
-        alignment: Alignment.center,
-        constraints: const BoxConstraints(
-          minWidth: 88.0,
-          minHeight: 36.0,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text(
-            text,
-            style: customTextStyle(
-              false,
-              color: textColor ?? (darkTheme ? Colors.black : Colors.white),
-            ),
-            softWrap: true,
-            maxLines: 2,
-            overflow: TextOverflow.fade,
-            textAlign: TextAlign.center,
+      child: InkWell(
+        child: Container(
+          alignment: Alignment.center,
+          constraints: const BoxConstraints(
+            minWidth: 88.0,
+            minHeight: 36.0,
           ),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
+              text,
+              style: customTextStyle(
+                false,
+                color: textColor ?? (darkTheme ? Colors.black : Colors.white),
+              ),
+              softWrap: true,
+              maxLines: 2,
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          height: height,
+          width: width,
         ),
-        height: height,
-        width: width,
       ),
     ),
   );

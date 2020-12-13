@@ -57,9 +57,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
             CupertinoIcons.back,
           ),
           tooltip: "Back",
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Padding(
@@ -68,18 +66,18 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
           shrinkWrap: true,
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
           children: [
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Text(
               "Select chapters",
               textAlign: TextAlign.center,
               style: customTextStyle(themeChange.darkTheme),
             ),
-            SizedBox(height: 15)
+            const SizedBox(height: 15)
           ]
             ..addAll(
               [
                 ListTile(
-                  leading: Icon(CupertinoIcons.book_solid),
+                  leading: const Icon(CupertinoIcons.book_solid),
                   title: Text(
                     "All chapters",
                     style: customTextStyle(themeChange.darkTheme, size: 20),
@@ -102,17 +100,17 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                     });
                   },
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
               ],
             )
             ..addAll(_chapterSelection(themeChange.darkTheme))
             ..addAll([
               Visibility(
                 visible: !_all,
-                child: SizedBox(height: 60),
+                child: const SizedBox(height: 60),
               ),
               ListTile(
-                leading: Icon(CupertinoIcons.shuffle),
+                leading: const Icon(CupertinoIcons.shuffle),
                 title: Text(
                   "Random order",
                   style: customTextStyle(themeChange.darkTheme, size: 20),
@@ -130,7 +128,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                   });
                 },
               ),
-              SizedBox(height: 90)
+              const SizedBox(height: 90)
             ]),
         ),
       ),
