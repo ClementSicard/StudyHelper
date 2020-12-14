@@ -19,6 +19,7 @@ dependencies:
   flutter_icons: ^1.1.0
   flutter_launcher_icons: ^0.8.0
   path_provider: ^1.6.14
+  disk_space: ^0.0.3
   provider: ^4.3.2+1
   shared_preferences: ^0.5.10
 
@@ -36,3 +37,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icon.png
+
+module:
+  androidX: true
