@@ -196,7 +196,6 @@ class CoursesPageState extends State<CoursesPage> {
                         child: const Text("Import data from JSON file"),
                         isDefaultAction: false,
                         onPressed: () async {
-                          Navigator.pop(newContext);
                           FilePickerCross file;
 
                           // Try opening file from explorer
@@ -210,6 +209,7 @@ class CoursesPageState extends State<CoursesPage> {
                           // Checks if correctly formated JSON file
                           try {
                             var json = jsonDecode(content);
+                            Navigator.pop(newContext);
                             showCupertinoModalPopup(
                               context: context,
                               builder: (BuildContext aContext) =>
@@ -274,6 +274,7 @@ class CoursesPageState extends State<CoursesPage> {
                               ),
                             );
                           } catch (e) {
+                            Navigator.pop(newContext);
                             return showCupertinoModalPopup(
                               context: context,
                               builder: (BuildContext nContext) =>
@@ -294,9 +295,6 @@ class CoursesPageState extends State<CoursesPage> {
                         child: const Text("Export data to JSON file"),
                         isDefaultAction: false,
                         onPressed: () async {
-                          final coursesProvider =
-                              Provider.of<CoursesDataHandler>(context,
-                                  listen: false);
                           final dir = await getApplicationDocumentsDirectory();
                           final String path = "${dir.path}/courses_data";
                           final File file = File(path + ".json");
