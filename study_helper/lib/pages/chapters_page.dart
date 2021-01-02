@@ -199,6 +199,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
             ),
             child: FloatingActionButton(
               elevation: 0,
+              autofocus: true,
               onPressed: () => _promptNewSubject(themeChange.darkTheme),
               child: const Icon(
                 Icons.add,
@@ -229,13 +230,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 style: customTextStyle(darkTheme),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               CircleAvatar(
                 radius: MediaQuery.of(context).size.height / 17.0,
                 backgroundColor: Colors.greenAccent,
                 child: IconButton(
                   icon: const Icon(Icons.add),
-                  color: darkTheme ? Color(0xff282728) : Colors.white,
+                  color: darkTheme ? const Color(0xff282728) : Colors.white,
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
                   onPressed: () => _promptNewChapter(darkTheme),
@@ -283,8 +284,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                 return AlertDialog(
                                   elevation: 0,
                                   shape: const RoundedRectangleBorder(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(20.0))),
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(20.0),
+                                    ),
+                                  ),
                                   title: Text(
                                     'Rename the chapter',
                                     style: customTextStyle(darkTheme),
@@ -359,7 +362,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           },
                         ),
                         CupertinoContextMenuAction(
-                          child: const Center(child: const Text("Delete")),
+                          child: const Center(
+                            child: const Text("Delete"),
+                          ),
                           trailingIcon: CupertinoIcons.delete,
                           isDefaultAction: false,
                           isDestructiveAction: true,
@@ -423,7 +428,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
                         mini: true,
                         elevation: 0,
                         heroTag: null,
-                        autofocus: true,
                         focusElevation: 0,
                       ),
                     ),
