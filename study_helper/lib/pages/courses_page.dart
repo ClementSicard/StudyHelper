@@ -227,6 +227,7 @@ class CoursesPageState extends State<CoursesPage> {
                                               listen: false);
                                       int count = await coursesProvider
                                           .mergeData(content);
+                                      print(coursesProvider.courses);
                                       print("Added " +
                                           count.toString() +
                                           " courses!");

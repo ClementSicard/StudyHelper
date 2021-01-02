@@ -43,7 +43,6 @@ class CoursesDataHandler with ChangeNotifier {
     final Map toAdd = {
       "name": course.name,
       "chapters": chapters,
-      "description": course.description,
     };
 
     dynamic previousSave;
@@ -59,7 +58,6 @@ class CoursesDataHandler with ChangeNotifier {
     await file.writeAsString(contents);
 
     _update();
-    print("Saved course!");
     return true;
   }
 
@@ -90,7 +88,6 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
-      print("Renamed course!");
     }
 
     return found;
@@ -130,9 +127,7 @@ class CoursesDataHandler with ChangeNotifier {
             );
           },
         );
-        return Course(decodedContents[index]["name"],
-            description: decodedContents[index]["description"],
-            chapters: chapters);
+        return Course(decodedContents[index]["name"], chapters: chapters);
       },
     );
     _courses = courses;
@@ -187,7 +182,6 @@ class CoursesDataHandler with ChangeNotifier {
     await file.writeAsString(contents);
 
     _update();
-    print("Removed course!");
     return true;
   }
 
@@ -236,7 +230,6 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
-      print("Chapter added!");
     }
     return found;
   }
@@ -268,7 +261,6 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
-      print("Chapter removed!");
     }
     return found;
   }
@@ -301,7 +293,6 @@ class CoursesDataHandler with ChangeNotifier {
       contents = jsonEncode(decodedContents);
       await file.writeAsString(contents);
       _update();
-      print("Chapter renamed!");
     }
     return found;
   }
@@ -372,7 +363,7 @@ class CoursesDataHandler with ChangeNotifier {
       _update();
       print("Subject removed!");
     } else {
-      print("Error removing subject");
+      print("ça marche pas encore bg");
     }
     return found;
   }
@@ -411,12 +402,30 @@ class CoursesDataHandler with ChangeNotifier {
       _update();
       print("Subject renamed!");
     } else {
-      print("Error renaming subject");
+      print("ça marche pas encore bg");
     }
     return found;
   }
 
   List<Course> get courses => _courses;
+
+  List<Chapter> get chapters {
+    List<Chapter> acc = [];
+    for (Course c in _courses) {
+      acc.addAll(c.getChapters);
+    }
+    return acc;
+  }
+
+  List<Subject> get subjects {
+    List<Subject> acc = [];
+    for (Course c in _courses) {
+      for (List<Subject> l in c.subjects) {
+        acc.addAll(l);
+      }
+    }
+    return acc;
+  }
 
   List<Chapter> getChapters(Course course) {
     for (Course c in _courses) {

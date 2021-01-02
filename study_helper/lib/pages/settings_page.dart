@@ -18,6 +18,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
+    final coursesProvider =
+        Provider.of<CoursesDataHandler>(context, listen: false);
+
     return Container(
       child: Scaffold(
         appBar: AppBar(
@@ -76,9 +79,6 @@ class _SettingsPageState extends State<SettingsPage> {
                             child: const Text("OK"),
                             isDestructiveAction: true,
                             onPressed: () async {
-                              final coursesProvider =
-                                  Provider.of<CoursesDataHandler>(context,
-                                      listen: false);
                               await coursesProvider.deleteData();
                               Navigator.pop(context);
                               Navigator.pop(context);
@@ -98,6 +98,55 @@ class _SettingsPageState extends State<SettingsPage> {
                     );
                   },
                 ),
+                const SizedBox(height: 30),
+                Text(
+                  "Stats on data :",
+                  style: customTextStyle(themeChange.darkTheme),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 50.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        coursesProvider.courses.length.toString() + " courses",
+                        style: customTextStyle(themeChange.darkTheme),
+                      ),
+                      Text(
+                        coursesProvider.chapters.length.toString() +
+                            " chapters",
+                        style: customTextStyle(themeChange.darkTheme),
+                      ),
+                      Text(
+                        coursesProvider.subjects.length.toString() +
+                            " subjects",
+                        style: customTextStyle(themeChange.darkTheme),
+                      ),
+                      Visibility(
+                        visible: coursesProvider.courses.length != 0,
+                        child: Text(
+                          (coursesProvider.subjects.length /
+                                      coursesProvider.courses.length)
+                                  .toStringAsFixed(1) +
+                              " subjects per course on average",
+                          style: customTextStyle(themeChange.darkTheme),
+                        ),
+                      ),
+                      Visibility(
+                        visible: coursesProvider.courses.length != 0,
+                        child: Text(
+                          (coursesProvider.subjects.length /
+                                      coursesProvider.chapters.length)
+                                  .toStringAsFixed(1) +
+                              " subjects per chapter on average",
+                          style: customTextStyle(themeChange.darkTheme),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
