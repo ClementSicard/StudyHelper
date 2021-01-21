@@ -1,9 +1,12 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
@@ -105,31 +108,44 @@ class _GamePageState extends State<GamePage> {
   }
 
   Widget _body() {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     if (_subjects.isEmpty) {
       _done = true;
       _confettiController.play();
       return Stack(
         children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              maxBlastForce: 5, // set a lower max blast force
-              minBlastForce: 2, // set a lower min blast force
-              emissionFrequency: 0.05,
-              numberOfParticles: 30, // a lot of particles at once
-              gravity: 0.5,
-            ),
-          ),
           Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(height: MediaQuery.of(context).size.height / 30),
-              Text(
-                "Well done!",
-                style: customTextStyle(false, size: 40),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: RaisedButton(
+                  onPressed: () {},
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(40.0),
+                    ),
+                  ),
+                  mouseCursor: MouseCursor.defer,
+                  elevation: 0,
+                  hoverElevation: 0,
+                  hoverColor: Colors.transparent,
+                  color: Colors.white54,
+                  focusColor: Colors.transparent,
+                  highlightElevation: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      "Well done!",
+                      style: customTextStyle(themeChange.darkTheme, size: 50),
+                      textAlign: TextAlign.center,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
               ),
               Container(
                 alignment: Alignment.bottomCenter,
@@ -165,6 +181,18 @@ class _GamePageState extends State<GamePage> {
               ),
             ],
           ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              maxBlastForce: 5, // set a lower max blast force
+              minBlastForce: 2, // set a lower min blast force
+              emissionFrequency: 0.05,
+              numberOfParticles: 30, // a lot of particles at once
+              gravity: 0.5,
+            ),
+          ),
         ],
       );
     } else {
@@ -175,14 +203,60 @@ class _GamePageState extends State<GamePage> {
           SizedBox(height: MediaQuery.of(context).size.height / 30),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text(
-              _currentSubject.key.name,
-              style: customTextStyle(false, size: 40),
-              textAlign: TextAlign.center,
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
+            child: RaisedButton(
+              onPressed: () {},
+              shape: const RoundedRectangleBorder(
+                borderRadius: const BorderRadius.all(
+                  const Radius.circular(40.0),
+                ),
+              ),
+              mouseCursor: MouseCursor.defer,
+              elevation: 0,
+              hoverElevation: 0,
+              hoverColor: Colors.transparent,
+              color: Colors.white54,
+              focusColor: Colors.transparent,
+              highlightElevation: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  _currentSubject.value.name,
+                  style: customTextStyle(themeChange.darkTheme, size: 25),
+                  textAlign: TextAlign.center,
+                  maxLines: 5,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: RaisedButton(
+              onPressed: () {},
+              shape: const RoundedRectangleBorder(
+                borderRadius: const BorderRadius.all(
+                  const Radius.circular(60.0),
+                ),
+              ),
+              hoverColor: Colors.transparent,
+              color: Colors.white70,
+              elevation: 0,
+              hoverElevation: 0,
+              highlightElevation: 0,
+              mouseCursor: MouseCursor.defer,
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Text(
+                  _currentSubject.key.name,
+                  style: customTextStyle(themeChange.darkTheme, size: 40),
+                  textAlign: TextAlign.center,
+                  maxLines: 7,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 5),
           Container(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -203,12 +277,10 @@ class _GamePageState extends State<GamePage> {
                           iconSize: 30,
                           onPressed: () {
                             if (!_putAsideSubjects.contains(_currentSubject)) {
-                              setState(
-                                () {
-                                  _putAsideSubjects.add(_currentSubject);
-                                  _putAsideCounter++;
-                                },
-                              );
+                              setState(() {
+                                _putAsideSubjects.add(_currentSubject);
+                                _putAsideCounter++;
+                              });
                             } else {
                               showCupertinoModalPopup(
                                 context: context,
