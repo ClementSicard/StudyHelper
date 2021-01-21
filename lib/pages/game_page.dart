@@ -133,7 +133,7 @@ class _GamePageState extends State<GamePage> {
                   hoverElevation: 0,
                   hoverColor: Colors.transparent,
                   color:
-                      themeChange.darkTheme ? Colors.black26 : Colors.white54,
+                      themeChange.darkTheme ? Colors.black12 : Colors.white54,
                   focusColor: Colors.transparent,
                   highlightElevation: 0,
                   child: Padding(
