@@ -13,6 +13,7 @@ import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/pages/chapters_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
+import '../utils/custom_text_styles.dart';
 import 'course_prompt_page.dart';
 
 class CoursesPage extends StatefulWidget {
@@ -33,11 +34,9 @@ class CoursesPageState extends State<CoursesPage> {
             children: <Widget>[
               CircularProgressIndicator(),
               SizedBox(height: 10),
-              const Text(
+              Text(
                 "Loading...",
-                style: TextStyle(
-                  color: Colors.black,
-                ),
+                style: customTextStyle(darkTheme),
               )
             ],
           ),

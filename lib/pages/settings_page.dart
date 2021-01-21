@@ -6,6 +6,10 @@ import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
+import 'package:study_helper/objects/chapter.dart';
+import 'package:study_helper/objects/subject.dart';
+import 'package:study_helper/objects/course.dart';
+import '../objects/dark_theme_handler.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -20,7 +24,6 @@ class _SettingsPageState extends State<SettingsPage> {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     final coursesProvider =
         Provider.of<CoursesDataHandler>(context, listen: false);
-
     return Container(
       child: Scaffold(
         appBar: AppBar(
@@ -99,54 +102,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
                 const SizedBox(height: 30),
-                Text(
-                  "Stats on data :",
-                  style: customTextStyle(themeChange.darkTheme),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(left: 50.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        coursesProvider.courses.length.toString() + " courses",
-                        style: customTextStyle(themeChange.darkTheme),
-                      ),
-                      Text(
-                        coursesProvider.chapters.length.toString() +
-                            " chapters",
-                        style: customTextStyle(themeChange.darkTheme),
-                      ),
-                      Text(
-                        coursesProvider.subjects.length.toString() +
-                            " subjects",
-                        style: customTextStyle(themeChange.darkTheme),
-                      ),
-                      Visibility(
-                        visible: coursesProvider.courses.length != 0,
-                        child: Text(
-                          (coursesProvider.subjects.length /
-                                      coursesProvider.courses.length)
-                                  .toStringAsFixed(1) +
-                              " subjects per course on average",
-                          style: customTextStyle(themeChange.darkTheme),
-                        ),
-                      ),
-                      Visibility(
-                        visible: coursesProvider.courses.length != 0,
-                        child: Text(
-                          (coursesProvider.subjects.length /
-                                      coursesProvider.chapters.length)
-                                  .toStringAsFixed(1) +
-                              " subjects per chapter on average",
-                          style: customTextStyle(themeChange.darkTheme),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
               ],
             ),
           ),
