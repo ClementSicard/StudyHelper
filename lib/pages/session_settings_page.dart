@@ -72,7 +72,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
               textAlign: TextAlign.center,
               style: customTextStyle(themeChange.darkTheme),
             ),
-            const SizedBox(height: 15)
+            const SizedBox(height: 15),
           ]
             ..addAll(
               [
@@ -116,12 +116,13 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                   style: customTextStyle(themeChange.darkTheme, size: 20),
                 ),
                 trailing: CupertinoSwitch(
-                    value: _random,
-                    onChanged: (value) {
-                      setState(() {
-                        _random = value;
-                      });
-                    }),
+                  value: _random,
+                  onChanged: (value) {
+                    setState(() {
+                      _random = value;
+                    });
+                  },
+                ),
                 onTap: () {
                   setState(() {
                     _random = !_random;
@@ -190,6 +191,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                 ),
               );
             } else {
+              print(_random);
               Navigator.push(
                 context,
                 PageRouteBuilder(

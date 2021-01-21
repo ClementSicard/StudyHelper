@@ -44,8 +44,8 @@ class _GamePageState extends State<GamePage> {
 
   @override
   void initState() {
-    setup();
     super.initState();
+    setup();
   }
 
   @override
@@ -335,15 +335,16 @@ class _GamePageState extends State<GamePage> {
     for (Chapter c in _chapters) {
       _subjectsOri.addAll(c.subjects.map((s) => MapEntry(s, c)).toList());
     }
-    _colors = List.from(Colors.accents);
+    _colors = List.from(Colors.accents.map((c) => c[100]).toList());
+    print(_colors);
     _nbOfSubjects = _subjectsOri.length;
 
     setState(
       () {
+        _subjects = List.from(_subjectsOri);
         if (_random) {
           _subjects.shuffle();
         }
-        _subjects = List.from(_subjectsOri);
         _color = (_colors..shuffle()).first;
         _counter = 1;
         _putAsideCounter = 0;
