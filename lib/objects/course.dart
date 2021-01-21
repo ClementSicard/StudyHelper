@@ -14,7 +14,7 @@ class Course {
   }
 
   List<List<Subject>> get subjects {
-    List<List<Subject>> list = List();
+    List<List<Subject>> list = [];
     for (Chapter chapter in _chapters) {
       list.add(chapter.subjects);
     }

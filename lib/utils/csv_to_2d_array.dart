@@ -12,10 +12,10 @@ Future<List<Chapter>> csvTo2DArray(File csv, {String delimiter = ";"}) async {
     if (!_checkCorrectCSV(contents, nbOfChapters)) {
       return null;
     } else {
-      List<Chapter> chapters = List();
+      List<Chapter> chapters = [];
       List<String> firstLine = contents[0].split(delimiter);
       for (int i = 0; i < nbOfChapters; i++) {
-        List<Subject> subList = List();
+        List<Subject> subList = [];
         for (int j = 0; j < contents.length; j++) {
           List<String> currentLine = contents[j].split(delimiter);
           // Initially all the subjects are all poorly mastered
@@ -31,7 +31,7 @@ Future<List<Chapter>> csvTo2DArray(File csv, {String delimiter = ";"}) async {
 Future<void> arrayToCSV(List<Chapter> chapters, File csv,
     {String delimiter = ";"}) async {
   int max = _maxSubjects(chapters);
-  List<String> strings = List();
+  List<String> strings = [];
 
   // Initialize the list of strings to the max number of subjects
   for (int i = 0; i < max; i++) {
@@ -60,11 +60,7 @@ Future<void> arrayToCSV(List<Chapter> chapters, File csv,
   await csv.writeAsString(content);
 }
 
-/*******************************
-
-            HELPERS
-
-*******************************/
+// HELPERS
 
 int _maxSubjects(List<Chapter> chapters) {
   int currentMax = 0;

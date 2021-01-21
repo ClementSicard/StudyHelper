@@ -208,7 +208,7 @@ class CoursesPageState extends State<CoursesPage> {
                           String content = file.toString();
                           // Checks if correctly formated JSON file
                           try {
-                            var json = jsonDecode(content);
+                            jsonDecode(content);
                             Navigator.pop(newContext);
                             showCupertinoModalPopup(
                               context: context,

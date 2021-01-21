@@ -1,5 +1,3 @@
-import 'package:study_helper/objects/course.dart';
-
 class Subject {
   String _name;
   Mastered _mas;

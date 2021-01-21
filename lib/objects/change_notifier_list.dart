@@ -14,7 +14,7 @@ class ChangeNotifierList<E> with ChangeNotifier {
   }
 
   ChangeNotifierList.empty() {
-    _list = List();
+    _list = [];
   }
 
   bool get isEmpty {

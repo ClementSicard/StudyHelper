@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.orange,
               size: 40,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Text(
               widget.title,
               textAlign: TextAlign.center,
