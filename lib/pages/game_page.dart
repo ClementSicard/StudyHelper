@@ -132,7 +132,8 @@ class _GamePageState extends State<GamePage> {
                   elevation: 0,
                   hoverElevation: 0,
                   hoverColor: Colors.transparent,
-                  color: Colors.white54,
+                  color:
+                      themeChange.darkTheme ? Colors.black26 : Colors.white54,
                   focusColor: Colors.transparent,
                   highlightElevation: 0,
                   child: Padding(
@@ -214,7 +215,7 @@ class _GamePageState extends State<GamePage> {
               elevation: 0,
               hoverElevation: 0,
               hoverColor: Colors.transparent,
-              color: Colors.white54,
+              color: themeChange.darkTheme ? Colors.black12 : Colors.white54,
               focusColor: Colors.transparent,
               highlightElevation: 0,
               child: Padding(
@@ -239,7 +240,7 @@ class _GamePageState extends State<GamePage> {
                 ),
               ),
               hoverColor: Colors.transparent,
-              color: Colors.white70,
+              color: themeChange.darkTheme ? Colors.black26 : Colors.white70,
               elevation: 0,
               hoverElevation: 0,
               highlightElevation: 0,
@@ -408,7 +409,6 @@ class _GamePageState extends State<GamePage> {
       _subjectsOri.addAll(c.subjects.map((s) => MapEntry(s, c)).toList());
     }
     _colors = List.from(Colors.accents.map((c) => c[100]).toList());
-    print(_colors);
     _nbOfSubjects = _subjectsOri.length;
 
     setState(
