@@ -216,7 +216,7 @@ class _DiagonalScrollViewState extends State<DiagonalScrollView>
 
   void _handleScaleEnd(ScaleEndDetails details) {
     _position += _boxZoomOffset / _scale;
-    _boxZoomOffset = Offset(0, 0);
+    _boxZoomOffset = const Offset(0, 0);
 
     Offset velocity = details.velocity.pixelsPerSecond;
     if (widget.enableFling && velocity.distance > 0.0) {
@@ -224,7 +224,7 @@ class _DiagonalScrollViewState extends State<DiagonalScrollView>
 
       _flingAnimation = Tween<Offset>(
         begin: velocity,
-        end: Offset(0.0, 0.0),
+        end: const Offset(0.0, 0.0),
       ).animate(_flingController);
 
       _flingController.fling(velocity: 1.0);

@@ -9,6 +9,7 @@ import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/pages/session_settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
+import 'package:study_helper/utils/diagonal_scrollview.dart';
 import 'package:study_helper/utils/nice_button.dart';
 
 class ChaptersPage extends StatefulWidget {
@@ -628,17 +629,18 @@ class _ChaptersPageState extends State<ChaptersPage> {
             .toList(),
       );
 
-      return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: SizedBox(
-            height: scrollHeight(
-                context, appBarSize, dataRowHeight, headingRowHeight),
-            child: dataTable,
-          ),
-        ),
-      );
+      return DiagonalScrollView(child: dataTable);
+      // return SingleChildScrollView(
+      //   scrollDirection: Axis.vertical,
+      //   child: SingleChildScrollView(
+      //     scrollDirection: Axis.horizontal,
+      //     child: SizedBox(
+      //       height: scrollHeight(
+      //           context, appBarSize, dataRowHeight, headingRowHeight),
+      //       child: dataTable,
+      //     ),
+      //   ),
+      // );
     }
   }
 
