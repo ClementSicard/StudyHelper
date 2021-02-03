@@ -4,10 +4,8 @@ class Styles {
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
     return ThemeData(
       primarySwatch: Colors.red,
-      primaryColor:
-          isDarkTheme ? const Color(0xff2D2225) : const Color(0xffF1E9EB),
-      backgroundColor:
-          isDarkTheme ? const Color(0xff2D2225) : const Color(0xffF1E9EB),
+      primaryColor: isDarkTheme ? const Color(0xff2D2225) : Colors.white,
+      backgroundColor: isDarkTheme ? const Color(0xff2D2225) : Colors.white,
       highlightColor: Colors.white24,
       hoverColor: Colors.transparent,
       splashColor: Colors.white24,
@@ -27,7 +25,7 @@ class Styles {
       appBarTheme: AppBarTheme(
         centerTitle: true,
         elevation: 0.0,
-        color: isDarkTheme ? const Color(0xff2D2225) : const Color(0xffF1E9EB),
+        color: isDarkTheme ? const Color(0xff2D2225) : Colors.white,
         brightness: isDarkTheme ? Brightness.dark : Brightness.light,
         actionsIconTheme: IconThemeData(
           color: isDarkTheme ? Colors.white : Colors.black,
@@ -39,8 +37,8 @@ class Styles {
         size: 30,
       ),
       scaffoldBackgroundColor:
-          isDarkTheme ? const Color(0xff2D2225) : const Color(0xffF1E9EB),
-      dividerColor: isDarkTheme ? const Color(0xff282728) : Colors.white,
+          isDarkTheme ? const Color(0xff2D2225) : Colors.white,
+      dividerColor: isDarkTheme ? const Color(0xff2D2225) : Colors.white,
     );
   }
 }
