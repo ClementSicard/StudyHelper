@@ -195,8 +195,9 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
               Navigator.push(
                 context,
                 PageRouteBuilder(
-                    pageBuilder: (context, animation1, animation2) =>
-                        GamePage(_course, selectedChapters, _random)),
+                  pageBuilder: (context, animation1, animation2) =>
+                      GamePage(_course, selectedChapters, _random),
+                ),
               );
             }
           },
