@@ -1,9 +1,19 @@
+import 'package:flutter/material.dart';
+
 class Subject {
+  String _subjectID;
+  String _chapterID;
   String _name;
   Mastered _mas;
 
-  Subject(String name, {Mastered mas = Mastered.Poorly}) {
+  Subject({
+    @required String name,
+    @required String chapterID,
+    Mastered mas = Mastered.Poorly,
+  }) {
     this._name = name;
+    this._chapterID = chapterID;
+    this._subjectID = UniqueKey().toString();
     this._mas = mas;
   }
 
@@ -11,16 +21,17 @@ class Subject {
     _mas = mas;
   }
 
-  String get name {
-    return _name;
-  }
+  String get id => _subjectID;
+  String get chapterID => _chapterID;
+  String get name => _name;
 
-  Mastered get mas {
-    return _mas;
-  }
-
-  set name(String name) {
-    _name = name;
+  Map<String, dynamic> toMap() {
+    return {
+      "SubjectID": id,
+      "ChapterID": chapterID,
+      "Name": name,
+      "Mastered": _mas,
+    };
   }
 }
 

@@ -1,31 +1,33 @@
-import 'package:study_helper/objects/chapter.dart';
-import 'package:study_helper/objects/subject.dart';
+import 'package:flutter/material.dart';
 
 class Course {
+  String _courseID;
+  String _semesterID;
   String _name;
-  List<Chapter> _chapters;
   String _description;
 
-  Course(String name,
-      {List<Chapter> chapters = const [], String description = ""}) {
+  Course({
+    @required String name,
+    @required String semesterID,
+    String description = "",
+  }) {
     this._name = name;
-    this._chapters = chapters;
+    this._semesterID = semesterID;
     this._description = description;
+    this._courseID = UniqueKey().toString();
   }
 
-  List<List<Subject>> get subjects {
-    List<List<Subject>> list = [];
-    for (Chapter chapter in _chapters) {
-      list.add(chapter.subjects);
-    }
-    return list;
-  }
-
-  List<Chapter> get getChapters => List.from(_chapters);
+  String get id => _courseID;
+  String get semesterId => _semesterID;
   String get name => _name;
   String get description => _description;
 
-  set name(String newName) {
-    _name = newName;
+  Map<String, dynamic> toMap() {
+    return {
+      "CourseID": id,
+      "SemesterID": _semesterID,
+      "Name": name,
+      "Description": description,
+    };
   }
 }
