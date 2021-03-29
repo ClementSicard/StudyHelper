@@ -5,6 +5,7 @@ import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/utils/themes.dart';
 import 'pages/home_page.dart';
+import 'dart:io' show Platform;
 
 void main() {
   runApp(MyApp());
