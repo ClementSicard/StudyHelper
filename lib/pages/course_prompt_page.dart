@@ -5,23 +5,25 @@ import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
+import 'package:study_helper/objects/semester.dart';
 import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
 class CoursePromptPage extends StatefulWidget {
-  factory CoursePromptPage({Key key}) {
-    return CoursePromptPage._(key: key);
-  }
+  final Semester _semester;
 
-  CoursePromptPage._({Key key}) : super(key: key);
+  CoursePromptPage(this._semester, {Key key}) : super(key: key);
 
   @override
-  _CoursePromptPageState createState() => _CoursePromptPageState();
+  _CoursePromptPageState createState() => _CoursePromptPageState(_semester);
 }
 
 class _CoursePromptPageState extends State<CoursePromptPage> {
   TextEditingController _nameController;
   TextEditingController _descriptionController;
+  Semester _semester;
+
+  _CoursePromptPageState(this._semester);
 
   @override
   void initState() {
@@ -72,7 +74,6 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   labelStyle: customTextStyle(themeChange.darkTheme),
                   fillColor: Colors.blueAccent,
                 ),
-                maxLengthEnforced: true,
                 maxLength: 100,
                 maxLines: 1,
                 textCapitalization: TextCapitalization.sentences,
@@ -124,9 +125,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
           ),
           child: FloatingActionButton.extended(
             onPressed: () async {
-              final coursesData =
-                  Provider.of<CoursesDataHandler>(context, listen: false);
-              final List<Course> courses = coursesData.courses;
+              List<Course> courses = _semester.courses;
               final String givenName = _nameController.text;
               final String description = _descriptionController.text;
               if (givenName == "") {
@@ -176,12 +175,13 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 );
               } else {
                 final Course newCourse = Course(
-                  givenName,
+                  name: givenName,
                   description: description,
+                  semesterID: _semester.id,
                 );
                 final coursesData =
                     Provider.of<CoursesDataHandler>(context, listen: false);
-                await coursesData.save(newCourse);
+                await coursesData.addCourse(newCourse);
                 Navigator.pop(context);
               }
             },

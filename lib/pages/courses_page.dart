@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
@@ -16,13 +12,17 @@ import '../utils/custom_text_styles.dart';
 import 'course_prompt_page.dart';
 
 class CoursesPage extends StatefulWidget {
-  CoursesPage({Key key}) : super(key: key);
+  final Semester _semester;
+  CoursesPage(this._semester, {Key key}) : super(key: key);
 
   @override
-  CoursesPageState createState() => CoursesPageState();
+  CoursesPageState createState() => CoursesPageState(_semester);
 }
 
 class CoursesPageState extends State<CoursesPage> {
+  final Semester _semester;
+  CoursesPageState(this._semester);
+
   Widget _body(List<Course> courses, bool darkTheme) {
     if (courses == null) {
       return Center(
@@ -71,7 +71,7 @@ class CoursesPageState extends State<CoursesPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CoursePromptPage(),
+                        builder: (context) => CoursePromptPage(_semester),
                       ),
                     );
                   },
@@ -149,6 +149,7 @@ class CoursesPageState extends State<CoursesPage> {
         if (snapshot.hasData &&
             snapshot.connectionState == ConnectionState.done) {
           final List<Semester> semesters = snapshot.data;
+          final List<Course> courses = _semester.courses;
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -165,179 +166,6 @@ class CoursesPageState extends State<CoursesPage> {
                   Navigator.pop(context);
                 },
               ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(
-                      right: 10.0 / 360.0 * MediaQuery.of(context).size.width),
-                  child: IconButton(
-                    icon: const Icon(Icons.more_horiz_rounded),
-                    onPressed: () async {
-                      showCupertinoModalPopup(
-                        context: context,
-                        builder: (BuildContext newContext) =>
-                            CupertinoActionSheet(
-                          title: const Text('Additional features'),
-                          actions: [
-                            CupertinoActionSheetAction(
-                              child: const Text("Export to clipboard"),
-                              isDefaultAction: false,
-                              onPressed: () async {
-                                final dir =
-                                    await getApplicationDocumentsDirectory();
-                                final File file =
-                                    File("${dir.path}/courses_data.json");
-                                String contents;
-                                if (await file.exists()) {
-                                  contents = await file.readAsString();
-                                } else {
-                                  contents = "";
-                                }
-                                Clipboard.setData(
-                                    ClipboardData(text: contents));
-                                print("Done!");
-                                Navigator.pop(newContext);
-                              },
-                            ),
-                            CupertinoActionSheetAction(
-                              child: const Text("Import data from JSON file"),
-                              isDefaultAction: false,
-                              onPressed: () async {
-                                FilePickerCross file;
-
-                                // Try opening file from explorer
-                                try {
-                                  file =
-                                      await FilePickerCross.importFromStorage();
-                                } catch (e) {
-                                  // Handles the case where no file is selected
-                                  return Navigator.pop(newContext);
-                                }
-                                String content = file.toString();
-                                // Checks if correctly formated JSON file
-                                try {
-                                  jsonDecode(content);
-                                  Navigator.pop(newContext);
-                                  showCupertinoModalPopup(
-                                    context: context,
-                                    builder: (BuildContext aContext) =>
-                                        CupertinoActionSheet(
-                                      title: const Text(
-                                          "How do you want to import this JSON file ?"),
-                                      actions: [
-                                        CupertinoActionSheetAction(
-                                          child: const Text(
-                                              "Merge with existing data"),
-                                          onPressed: () async {
-                                            final coursesProvider =
-                                                Provider.of<CoursesDataHandler>(
-                                                    aContext,
-                                                    listen: false);
-                                            int count = await coursesProvider
-                                                .mergeData(content);
-                                            print(coursesProvider.courses);
-                                            print("Added " +
-                                                count.toString() +
-                                                " courses!");
-                                            Navigator.pop(aContext);
-                                          },
-                                        ),
-                                        CupertinoActionSheetAction(
-                                          child: const Text(
-                                              "Overwrite existing data"),
-                                          onPressed: () {
-                                            Navigator.pop(aContext);
-                                            final coursesProvider =
-                                                Provider.of<CoursesDataHandler>(
-                                                    aContext,
-                                                    listen: false);
-                                            try {
-                                              coursesProvider
-                                                  .overwriteData(content);
-                                              print("Done !");
-                                            } catch (e) {
-                                              return showCupertinoModalPopup(
-                                                context: aContext,
-                                                builder:
-                                                    (BuildContext bContext) =>
-                                                        CupertinoActionSheet(
-                                                  title: const Text(
-                                                      "Error importing this file"),
-                                                  cancelButton:
-                                                      CupertinoActionSheetAction(
-                                                    onPressed: () =>
-                                                        Navigator.pop(bContext),
-                                                    child: const Text("Cancel"),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          isDestructiveAction: true,
-                                        )
-                                      ],
-                                      cancelButton: CupertinoActionSheetAction(
-                                        child: const Text("Cancel"),
-                                        isDefaultAction: true,
-                                        onPressed: () => Navigator.pop(context),
-                                      ),
-                                    ),
-                                  );
-                                } catch (e) {
-                                  Navigator.pop(newContext);
-                                  return showCupertinoModalPopup(
-                                    context: context,
-                                    builder: (BuildContext nContext) =>
-                                        CupertinoActionSheet(
-                                      title: const Text(
-                                          "The JSON file you selected is invalid"),
-                                      cancelButton: CupertinoActionSheetAction(
-                                        child: const Text("Cancel"),
-                                        isDefaultAction: true,
-                                        onPressed: () =>
-                                            Navigator.pop(nContext),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                            CupertinoActionSheetAction(
-                              child: const Text("Export data to JSON file"),
-                              isDefaultAction: false,
-                              onPressed: () async {
-                                final dir =
-                                    await getApplicationDocumentsDirectory();
-                                final String path = "${dir.path}/courses_data";
-                                final File file = File(path + ".json");
-                                final Uint8List bytes =
-                                    await file.readAsBytes();
-                                FilePickerCross fp = FilePickerCross(bytes,
-                                    path: path, fileExtension: "json");
-                                try {
-                                  await fp.exportToStorage();
-                                  Navigator.pop(newContext);
-                                } catch (err) {
-                                  print("ici");
-                                }
-                              },
-                            ),
-                          ],
-                          cancelButton: CupertinoActionSheetAction(
-                            child: const Text(
-                              'Cancel',
-                              style: const TextStyle(color: Colors.blue),
-                            ),
-                            isDefaultAction: true,
-                            onPressed: () {
-                              Navigator.pop(context, 'Cancel');
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
             ),
             body: _body(courses, themeChange.darkTheme),
             floatingActionButton: Visibility(
@@ -349,7 +177,8 @@ class CoursesPageState extends State<CoursesPage> {
                 ),
                 child: FloatingActionButton(
                   onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => CoursePromptPage()),
+                    MaterialPageRoute(
+                        builder: (context) => CoursePromptPage(_semester)),
                   ),
                   child: const Icon(Icons.add),
                   backgroundColor: Colors.blueAccent[100],
