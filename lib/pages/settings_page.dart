@@ -6,9 +6,6 @@ import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
-import 'package:study_helper/objects/chapter.dart';
-import 'package:study_helper/objects/subject.dart';
-import 'package:study_helper/objects/course.dart';
 import '../objects/dark_theme_handler.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -82,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             child: const Text("OK"),
                             isDestructiveAction: true,
                             onPressed: () async {
-                              await coursesProvider.deleteData();
+                              await coursesProvider.clearData();
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },

@@ -374,7 +374,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                             final coursesProvider =
                                 Provider.of<CoursesDataHandler>(context,
                                     listen: false);
-                            await coursesProvider.removeChapter(_course, c);
+                            await coursesProvider.removeChapter(c);
                             Navigator.pop(context);
                           },
                         ),
@@ -580,8 +580,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                           Provider.of<CoursesDataHandler>(
                                               context,
                                               listen: false);
-                                      await coursesProvider.removeSubject(
-                                          _course, s.value, s.key);
+                                      await coursesProvider
+                                          .removeSubject(s.key);
                                       Navigator.pop(context);
                                     },
                                   ),
@@ -806,7 +806,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
     } else {
       final coursesProvider =
           Provider.of<CoursesDataHandler>(context, listen: false);
-      await coursesProvider.renameChapter(_course, chapter, newName);
+      await coursesProvider.renameChapter(chapter, newName);
       Navigator.pop(context);
     }
   }
@@ -859,7 +859,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
       final coursesData =
           Provider.of<CoursesDataHandler>(context, listen: false);
       await coursesData.addChapter(
-        _course,
         Chapter(
           name: name,
           courseID: _course.id,
@@ -916,8 +915,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
                     final coursesData =
                         Provider.of<CoursesDataHandler>(context, listen: false);
                     await coursesData.addSubject(
-                      _course,
-                      _selectedChapter,
                       Subject(
                         name: subjectName,
                         chapterID: _selectedChapter.id,

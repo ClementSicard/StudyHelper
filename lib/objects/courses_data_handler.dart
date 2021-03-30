@@ -13,13 +13,10 @@ class CoursesDataHandler with ChangeNotifier {
     _update();
   }
 
-  Future<bool> clear(Database db) async {
+  Future<bool> clearData() async {
     final Database db = await DBHelper.instance.database;
-    await db.rawQuery('TRUNCATE TABLE Course;');
-    await db.rawQuery('TRUNCATE TABLE Semester;');
-    await db.rawQuery('TRUNCATE TABLE Subject;');
-    await db.rawQuery('TRUNCATE TABLE Chapter;');
-    await _update();
+    await DBHelper.instance.clearDB(db);
+    print("[CoursesDataHandler] Data successfully cleared!");
     return true;
   }
 
@@ -46,6 +43,30 @@ class CoursesDataHandler with ChangeNotifier {
     return true;
   }
 
+  Future<List<Course>> getCoursesFromSemester(Semester semester) async {
+    final Database db = await DBHelper.instance.database;
+    final List<Course> courses = await _getCoursesFromDB(db, semester.id);
+    return courses;
+  }
+
+  Future<List<Chapter>> getChaptersFromCourse(Course course) async {
+    final Database db = await DBHelper.instance.database;
+    final List<Chapter> chapters = await _getChaptersFromDB(
+      db,
+      course.id,
+    );
+    return chapters;
+  }
+
+  Future<List<Subject>> getSubjectsFromChapter(Chapter chapter) async {
+    final Database db = await DBHelper.instance.database;
+    final List<Subject> subjects = await _getSubjectsFromDB(
+      db,
+      chapter.id,
+    );
+    return subjects;
+  }
+
   Future<List<Course>> _getCoursesFromDB(Database db, String semesterID) async {
     final List<Map> coursesFromDB = await db.query(
       'Course',
@@ -62,29 +83,23 @@ class CoursesDataHandler with ChangeNotifier {
     }).toList();
 
     for (Course course in courses) {
-      final List<Chapter> chapters =
-          await _getChaptersFromDB(db, semesterID, course.id);
+      final List<Chapter> chapters = await _getChaptersFromDB(db, semesterID);
       course.chapters = chapters;
     }
 
     return courses;
   }
 
-  Future<List<Chapter>> _getChaptersFromDB(
-      Database db, String semesterID, String courseID) async {
+  Future<List<Chapter>> _getChaptersFromDB(Database db, String courseID) async {
     var query = '''
-        SELECT Chapter.ChapterID, Chapter.Name, Chapter.Mastered, Chapter.Description FROM Semester 
-          JOIN Course 
-            JOIN Chapter 
-            ON Chapter.CourseID = Course.CourseID 
-          ON Course.SemesterID = Semester.SemesterID
+        SELECT Chapter.ChapterID, Chapter.Name, Chapter.Mastered, Chapter.Description FROM Course 
+          JOIN Chapter 
+          ON Chapter.CourseID = Course.CourseID 
         WHERE 
-          Semester.SemesterID = ? 
-          AND Course.CourseID = ?;
+          Course.CourseID = ?;
         ''';
 
-    final List<Map> chaptersFromDB =
-        await db.rawQuery(query, [semesterID, courseID]);
+    final List<Map> chaptersFromDB = await db.rawQuery(query, [courseID]);
 
     final List<Chapter> chapters = chaptersFromDB
         .map(
@@ -99,8 +114,7 @@ class CoursesDataHandler with ChangeNotifier {
         .toList();
 
     for (Chapter chapter in chapters) {
-      final List<Subject> subjects =
-          await _getSubjectsFromDB(db, semesterID, courseID, chapter.id);
+      final List<Subject> subjects = await _getSubjectsFromDB(db, chapter.id);
       chapter.subjects = subjects;
     }
 
@@ -108,23 +122,16 @@ class CoursesDataHandler with ChangeNotifier {
   }
 
   Future<List<Subject>> _getSubjectsFromDB(
-      Database db, String semesterID, String courseID, String chapterID) async {
+      Database db, String chapterID) async {
     var query = '''
-        SELECT Subject.SubjectID, Subject.Name, Subject.Mastered FROM Semester 
-          JOIN Course 
-            JOIN Chapter 
-              JOIN Subject 
-              ON Subject.ChapterID = Chapter.ChapterID 
-            ON Chapter.CourseID = Course.CourseID 
-          ON Course.SemesterID = Semester.SemesterID
+        SELECT Subject.SubjectID, Subject.Name, Subject.Mastered FROM Chapter 
+          JOIN Subject 
+          ON Subject.ChapterID = Chapter.ChapterID 
         WHERE 
-          Semester.SemesterID = ? 
-          AND Course.CourseID = ?
-          AND Chapter.ChapterID = ?;
+          Chapter.ChapterID = ?;
         ''';
 
-    List<Map> subjectsFromDB =
-        await db.rawQuery(query, [semesterID, courseID, chapterID]);
+    List<Map> subjectsFromDB = await db.rawQuery(query, [chapterID]);
 
     List<Subject> subjects = subjectsFromDB
         .map(

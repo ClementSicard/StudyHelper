@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
+import 'package:study_helper/objects/semester.dart';
 import 'package:study_helper/utils/custom_alert_dialog.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 
@@ -125,7 +126,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
             onPressed: () async {
               final coursesData =
                   Provider.of<CoursesDataHandler>(context, listen: false);
-              final List<Course> courses = coursesData.courses;
+              final List<Semester> semesters = await coursesData.getSemesters();
               final String givenName = _nameController.text;
               final String description = _descriptionController.text;
               if (givenName == "") {
@@ -133,7 +134,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                   context: context,
                   builder: (BuildContext context) {
                     return CupertinoActionSheet(
-                      title: const Text("Please give a name for your course"),
+                      title: const Text("Please give a name for the semester"),
                       message: const Text("The name cannot be empty"),
                       actions: [
                         CupertinoActionSheetAction(
@@ -149,8 +150,8 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                     );
                   },
                 );
-              } else if (courses
-                  .map((c) => c.name)
+              } else if (semesters
+                  .map((s) => s.name)
                   .toSet()
                   .contains(givenName)) {
                 await showDialog(
@@ -174,13 +175,13 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                   },
                 );
               } else {
-                final Course newCourse = Course(
-                  givenName,
+                final Semester newSemester = Semester(
+                  name: givenName,
                   description: description,
                 );
                 final coursesData =
                     Provider.of<CoursesDataHandler>(context, listen: false);
-                await coursesData.save(newCourse);
+                await coursesData.addSemester(newSemester);
                 Navigator.pop(context);
               }
             },

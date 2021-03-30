@@ -10,7 +10,7 @@ class DBHelper {
   static final _databaseVersion = 1;
   static final table = "courses";
 
-  final _subjectCreationQuery = '''CREATE TABLE   Subject(
+  final _subjectCreationQuery = '''CREATE TABLE Subject(
         SubjectID varchar(1000), 
         ChapterID varchar(1000), 
         Name varchar(100), 
@@ -65,6 +65,14 @@ class DBHelper {
     await db.execute(_courseCreationQuery);
     await db.execute(_semesterCreationQuery);
     print("[DBHelper] Database was created!");
+  }
+
+  Future<void> clearDB(Database db) async {
+    final Database db = await DBHelper.instance.database;
+    await db.rawQuery('TRUNCATE TABLE Course;');
+    await db.rawQuery('TRUNCATE TABLE Semester;');
+    await db.rawQuery('TRUNCATE TABLE Subject;');
+    await db.rawQuery('TRUNCATE TABLE Chapter;');
   }
 
   // Course methods

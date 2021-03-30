@@ -16,6 +16,7 @@ dependencies:
   disk_space: ^0.0.3
   downloads_path_provider: ^0.1.0
   file_chooser: ^0.1.6
+  flutter_easyloading: ^3.0.0
   flutter_icons: ^1.1.0
   path: ^1.8.0
   provider: ^4.3.2+1xw
