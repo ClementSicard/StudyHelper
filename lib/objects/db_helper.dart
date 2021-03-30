@@ -1,8 +1,9 @@
-import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/objects/semester.dart';
+import 'package:study_helper/objects/subject.dart';
 
 class DBHelper {
   static final _databaseName = 'courses.db';
@@ -35,7 +36,7 @@ class DBHelper {
         SemesterID varchar(1000), 
         Name varchar(100), 
         Description varchar(1000), 
-        PRIMARY KEY (SemesterID)
+        PRIMARY KEY (SemesterID, Name)
         );''';
 
   DBHelper._privateConstructor();
@@ -70,6 +71,7 @@ class DBHelper {
 
   Future<void> addCourse(Course course) async {
     final Database db = await database;
+
     await db.insert(
       'Course',
       course.toMap(),
@@ -107,7 +109,117 @@ class DBHelper {
   // Chapter methods
 
   Future<void> addChapter(Chapter chapter) async {
-    await 
+    final Database db = await database;
+
+    await db.insert(
+      'Chapter',
+      chapter.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
   }
 
+  Future<void> renameChapter(
+    Chapter chapter,
+    String newName,
+  ) async {
+    final Database db = await database;
+    var row = chapter.toMap();
+    row["Name"] = newName;
+
+    await db.update(
+      'Chapter',
+      row,
+      where: "ChapterID = ?",
+      whereArgs: [chapter.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> deleteChapter(Chapter chapter) async {
+    final Database db = await database;
+
+    await db.delete(
+      'Chapter',
+      where: "ChapterID = ?",
+      whereArgs: [chapter.id],
+    );
+  }
+
+  // Subject methods
+
+  Future<void> addSubject(Subject subject) async {
+    final Database db = await database;
+
+    await db.insert(
+      'Subject',
+      subject.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+  }
+
+  Future<void> renameSubject(
+    Subject subject,
+    String newName,
+  ) async {
+    final Database db = await database;
+    var row = subject.toMap();
+    row["Name"] = newName;
+
+    await db.update(
+      'Subject',
+      row,
+      where: "SubjectID = ?",
+      whereArgs: [subject.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> deleteSubject(Subject subject) async {
+    final Database db = await database;
+
+    await db.delete(
+      'Subject',
+      where: "SubjectID = ?",
+      whereArgs: [subject.id],
+    );
+  }
+
+  // Semester methods
+
+  Future<void> addSemester(Semester semester) async {
+    final Database db = await database;
+
+    await db.insert(
+      'Semester',
+      semester.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+  }
+
+  Future<void> renameSemester(
+    Semester semester,
+    String newName,
+  ) async {
+    final Database db = await database;
+    var row = semester.toMap();
+    row["Name"] = newName;
+
+    await db.update(
+      'Semester',
+      row,
+      where: "SemesterID = ?",
+      whereArgs: [semester.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> deleteSemester(Semester semester) async {
+    final Database db = await database;
+
+    await db.delete(
+      'Semester',
+      where: "SemesterID = ?",
+      whereArgs: [semester.id],
+    );
+  }
 }

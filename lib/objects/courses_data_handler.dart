@@ -1,512 +1,232 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/objects/db_helper.dart';
+import 'package:study_helper/objects/semester.dart';
 import 'package:study_helper/objects/subject.dart';
 
 class CoursesDataHandler with ChangeNotifier {
-  List<Course> _courses;
+  List<Semester> _semesters;
 
   CoursesDataHandler() {
     _update();
   }
 
-  Future<bool> save(Course course) async {
-    if (course == null) {
-      return true;
-    }
-
-    final dir = await getApplicationDocumentsDirectory();
-    print(dir.path);
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      contents = "";
-    }
-
-    List<Map<String, List<String>>> chapters =
-        List<Map<String, List<String>>>.generate(
-      course.getChapters.length,
-      (index) {
-        Chapter currentChapter = course.getChapters[index];
-        return {
-          "name": [currentChapter.name],
-          "subjects": currentChapter.subjects.map((s) => s.name).toList()
-        };
-      },
-    );
-
-    final Map toAdd = {
-      "name": course.name,
-      "chapters": chapters,
-    };
-
-    dynamic previousSave;
-
-    if (contents.isEmpty) {
-      previousSave = [toAdd];
-    } else {
-      previousSave = jsonDecode(contents);
-      previousSave.add(toAdd);
-    }
-
-    contents = jsonEncode(previousSave);
-    await file.writeAsString(contents);
-
-    _update();
-    return true;
-  }
-
-  Future<bool> renameCourse(Course course, String name) async {
-    if (course == null) {
-      return false;
-    }
-
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      return false;
-    }
-
-    List decodedContents = jsonDecode(contents);
-
-    bool found = false;
-    for (int i = 0; i < decodedContents.length; i++) {
-      if (decodedContents[i]["name"] == course.name) {
-        found = true;
-        decodedContents[i]["name"] = name;
-      }
-    }
-    if (found) {
-      contents = jsonEncode(decodedContents);
-      await file.writeAsString(contents);
-      _update();
-    }
-
-    return found;
-  }
-
-  Future<void> updateCourse(Course course) async {
-    assert(course != null);
-    await removeCourse(course);
-    await save(course);
-  }
+  Future<bool> clear() async {}
 
   Future<bool> _update() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
+    final Database db = await DBHelper.instance.database;
 
-    if (!await file.exists()) {
-      _courses = [];
-      notifyListeners();
-      return true;
+    List<Map> semestersFromDB = await db.query('Semester');
+    List<Semester> semesters = semestersFromDB
+        .map(
+          (m) => Semester(
+              id: m["SemesterID"],
+              name: m["Name"],
+              description: m["Description"]),
+        )
+        .toList();
+
+    for (Semester semester in semesters) {
+      final List<Course> courses = await _getCoursesFromDB(db, semester.id);
+      semester.courses = courses;
     }
-    String contents = await file.readAsString();
-    final List decodedContents = jsonDecode(contents);
 
-    List<Course> courses = List<Course>.generate(
-      decodedContents.length,
-      (index) {
-        final decodedChapters = decodedContents[index]["chapters"];
-        List<Chapter> chapters = List<Chapter>.generate(
-          decodedChapters.length,
-          (i) {
-            return Chapter(
-              decodedChapters[i]["name"][0],
-              subjects: List<Subject>.generate(
-                  decodedChapters[i]["subjects"].length, (j) {
-                return Subject(decodedChapters[i]["subjects"][j]);
-              }),
-            );
-          },
-        );
-        return Course(decodedContents[index]["name"], chapters: chapters);
-      },
-    );
-    _courses = courses;
+    _semesters = semesters;
     notifyListeners();
     return true;
   }
 
-  Future<bool> removeCourseAtIndex(int index) async {
-    assert(index >= 0);
+  Future<List<Course>> _getCoursesFromDB(Database db, String semesterID) async {
+    final List<Map> coursesFromDB = await db.query(
+      'Course',
+      where: "SemesterID = ?",
+      whereArgs: [semesterID],
+    );
 
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
+    final List<Course> courses = coursesFromDB.map((c) {
+      return Course(
+        name: c["Name"],
+        id: c["CourseID"],
+        semesterID: semesterID,
+      );
+    }).toList();
 
-    if (!await file.exists()) {
-      _courses = [];
-      notifyListeners();
-      return true;
+    for (Course course in courses) {
+      final List<Chapter> chapters =
+          await _getChaptersFromDB(db, semesterID, course.id);
+      course.chapters = chapters;
     }
-    String contents = await file.readAsString();
-    final List previousSave = jsonDecode(contents);
 
-    if (index >= previousSave.length) {
-      return false;
+    return courses;
+  }
+
+  Future<List<Chapter>> _getChaptersFromDB(
+      Database db, String semesterID, String courseID) async {
+    var query = '''
+        SELECT Chapter.ChapterID, Chapter.Name, Chapter.Mastered, Chapter.Description FROM Semester 
+          JOIN Course 
+            JOIN Chapter 
+            ON Chapter.CourseID = Course.CourseID 
+          ON Course.SemesterID = Semester.SemesterID
+        WHERE 
+          Semester.SemesterID = '$semesterID' 
+          AND Course.CourseID = '$courseID';
+        ''';
+
+    final List<Map> chaptersFromDB = await db.rawQuery(query);
+
+    final List<Chapter> chapters = chaptersFromDB
+        .map(
+          (m) => Chapter(
+            id: m["ChapterID"],
+            name: m["Name"],
+            mas: m["Mastered"],
+            description: m["Description"],
+            courseID: courseID,
+          ),
+        )
+        .toList();
+
+    for (Chapter chapter in chapters) {
+      final List<Subject> subjects =
+          await _getSubjectsFromDB(db, semesterID, courseID, chapter.id);
+      chapter.subjects = subjects;
     }
-    previousSave.removeAt(index);
-    contents = jsonEncode(previousSave);
-    await file.writeAsString(contents);
-    _update();
+
+    return chapters;
+  }
+
+  Future<List<Subject>> _getSubjectsFromDB(
+      Database db, String semesterID, String courseID, String chapterID) async {
+    var query = '''
+        SELECT Subject.SubjectID, Subject.Name, Subject.Mastered FROM Semester 
+          JOIN Course 
+            JOIN Chapter 
+              JOIN Subject 
+              ON Subject.ChapterID = Chapter.ChapterID 
+            ON Chapter.CourseID = Course.CourseID 
+          ON Course.SemesterID = Semester.SemesterID
+        WHERE 
+          Semester.SemesterID = '$semesterID' 
+          AND Course.CourseID = '$courseID'
+          AND Chapter.ChapterID = '$chapterID';
+        ''';
+
+    List<Map> subjectsFromDB = await db.rawQuery(query);
+
+    List<Subject> subjects = subjectsFromDB
+        .map(
+          (m) => Subject(
+            id: m["SubjectID"],
+            name: m["Name"],
+            mas: m["Mastered"],
+            chapterID: chapterID,
+          ),
+        )
+        .toList();
+
+    return subjects;
+  }
+
+// Semester methods
+
+  Future<bool> addSemester(Semester semester) async {
+    await DBHelper.instance.addSemester(semester);
+    await _update();
+    print("[CoursesDataHandler] Semester well added!");
+    return true;
+  }
+
+  Future<bool> renameSemester(Semester semester, String newName) async {
+    await DBHelper.instance.renameSemester(semester, newName);
+    await _update();
+    print("[CoursesDataHandler] Semester well renamed!");
+    return true;
+  }
+
+  Future<bool> removeSemester(Semester semester) async {
+    await DBHelper.instance.deleteSemester(semester);
+    await _update();
+    print("[CoursesDataHandler] Semester well removed!");
+    return true;
+  }
+
+// Course methods
+
+  Future<bool> addCourse(Course course) async {
+    await DBHelper.instance.addCourse(course);
+    await _update();
+    print("[CoursesDataHandler] Course well added!");
     return true;
   }
 
   Future<bool> removeCourse(Course course) async {
-    assert(course != null);
-
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-
-    if (!await file.exists()) {
-      _courses = [];
-      notifyListeners();
-      return true;
-    }
-    String contents = await file.readAsString();
-    final List previousSave = jsonDecode(contents);
-
-    for (int i = 0; i < previousSave.length; i++) {
-      if (previousSave[i]["name"] == course.name) {
-        previousSave.removeAt(i);
-      }
-    }
-    contents = jsonEncode(previousSave);
-    await file.writeAsString(contents);
-
-    _update();
+    await DBHelper.instance.deleteCourse(course);
+    await _update();
+    print("[CoursesDataHandler] Course well deleted!");
     return true;
   }
 
-  Future<bool> clear() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      return false;
-    }
-
-    List previousSave = jsonDecode(contents);
-    previousSave.clear();
-
-    contents = jsonEncode(previousSave);
-    await file.writeAsString(contents);
-    _update();
+  Future<bool> renameCourse(Course course, String newName) async {
+    await DBHelper.instance.renameCourse(course, newName);
+    await _update();
+    print("[CoursesDataHandler] Course well renamed!");
     return true;
   }
 
-  Future<bool> addChapter(Course course, Chapter chapter) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      return false;
-    }
+// Chapter methods
 
-    List decodedContents = jsonDecode(contents);
-    bool found = false;
-    for (int i = 0; i < decodedContents.length; i++) {
-      if (decodedContents[i]["name"] == course.name) {
-        found = true;
-        Map<String, List<String>> cMap = {
-          "name": [chapter.name],
-          "subjects": chapter.subjects.map((s) => s.name).toList()
-        };
-        decodedContents[i]["chapters"].add(cMap);
-      }
-    }
-    if (found) {
-      contents = jsonEncode(decodedContents);
-      await file.writeAsString(contents);
-      _update();
-    }
-    return found;
+  Future<bool> addChapter(Chapter chapter) async {
+    await DBHelper.instance.addChapter(chapter);
+    await _update();
+    print("[CoursesDataHandler] Chapter well added!");
+    return true;
   }
 
-  Future<bool> removeChapter(Course course, Chapter chapter) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      return false;
-    }
-
-    List decodedContents = jsonDecode(contents);
-    bool found = false;
-    for (int i = 0; i < decodedContents.length; i++) {
-      if (decodedContents[i]["name"] == course.name) {
-        List chapters = decodedContents[i]["chapters"];
-        for (int j = 0; j < chapters.length; j++) {
-          if (chapters[j]["name"][0] == chapter.name) {
-            decodedContents[i]["chapters"].removeAt(j);
-            found = true;
-          }
-        }
-      }
-    }
-    if (found) {
-      contents = jsonEncode(decodedContents);
-      await file.writeAsString(contents);
-      _update();
-    }
-    return found;
+  Future<bool> renameChapter(Chapter chapter, String newName) async {
+    await DBHelper.instance.renameChapter(chapter, newName);
+    await _update();
+    print("[CoursesDataHandler] Chapter well renamed!");
+    return true;
   }
 
-  Future<bool> renameChapter(
-      Course course, Chapter chapter, String newName) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      return false;
-    }
-
-    List decodedContents = jsonDecode(contents);
-    bool found = false;
-    for (int i = 0; i < decodedContents.length; i++) {
-      if (decodedContents[i]["name"] == course.name) {
-        List chapters = decodedContents[i]["chapters"];
-        for (int j = 0; j < chapters.length; j++) {
-          if (chapters[j]["name"][0] == chapter.name) {
-            chapters[j]["name"][0] = newName;
-            found = true;
-          }
-        }
-      }
-    }
-    if (found) {
-      contents = jsonEncode(decodedContents);
-      await file.writeAsString(contents);
-      _update();
-    }
-    return found;
+  Future<bool> removeChapter(Chapter chapter) async {
+    await DBHelper.instance.deleteChapter(chapter);
+    await _update();
+    print("[CoursesDataHandler] Chapter well removed!");
+    return true;
   }
 
-  Future<bool> addSubject(
-      Course course, Chapter chapter, Subject subject) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      return false;
-    }
+// Subject methods
 
-    List decodedContents = jsonDecode(contents);
-    bool found = false;
-    for (int i = 0; i < decodedContents.length; i++) {
-      if (decodedContents[i]["name"] == course.name) {
-        for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
-          if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
-            found = true;
-            decodedContents[i]["chapters"][j]["subjects"].add(subject.name);
-          }
-        }
-      }
-    }
-    if (found) {
-      contents = jsonEncode(decodedContents);
-      await file.writeAsString(contents);
-      _update();
-      print("Subject saved!");
-    }
-    return found;
-  }
-
-  Future<bool> removeSubject(
-      Course course, Chapter chapter, Subject subject) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      return false;
-    }
-
-    List decodedContents = jsonDecode(contents);
-    bool found = false;
-    for (int i = 0; i < decodedContents.length; i++) {
-      if (decodedContents[i]["name"] == course.name) {
-        for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
-          if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
-            found = true;
-            List subjects = decodedContents[i]["chapters"][j]["subjects"];
-            for (int k = 0; k < subjects.length; k++) {
-              if (subjects[k] == subject.name) {
-                decodedContents[i]["chapters"][j]["subjects"].removeAt(k);
-              }
-            }
-          }
-        }
-      }
-    }
-    if (found) {
-      contents = jsonEncode(decodedContents);
-      await file.writeAsString(contents);
-      _update();
-      print("Subject removed!");
-    } else {
-      print("ça marche pas encore bg");
-    }
-    return found;
+  Future<bool> addSubject(Subject subject) async {
+    await DBHelper.instance.addSubject(subject);
+    await _update();
+    print("[CoursesDataHandler] Subject well added!");
+    return true;
   }
 
   Future<bool> renameSubject(
       Course course, Chapter chapter, Subject subject, String newName) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      return false;
-    }
-
-    List decodedContents = jsonDecode(contents);
-    bool found = false;
-    for (int i = 0; i < decodedContents.length; i++) {
-      if (decodedContents[i]["name"] == course.name) {
-        for (int j = 0; j < decodedContents[i]["chapters"].length; j++) {
-          if (decodedContents[i]["chapters"][j]["name"][0] == chapter.name) {
-            found = true;
-            List subjects = decodedContents[i]["chapters"][j]["subjects"];
-            for (int k = 0; k < subjects.length; k++) {
-              if (subjects[k] == subject.name) {
-                decodedContents[i]["chapters"][j]["subjects"][k] = newName;
-              }
-            }
-          }
-        }
-      }
-    }
-    if (found) {
-      contents = jsonEncode(decodedContents);
-      await file.writeAsString(contents);
-      _update();
-      print("Subject renamed!");
-    } else {
-      print("ça marche pas encore bg");
-    }
-    return found;
-  }
-
-  List<Course> get courses => _courses;
-
-  List<Chapter> get chapters {
-    List<Chapter> acc = [];
-    for (Course c in _courses) {
-      acc.addAll(c.getChapters);
-    }
-    return acc;
-  }
-
-  List<Subject> get subjects {
-    List<Subject> acc = [];
-    for (Course c in _courses) {
-      for (List<Subject> l in c.subjects) {
-        acc.addAll(l);
-      }
-    }
-    return acc;
-  }
-
-  List<Chapter> getChapters(Course course) {
-    for (Course c in _courses) {
-      if (c.name == course.name) {
-        return c.getChapters;
-      }
-    }
-    print("On a pas trouvé le cours");
-    return [];
-  }
-
-  Future<File> exportJSONFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = await file.readAsString();
-    } else {
-      contents = "";
-    }
-
-    final File backupFile = File("${dir.path}/courses_data_export.json");
-    await backupFile.writeAsString(contents);
-    return backupFile;
-  }
-
-  Future<void> deleteData() async {
-    for (Course c in this._courses) {
-      await removeCourse(c);
-    }
-    print("Data deleted!");
-  }
-
-  Future<bool> overwriteData(String newContent) async {
-    var json = jsonDecode(newContent);
-    List test = json[0]["chapters"];
-    if (test == null) {
-      throw Exception("Not well structured JSON file for this application");
-    }
-    final dir = await getApplicationDocumentsDirectory();
-    final File file = File("${dir.path}/courses_data.json");
-    String contents;
-    if (await file.exists()) {
-      contents = newContent;
-    } else {
-      return false;
-    }
-    await file.writeAsString(contents);
-    _update();
+    await DBHelper.instance.addSubject(subject);
+    await _update();
+    print("[CoursesDataHandler] Subject well renamed!");
     return true;
   }
 
-  Future<int> mergeData(String newContent) async {
-    int count = 0;
-    var json = jsonDecode(newContent);
-    List test = json[0]["chapters"];
-    if (test == null) {
-      throw Exception("Not well structured JSON file for this application");
+  Future<bool> removeSubject(Subject subject) async {
+    await DBHelper.instance.deleteSubject(subject);
+    await _update();
+    print("[CoursesDataHandler] Subject well removed!");
+    return true;
+  }
+
+  Future<List<Semester>> getSemesters() async {
+    if (_semesters == null) {
+      await _update();
     }
-    if (_courses == null || _courses.isEmpty) {
-      overwriteData(newContent);
-      return json.length;
-    } else {
-      for (int i = 0; i < json.length; i++) {
-        var current = json[i];
-        if (!_courses.map((c) => c.name).toSet().contains(current["name"])) {
-          count++;
-          List<Chapter> chapters = [];
-          for (int j = 0; j < current["chapters"].length; j++) {
-            var chap = current["chapters"][j];
-            Chapter chapter = Chapter(chap["name"][0]);
-            for (String s in chap["subjects"]) {
-              chapter.addSubject(Subject(s));
-            }
-            print(chapter.subjects);
-          }
-          Course course = Course(current["name"], chapters: chapters);
-          await save(course);
-        }
-      }
-      return count;
-    }
+    return _semesters;
   }
 }

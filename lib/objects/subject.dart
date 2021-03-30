@@ -9,11 +9,12 @@ class Subject {
   Subject({
     @required String name,
     @required String chapterID,
+    String id,
     Mastered mas = Mastered.Poorly,
   }) {
     this._name = name;
     this._chapterID = chapterID;
-    this._subjectID = UniqueKey().toString();
+    this._subjectID = id == null ? UniqueKey().toString() : id;
     this._mas = mas;
   }
 

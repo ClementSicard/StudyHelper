@@ -55,7 +55,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
       for (int j = 0; j < _chapters.length; j++) {
         subList.add(_chapters[j].subjects.length > i
             ? MapEntry(_chapters[j].subjects[i], _chapters[j])
-            : MapEntry(Subject(""), Chapter("")));
+            : MapEntry(Subject(name: "", chapterID: ""),
+                Chapter(name: "", courseID: "")));
       }
 
       subjectsByCol.add(subList);
@@ -66,7 +67,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
   @override
   Widget build(BuildContext context) {
     final coursesData = Provider.of<CoursesDataHandler>(context, listen: true);
-    _chapters = coursesData.getChapters(_course);
+    _chapters = _course.chapters;
     final themeChange = Provider.of<DarkThemeProvider>(context);
     AppBar appBar = AppBar(
       title: InkWell(
@@ -857,7 +858,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
     } else {
       final coursesData =
           Provider.of<CoursesDataHandler>(context, listen: false);
-      await coursesData.addChapter(_course, Chapter(name));
+      await coursesData.addChapter(
+        _course,
+        Chapter(
+          name: name,
+          courseID: _course.id,
+        ),
+      );
       Navigator.of(context).pop();
     }
   }
@@ -887,11 +894,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           'There already exists a subject with the same name in the same chapter'),
                       content: const Text("Please try a different one"),
                       actions: [
-                        FlatButton(
+                        TextButton(
                           child: const Text('OK'),
                           onPressed: () => Navigator.of(context).pop(),
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
                         ),
                       ],
                     );
@@ -901,11 +906,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       title: const Text("A subject cannot have an empty name"),
                       content: Text("Please try a different one"),
                       actions: [
-                        FlatButton(
+                        TextButton(
                           child: const Text('OK'),
                           onPressed: () => Navigator.of(context).pop(),
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
                         ),
                       ],
                     );
@@ -915,7 +918,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                     await coursesData.addSubject(
                       _course,
                       _selectedChapter,
-                      Subject(subjectName),
+                      Subject(
+                        name: subjectName,
+                        chapterID: _selectedChapter.id,
+                      ),
                     );
                     Navigator.pop(context);
                     Navigator.pop(context);
