@@ -13,7 +13,15 @@ class CoursesDataHandler with ChangeNotifier {
     _update();
   }
 
-  Future<bool> clear() async {}
+  Future<bool> clear(Database db) async {
+    final Database db = await DBHelper.instance.database;
+    await db.rawQuery('TRUNCATE TABLE Course;');
+    await db.rawQuery('TRUNCATE TABLE Semester;');
+    await db.rawQuery('TRUNCATE TABLE Subject;');
+    await db.rawQuery('TRUNCATE TABLE Chapter;');
+    await _update();
+    return true;
+  }
 
   Future<bool> _update() async {
     final Database db = await DBHelper.instance.database;
@@ -71,11 +79,12 @@ class CoursesDataHandler with ChangeNotifier {
             ON Chapter.CourseID = Course.CourseID 
           ON Course.SemesterID = Semester.SemesterID
         WHERE 
-          Semester.SemesterID = '$semesterID' 
-          AND Course.CourseID = '$courseID';
+          Semester.SemesterID = ? 
+          AND Course.CourseID = ?;
         ''';
 
-    final List<Map> chaptersFromDB = await db.rawQuery(query);
+    final List<Map> chaptersFromDB =
+        await db.rawQuery(query, [semesterID, courseID]);
 
     final List<Chapter> chapters = chaptersFromDB
         .map(
@@ -109,12 +118,13 @@ class CoursesDataHandler with ChangeNotifier {
             ON Chapter.CourseID = Course.CourseID 
           ON Course.SemesterID = Semester.SemesterID
         WHERE 
-          Semester.SemesterID = '$semesterID' 
-          AND Course.CourseID = '$courseID'
-          AND Chapter.ChapterID = '$chapterID';
+          Semester.SemesterID = ? 
+          AND Course.CourseID = ?
+          AND Chapter.ChapterID = ?;
         ''';
 
-    List<Map> subjectsFromDB = await db.rawQuery(query);
+    List<Map> subjectsFromDB =
+        await db.rawQuery(query, [semesterID, courseID, chapterID]);
 
     List<Subject> subjects = subjectsFromDB
         .map(

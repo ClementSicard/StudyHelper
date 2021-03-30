@@ -9,9 +9,9 @@ import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
 
 class CoursesPage extends StatefulWidget {
-  Semester _semester;
+  final Semester _semester;
 
-  CoursesPage({Key key}) : super(key: key);
+  CoursesPage(this._semester, {Key key}) : super(key: key);
 
   @override
   CoursesPageState createState() => CoursesPageState();
@@ -52,7 +52,9 @@ class CoursesPageState extends State<CoursesPage> {
                         child: IconButton(
                           icon: Icon(
                             Icons.add,
-                            color: darkTheme ? Color(0xff282728) : Colors.white,
+                            color: darkTheme
+                                ? const Color(0xff282728)
+                                : Colors.white,
                           ),
                           enableFeedback: true,
                           iconSize: MediaQuery.of(context).size.height / 17.0,
