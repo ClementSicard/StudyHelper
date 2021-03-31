@@ -180,7 +180,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   semesterID: _semester.id,
                 );
                 final coursesData =
-                    Provider.of<CoursesDataHandler>(context, listen: false);
+                    Provider.of<DataHandler>(context, listen: false);
                 await coursesData.addCourse(newCourse);
                 Navigator.pop(context);
               }

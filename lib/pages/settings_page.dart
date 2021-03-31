@@ -19,8 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    final coursesProvider =
-        Provider.of<CoursesDataHandler>(context, listen: false);
+    final dataProvider = Provider.of<DataHandler>(context, listen: false);
     return Container(
       child: Scaffold(
         appBar: AppBar(
@@ -79,7 +78,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             child: const Text("OK"),
                             isDestructiveAction: true,
                             onPressed: () async {
-                              await coursesProvider.clearData();
+                              await dataProvider.clearData();
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },

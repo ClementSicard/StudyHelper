@@ -6,17 +6,18 @@ import 'package:study_helper/objects/db_helper.dart';
 import 'package:study_helper/objects/semester.dart';
 import 'package:study_helper/objects/subject.dart';
 
-class CoursesDataHandler with ChangeNotifier {
+class DataHandler with ChangeNotifier {
   List<Semester> _semesters;
 
-  CoursesDataHandler() {
+  DataHandler() {
     _update();
   }
 
   Future<bool> clearData() async {
     final Database db = await DBHelper.instance.database;
     await DBHelper.instance.clearDB(db);
-    print("[CoursesDataHandler] Data successfully cleared!");
+    await _update();
+    print("[DataHandler] Data successfully cleared!");
     return true;
   }
 
@@ -162,21 +163,21 @@ class CoursesDataHandler with ChangeNotifier {
   Future<bool> addSemester(Semester semester) async {
     await DBHelper.instance.addSemester(semester);
     await _update();
-    print("[CoursesDataHandler] Semester well added!");
+    print("[DataHandler] Semester well added!");
     return true;
   }
 
   Future<bool> renameSemester(Semester semester, String newName) async {
     await DBHelper.instance.renameSemester(semester, newName);
     await _update();
-    print("[CoursesDataHandler] Semester well renamed!");
+    print("[DataHandler] Semester well renamed!");
     return true;
   }
 
   Future<bool> removeSemester(Semester semester) async {
     await DBHelper.instance.deleteSemester(semester);
     await _update();
-    print("[CoursesDataHandler] Semester well removed!");
+    print("[DataHandler] Semester well removed!");
     return true;
   }
 
@@ -185,21 +186,21 @@ class CoursesDataHandler with ChangeNotifier {
   Future<bool> addCourse(Course course) async {
     await DBHelper.instance.addCourse(course);
     await _update();
-    print("[CoursesDataHandler] Course well added!");
+    print("[DataHandler] Course well added!");
     return true;
   }
 
   Future<bool> removeCourse(Course course) async {
     await DBHelper.instance.deleteCourse(course);
     await _update();
-    print("[CoursesDataHandler] Course well deleted!");
+    print("[DataHandler] Course well deleted!");
     return true;
   }
 
   Future<bool> renameCourse(Course course, String newName) async {
     await DBHelper.instance.renameCourse(course, newName);
     await _update();
-    print("[CoursesDataHandler] Course well renamed!");
+    print("[DataHandler] Course well renamed!");
     return true;
   }
 
@@ -208,21 +209,21 @@ class CoursesDataHandler with ChangeNotifier {
   Future<bool> addChapter(Chapter chapter) async {
     await DBHelper.instance.addChapter(chapter);
     await _update();
-    print("[CoursesDataHandler] Chapter well added!");
+    print("[DataHandler] Chapter well added!");
     return true;
   }
 
   Future<bool> renameChapter(Chapter chapter, String newName) async {
     await DBHelper.instance.renameChapter(chapter, newName);
     await _update();
-    print("[CoursesDataHandler] Chapter well renamed!");
+    print("[DataHandler] Chapter well renamed!");
     return true;
   }
 
   Future<bool> removeChapter(Chapter chapter) async {
     await DBHelper.instance.deleteChapter(chapter);
     await _update();
-    print("[CoursesDataHandler] Chapter well removed!");
+    print("[DataHandler] Chapter well removed!");
     return true;
   }
 
@@ -231,7 +232,7 @@ class CoursesDataHandler with ChangeNotifier {
   Future<bool> addSubject(Subject subject) async {
     await DBHelper.instance.addSubject(subject);
     await _update();
-    print("[CoursesDataHandler] Subject well added!");
+    print("[DataHandler] Subject well added!");
     return true;
   }
 
@@ -239,14 +240,14 @@ class CoursesDataHandler with ChangeNotifier {
       Course course, Chapter chapter, Subject subject, String newName) async {
     await DBHelper.instance.addSubject(subject);
     await _update();
-    print("[CoursesDataHandler] Subject well renamed!");
+    print("[DataHandler] Subject well renamed!");
     return true;
   }
 
   Future<bool> removeSubject(Subject subject) async {
     await DBHelper.instance.deleteSubject(subject);
     await _update();
-    print("[CoursesDataHandler] Subject well removed!");
+    print("[DataHandler] Subject well removed!");
     return true;
   }
 

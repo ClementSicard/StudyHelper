@@ -70,10 +70,10 @@ class DBHelper {
   Future<void> clearDB(Database db) async {
     final Database db = await DBHelper.instance.database;
 
-    await db.rawQuery('TRUNCATE TABLE Course;');
-    await db.rawQuery('TRUNCATE TABLE Semester;');
-    await db.rawQuery('TRUNCATE TABLE Subject;');
-    await db.rawQuery('TRUNCATE TABLE Chapter;');
+    await db.delete('Course');
+    await db.delete('Semester');
+    await db.delete('Chapter');
+    await db.delete('Subject');
   }
 
   // Course methods

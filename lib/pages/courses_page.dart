@@ -106,10 +106,9 @@ class CoursesPageState extends State<CoursesPage> {
                         isDestructiveAction: true,
                         trailingIcon: CupertinoIcons.delete,
                         onPressed: () async {
-                          final coursesProvider =
-                              Provider.of<CoursesDataHandler>(context,
-                                  listen: false);
-                          await coursesProvider.removeCourse(current);
+                          final dataProvider =
+                              Provider.of<DataHandler>(context, listen: false);
+                          await dataProvider.removeCourse(current);
                           Navigator.of(context).pop();
                         },
                       ),
@@ -141,19 +140,22 @@ class CoursesPageState extends State<CoursesPage> {
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    final coursesListProvider =
-        Provider.of<CoursesDataHandler>(context, listen: true);
+    final dataProvider = Provider.of<DataHandler>(context, listen: true);
     return FutureBuilder(
-      future: coursesListProvider.getSemesters(),
+      future: dataProvider.getSemesters(),
       builder: (context, snapshot) {
         if (snapshot.hasData &&
             snapshot.connectionState == ConnectionState.done) {
           final List<Semester> semesters = snapshot.data;
-          final List<Course> courses = _semester.courses;
+          final List<Course> courses = semesters
+              .firstWhere(
+                (s) => s.id == _semester.id,
+              )
+              .courses;
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                "Your courses",
+                "${_semester.name} - Courses",
                 textAlign: TextAlign.center,
                 style: customTextStyle(themeChange.darkTheme),
               ),
@@ -187,7 +189,13 @@ class CoursesPageState extends State<CoursesPage> {
               ),
             ),
           );
-        }
+        } else
+          return Scaffold(
+            appBar: AppBar(),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
       },
     );
   }

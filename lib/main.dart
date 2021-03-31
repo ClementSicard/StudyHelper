@@ -40,8 +40,8 @@ class _MyAppState extends State<MyApp> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<CoursesDataHandler>(
-          create: (BuildContext context) => CoursesDataHandler(),
+        ChangeNotifierProvider<DataHandler>(
+          create: (BuildContext context) => DataHandler(),
         ),
         ChangeNotifierProvider<DarkThemeProvider>(
           create: (_) => themeChangeProvider,

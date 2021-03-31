@@ -66,7 +66,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final coursesData = Provider.of<CoursesDataHandler>(context, listen: true);
+    final coursesData = Provider.of<DataHandler>(context, listen: true);
     _chapters = _course.chapters;
     final themeChange = Provider.of<DarkThemeProvider>(context);
     AppBar appBar = AppBar(
@@ -371,10 +371,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           isDefaultAction: false,
                           isDestructiveAction: true,
                           onPressed: () async {
-                            final coursesProvider =
-                                Provider.of<CoursesDataHandler>(context,
-                                    listen: false);
-                            await coursesProvider.removeChapter(c);
+                            final dataProvider = Provider.of<DataHandler>(
+                                context,
+                                listen: false);
+                            await dataProvider.removeChapter(c);
                             Navigator.pop(context);
                           },
                         ),
@@ -576,12 +576,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                     trailingIcon: CupertinoIcons.delete,
                                     isDestructiveAction: true,
                                     onPressed: () async {
-                                      final coursesProvider =
-                                          Provider.of<CoursesDataHandler>(
-                                              context,
+                                      final dataProvider =
+                                          Provider.of<DataHandler>(context,
                                               listen: false);
-                                      await coursesProvider
-                                          .removeSubject(s.key);
+                                      await dataProvider.removeSubject(s.key);
                                       Navigator.pop(context);
                                     },
                                   ),
@@ -804,9 +802,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
         ),
       );
     } else {
-      final coursesProvider =
-          Provider.of<CoursesDataHandler>(context, listen: false);
-      await coursesProvider.renameChapter(chapter, newName);
+      final dataProvider = Provider.of<DataHandler>(context, listen: false);
+      await dataProvider.renameChapter(chapter, newName);
       Navigator.pop(context);
     }
   }
@@ -830,9 +827,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
         ),
       );
     } else {
-      final coursesProvider =
-          Provider.of<CoursesDataHandler>(context, listen: false);
-      await coursesProvider.renameSubject(_course, chapter, subject, newName);
+      final dataProvider = Provider.of<DataHandler>(context, listen: false);
+      await dataProvider.renameSubject(_course, chapter, subject, newName);
       Navigator.pop(context);
     }
   }
@@ -856,8 +852,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
         ),
       );
     } else {
-      final coursesData =
-          Provider.of<CoursesDataHandler>(context, listen: false);
+      final coursesData = Provider.of<DataHandler>(context, listen: false);
       await coursesData.addChapter(
         Chapter(
           name: name,
@@ -913,7 +908,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                     );
                   } else {
                     final coursesData =
-                        Provider.of<CoursesDataHandler>(context, listen: false);
+                        Provider.of<DataHandler>(context, listen: false);
                     await coursesData.addSubject(
                       Subject(
                         name: subjectName,

@@ -20,11 +20,9 @@ class SemestersPageState extends State<SemestersPage> {
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    final coursesProvider =
-        Provider.of<CoursesDataHandler>(context, listen: true);
-
+    final dataProvider = Provider.of<DataHandler>(context, listen: true);
     return FutureBuilder(
-      future: coursesProvider.getSemesters(),
+      future: dataProvider.getSemesters(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -51,6 +49,7 @@ class SemestersPageState extends State<SemestersPage> {
             List<Semester> semesters = snapshot.data;
             if (semesters.isEmpty) {
               return Scaffold(
+                appBar: AppBar(),
                 body: Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Center(
@@ -68,7 +67,7 @@ class SemestersPageState extends State<SemestersPage> {
                         const SizedBox(height: 40),
                         CircleAvatar(
                           radius: MediaQuery.of(context).size.height / 17.0,
-                          backgroundColor: Colors.orange,
+                          backgroundColor: Colors.red,
                           child: IconButton(
                             icon: Icon(
                               Icons.add,
@@ -106,14 +105,12 @@ class SemestersPageState extends State<SemestersPage> {
                       CupertinoIcons.back,
                     ),
                     tooltip: "Back",
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: () => Navigator.pop(context),
                   ),
                 ),
                 body: ListView.builder(
                   itemCount: semesters.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (newContext, index) {
                     Semester current = semesters[index];
                     return Column(
                       children: [
@@ -129,33 +126,15 @@ class SemestersPageState extends State<SemestersPage> {
                                 isDestructiveAction: true,
                                 trailingIcon: CupertinoIcons.delete,
                                 onPressed: () async {
-                                  return FutureBuilder(
-                                    future:
-                                        coursesProvider.removeSemester(current),
-                                    builder: (newContext, snapshot) {
-                                      if (snapshot.hasData &&
-                                          snapshot.connectionState ==
-                                              ConnectionState.done) {
-                                        return TextButton(
-                                          child: const Text("Done!"),
-                                          onPressed: () =>
-                                              Navigator.of(newContext).pop(),
-                                        );
-                                      } else {
-                                        return Center(
-                                          child:
-                                              const CircularProgressIndicator(),
-                                        );
-                                      }
-                                    },
-                                  );
+                                  await dataProvider.removeSemester(current);
+                                  Navigator.pop(newContext);
                                 },
                               ),
                             ],
                             child: NiceButton(
                               themeChange.darkTheme,
                               text: current.name,
-                              color: Colors.blueAccent[100],
+                              color: Colors.red[400],
                               width: 500,
                               onPressed: () {
                                 Navigator.of(context).push(
@@ -183,7 +162,7 @@ class SemestersPageState extends State<SemestersPage> {
                           builder: (context) => SemesterPromptPage()),
                     ),
                     child: const Icon(Icons.add),
-                    backgroundColor: Colors.blueAccent[100],
+                    backgroundColor: Colors.red[400],
                     elevation: 0,
                   ),
                 ),
@@ -191,7 +170,10 @@ class SemestersPageState extends State<SemestersPage> {
             }
           }
         } else {
-          return CircularProgressIndicator();
+          return Scaffold(
+            appBar: AppBar(),
+            body: CircularProgressIndicator(),
+          );
         }
       },
     );

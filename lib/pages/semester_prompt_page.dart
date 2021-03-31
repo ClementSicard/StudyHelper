@@ -59,13 +59,13 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                 autocorrect: false,
                 controller: _nameController,
                 autofocus: true,
-                cursorColor: Colors.greenAccent,
+                cursorColor: Colors.redAccent,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueAccent[100]),
+                    borderSide: BorderSide(color: Colors.redAccent[100]),
                   ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.greenAccent),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red[400]),
                   ),
                   labelText: 'Name of the semester',
                   focusColor: Colors.blueAccent,
@@ -85,13 +85,13 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
               ),
               TextFormField(
                 controller: _descriptionController,
-                cursorColor: Colors.greenAccent,
+                cursorColor: Colors.redAccent,
                 decoration: InputDecoration(
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.blueAccent),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.redAccent[100]),
                   ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.greenAccent),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red[400]),
                   ),
                   labelText: 'Description (optional)',
                   labelStyle: customTextStyle(themeChange.darkTheme),
@@ -113,7 +113,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 40),
         child: Theme(
@@ -121,10 +121,10 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
             highlightColor: Colors.transparent,
             splashColor: Colors.white54,
           ),
-          child: FloatingActionButton.extended(
+          child: FloatingActionButton(
             onPressed: () async {
               final coursesData =
-                  Provider.of<CoursesDataHandler>(context, listen: false);
+                  Provider.of<DataHandler>(context, listen: false);
               final List<Semester> semesters = await coursesData.getSemesters();
               final String givenName = _nameController.text;
               final String description = _descriptionController.text;
@@ -179,20 +179,16 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                   description: description,
                 );
                 final coursesData =
-                    Provider.of<CoursesDataHandler>(context, listen: false);
+                    Provider.of<DataHandler>(context, listen: false);
                 await coursesData.addSemester(newSemester);
                 Navigator.pop(context);
               }
             },
-            label: Text(
-              'Save this semester',
-              style: customTextStyle(!themeChange.darkTheme),
-            ),
-            icon: const Icon(
+            child: const Icon(
               CupertinoIcons.check_mark,
               size: 50,
             ),
-            backgroundColor: Colors.blueAccent[100],
+            backgroundColor: Colors.red[400],
             elevation: 0,
           ),
         ),
@@ -200,3 +196,66 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
     );
   }
 }
+
+//  onPressed: () async {
+//               final coursesData =
+//                   Provider.of<DataHandler>(context, listen: false);
+//               final List<Semester> semesters = await coursesData.getSemesters();
+//               final String givenName = _nameController.text;
+//               final String description = _descriptionController.text;
+//               if (givenName == "") {
+//                 await showCupertinoModalPopup(
+//                   context: context,
+//                   builder: (BuildContext context) {
+//                     return CupertinoActionSheet(
+//                       title: const Text("Please give a name for the semester"),
+//                       message: const Text("The name cannot be empty"),
+//                       actions: [
+//                         CupertinoActionSheetAction(
+//                           child: const Text(
+//                             "Try again",
+//                             style: TextStyle(color: Colors.green),
+//                           ),
+//                           onPressed: () {
+//                             Navigator.of(context).pop();
+//                           },
+//                         ),
+//                       ],
+//                     );
+//                   },
+//                 );
+//               } else if (semesters
+//                   .map((s) => s.name)
+//                   .toSet()
+//                   .contains(givenName)) {
+//                 await showDialog(
+//                   context: context,
+//                   barrierDismissible: false,
+//                   builder: (BuildContext context) {
+//                     return CustomAlertDialog.alertdialog(
+//                       title: "You already have a semester of with the name \"" +
+//                           givenName +
+//                           "\"",
+//                       content: "Please choose another name",
+//                       actions: [
+//                         MapEntry(
+//                           "Try again",
+//                           () {
+//                             Navigator.pop(context);
+//                           },
+//                         ),
+//                       ],
+//                     );
+//                   },
+//                 );
+//               } else {
+//                 final Semester newSemester = Semester(
+//                   name: givenName,
+//                   description: description,
+//                 );
+//                 final coursesData =
+//                     Provider.of<DataHandler>(context, listen: false);
+//                 await coursesData.addSemester(newSemester);
+//                 Navigator.pop(context);
+//               }
+//             },
