@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:study_helper/objects/mastered.dart';
 
 class Subject {
   String _subjectID;
@@ -19,7 +20,7 @@ class Subject {
   }
 
   set mas(Mastered mas) {
-    _mas = mas;
+    this._mas = mas;
   }
 
   String get id => _subjectID;
@@ -35,5 +36,3 @@ class Subject {
     };
   }
 }
-
-enum Mastered { Good, Moderately, Poorly }

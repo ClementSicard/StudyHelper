@@ -61,18 +61,16 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 autocorrect: false,
                 controller: _nameController,
                 autofocus: true,
-                cursorColor: Colors.greenAccent,
+                cursorColor: Colors.orangeAccent,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueAccent[100]),
+                    borderSide: BorderSide(color: Colors.orangeAccent[100]),
                   ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.greenAccent),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange[400]),
                   ),
                   labelText: 'Name of the course',
-                  focusColor: Colors.blueAccent,
                   labelStyle: customTextStyle(themeChange.darkTheme),
-                  fillColor: Colors.blueAccent,
                 ),
                 maxLength: 100,
                 maxLines: 1,
@@ -87,17 +85,16 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
               ),
               TextFormField(
                 controller: _descriptionController,
-                cursorColor: Colors.greenAccent,
+                cursorColor: Colors.orangeAccent,
                 decoration: InputDecoration(
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.blueAccent),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orangeAccent[100]),
                   ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.greenAccent),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange[400]),
                   ),
                   labelText: 'Description (optional)',
                   labelStyle: customTextStyle(themeChange.darkTheme),
-                  fillColor: Colors.blueAccent[100],
                 ),
                 maxLength: 1000,
                 keyboardType: TextInputType.multiline,
@@ -123,7 +120,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
             highlightColor: Colors.transparent,
             splashColor: Colors.white54,
           ),
-          child: FloatingActionButton.extended(
+          child: FloatingActionButton(
             onPressed: () async {
               List<Course> courses = _semester.courses;
               final String givenName = _nameController.text;
@@ -141,9 +138,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                             "Try again",
                             style: TextStyle(color: Colors.green),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: () => Navigator.of(context).pop(),
                         ),
                       ],
                     );
@@ -185,15 +180,11 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 Navigator.pop(context);
               }
             },
-            label: Text(
-              'Save this course',
-              style: customTextStyle(!themeChange.darkTheme),
-            ),
-            icon: const Icon(
+            child: const Icon(
               CupertinoIcons.check_mark,
               size: 50,
             ),
-            backgroundColor: Colors.blueAccent[100],
+            backgroundColor: Colors.orange[400],
             elevation: 0,
           ),
         ),
