@@ -2,6 +2,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/objects/mastered.dart';
 import 'package:study_helper/objects/semester.dart';
 import 'package:study_helper/objects/subject.dart';
 
@@ -112,6 +113,20 @@ class DBHelper {
     );
   }
 
+  Future<void> updateCourseDescription(
+      Course course, String newDescription) async {
+    final Database db = await database;
+    var row = course.toMap();
+    row["Description"] = newDescription;
+
+    await db.update(
+      'Course',
+      row,
+      where: 'CourseID = ?',
+      whereArgs: [course.id],
+    );
+  }
+
   // Chapter methods
 
   Future<void> addChapter(Chapter chapter) async {
@@ -144,6 +159,19 @@ class DBHelper {
     await db.delete(
       'Chapter',
       where: "ChapterID = ?",
+      whereArgs: [chapter.id],
+    );
+  }
+
+  Future<void> updateChapterMastering(Chapter chapter, Mastered mas) async {
+    final Database db = await database;
+    var row = chapter.toMap();
+    row["Mastered"] = mas.value;
+
+    await db.update(
+      'Chapter',
+      row,
+      where: 'ChapterID = ?',
       whereArgs: [chapter.id],
     );
   }
@@ -184,6 +212,19 @@ class DBHelper {
     );
   }
 
+  Future<void> updateSubjectMastering(Subject subject, Mastered mas) async {
+    final Database db = await database;
+    var row = subject.toMap();
+    row["Mastered"] = mas.value;
+
+    await db.update(
+      'Subject',
+      row,
+      where: 'SubjectID = ?',
+      whereArgs: [subject.id],
+    );
+  }
+
   // Semester methods
 
   Future<void> addSemester(Semester semester) async {
@@ -220,6 +261,21 @@ class DBHelper {
       'Semester',
       where: "SemesterID = ?",
       whereArgs: [semester.id],
+    );
+  }
+
+  Future<void> updateSemesterDescription(
+      Semester semester, String newDescription) async {
+    final Database db = await database;
+    var row = semester.toMap();
+    row["Description"] = newDescription;
+
+    await db.update(
+      'Semester',
+      row,
+      where: "SemesterID = ?",
+      whereArgs: [semester.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 }

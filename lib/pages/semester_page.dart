@@ -106,15 +106,139 @@ class SemestersPageState extends State<SemestersPage> {
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
-                body: ListView.builder(
-                  itemCount: semesters.length,
-                  itemBuilder: (newContext, index) {
-                    Semester current = semesters[index];
-                    return Column(
-                      children: [
-                        GestureDetector(
+                body: Center(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    primary: false,
+                    itemCount: semesters.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 40),
+                    itemBuilder: (newContext, index) {
+                      final Semester current = semesters[index];
+                      final String opDesc = current.description == ""
+                          ? "Add a description"
+                          : "Update description";
+                      return Align(
+                        child: GestureDetector(
                           child: CupertinoContextMenu(
                             actions: [
+                              CupertinoContextMenuAction(
+                                child: Text(
+                                  opDesc,
+                                  textAlign: TextAlign.center,
+                                ),
+                                isDefaultAction: false,
+                                isDestructiveAction: false,
+                                trailingIcon: CupertinoIcons.pencil,
+                                onPressed: () async {
+                                  final TextEditingController
+                                      _textFieldController =
+                                      TextEditingController();
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        elevation: 0,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: const BorderRadius.all(
+                                            const Radius.circular(20.0),
+                                          ),
+                                        ),
+                                        title: Text(
+                                          opDesc,
+                                          style: customTextStyle(
+                                              themeChange.darkTheme),
+                                        ),
+                                        content: Padding(
+                                          padding: const EdgeInsets.all(20.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextField(
+                                                autocorrect: false,
+                                                autofocus: true,
+                                                controller:
+                                                    _textFieldController,
+                                                onEditingComplete: () async =>
+                                                    await dataProvider
+                                                        .updateSemesterDescription(
+                                                            current,
+                                                            _textFieldController
+                                                                .text),
+                                                decoration: InputDecoration(
+                                                  hintText: "Edit description",
+                                                  hintStyle: customTextStyle(
+                                                      themeChange.darkTheme,
+                                                      size: 17),
+                                                ),
+                                                textCapitalization:
+                                                    TextCapitalization
+                                                        .sentences,
+                                              ),
+                                              const SizedBox(height: 40),
+                                              // Theme(
+                                              //   data:
+                                              //       Theme.of(context).copyWith(
+                                              //     highlightColor:
+                                              //         Colors.transparent,
+                                              //     splashColor: Colors.white54,
+                                              //   ),
+                                              //   child: FloatingActionButton(
+                                              //     elevation: 0,
+                                              //     backgroundColor:
+                                              //         Colors.red[400],
+                                              //     child: const Icon(
+                                              //         Icons.save_sharp),
+                                              //     heroTag: null,
+                                              // onPressed: () async =>
+                                              //     await dataProvider
+                                              //         .updateSemesterDescription(
+                                              //             current,
+                                              //             _textFieldController
+                                              //                 .text),
+                                              //   ),
+                                              // ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: Text(
+                                              'SAVE',
+                                              style: TextStyle(
+                                                color: Colors.lightGreen,
+                                              ),
+                                            ),
+                                            onPressed: () async {
+                                              await dataProvider
+                                                  .updateSemesterDescription(
+                                                      current,
+                                                      _textFieldController
+                                                          .text);
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text(
+                                              'CANCEL',
+                                              style: TextStyle(
+                                                color: Colors.red[400],
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                               CupertinoContextMenuAction(
                                 child: const Text(
                                   "Remove semester",
@@ -143,10 +267,9 @@ class SemestersPageState extends State<SemestersPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 40),
-                      ],
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
                 floatingActionButton: Theme(
                   data: Theme.of(context).copyWith(

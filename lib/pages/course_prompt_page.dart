@@ -148,7 +148,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   .map((c) => c.name)
                   .toSet()
                   .contains(givenName)) {
-                await showDialog(
+                await await showDialog(
                   context: context,
                   barrierDismissible: false,
                   builder: (BuildContext context) {
@@ -174,9 +174,9 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   description: description,
                   semesterID: _semester.id,
                 );
-                final coursesData =
+                final dataProvider =
                     Provider.of<DataHandler>(context, listen: false);
-                await coursesData.addCourse(newCourse);
+                await dataProvider.addCourse(newCourse);
                 Navigator.pop(context);
               }
             },

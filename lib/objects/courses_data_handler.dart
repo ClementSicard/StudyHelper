@@ -182,6 +182,14 @@ class DataHandler with ChangeNotifier {
     return true;
   }
 
+  Future<bool> updateSemesterDescription(
+      Semester semester, String newDescription) async {
+    await DBHelper.instance.updateSemesterDescription(semester, newDescription);
+    await _update();
+    print("[DataHandler] Semester description updated!");
+    return true;
+  }
+
 // Course methods
 
   Future<bool> addCourse(Course course) async {
@@ -202,6 +210,14 @@ class DataHandler with ChangeNotifier {
     await DBHelper.instance.renameCourse(course, newName);
     await _update();
     print("[DataHandler] Course well renamed!");
+    return true;
+  }
+
+  Future<bool> updateCourseDescription(
+      Course course, String newDescription) async {
+    await DBHelper.instance.updateCourseDescription(course, newDescription);
+    await _update();
+    print("[DataHandler] Course description updated!");
     return true;
   }
 
@@ -228,6 +244,13 @@ class DataHandler with ChangeNotifier {
     return true;
   }
 
+  Future<bool> updateChapterMastering(Chapter chapter, Mastered mas) async {
+    await DBHelper.instance.updateChapterMastering(chapter, mas);
+    await _update();
+    print("[DataHandler] Chapter mastering well changed!");
+    return true;
+  }
+
 // Subject methods
 
   Future<bool> addSubject(Subject subject) async {
@@ -237,9 +260,8 @@ class DataHandler with ChangeNotifier {
     return true;
   }
 
-  Future<bool> renameSubject(
-      Course course, Chapter chapter, Subject subject, String newName) async {
-    await DBHelper.instance.addSubject(subject);
+  Future<bool> renameSubject(Subject subject, String newName) async {
+    await DBHelper.instance.renameSubject(subject, newName);
     await _update();
     print("[DataHandler] Subject well renamed!");
     return true;
@@ -249,6 +271,13 @@ class DataHandler with ChangeNotifier {
     await DBHelper.instance.deleteSubject(subject);
     await _update();
     print("[DataHandler] Subject well removed!");
+    return true;
+  }
+
+  Future<bool> updateSubjectMastering(Subject subject, Mastered mas) async {
+    await DBHelper.instance.updateSubjectMastering(subject, mas);
+    await _update();
+    print("[DataHandler] Subject mastering well changed!");
     return true;
   }
 

@@ -121,9 +121,10 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
           ),
           child: FloatingActionButton(
             onPressed: () async {
-              final coursesData =
+              final dataProvider =
                   Provider.of<DataHandler>(context, listen: false);
-              final List<Semester> semesters = await coursesData.getSemesters();
+              final List<Semester> semesters =
+                  await dataProvider.getSemesters();
               final String givenName = _nameController.text;
               final String description = _descriptionController.text;
               if (givenName == "") {
@@ -151,7 +152,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                   .map((s) => s.name)
                   .toSet()
                   .contains(givenName)) {
-                await showDialog(
+                await await showDialog(
                   context: context,
                   barrierDismissible: false,
                   builder: (BuildContext context) {
@@ -176,9 +177,9 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                   name: givenName,
                   description: description,
                 );
-                final coursesData =
+                final dataProvider =
                     Provider.of<DataHandler>(context, listen: false);
-                await coursesData.addSemester(newSemester);
+                await dataProvider.addSemester(newSemester);
                 Navigator.pop(context);
               }
             },
@@ -196,9 +197,9 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
 }
 
 //  onPressed: () async {
-//               final coursesData =
+//               final dataProvider =
 //                   Provider.of<DataHandler>(context, listen: false);
-//               final List<Semester> semesters = await coursesData.getSemesters();
+//               final List<Semester> semesters = await dataProvider.getSemesters();
 //               final String givenName = _nameController.text;
 //               final String description = _descriptionController.text;
 //               if (givenName == "") {
@@ -226,7 +227,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
 //                   .map((s) => s.name)
 //                   .toSet()
 //                   .contains(givenName)) {
-//                 await showDialog(
+//                 await await showDialog(
 //                   context: context,
 //                   barrierDismissible: false,
 //                   builder: (BuildContext context) {
@@ -251,9 +252,9 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
 //                   name: givenName,
 //                   description: description,
 //                 );
-//                 final coursesData =
+//                 final dataProvider =
 //                     Provider.of<DataHandler>(context, listen: false);
-//                 await coursesData.addSemester(newSemester);
+//                 await dataProvider.addSemester(newSemester);
 //                 Navigator.pop(context);
 //               }
 //             },

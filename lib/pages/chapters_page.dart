@@ -66,15 +66,15 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final coursesData = Provider.of<DataHandler>(context, listen: true);
+    final dataProvider = Provider.of<DataHandler>(context, listen: true);
     _chapters = _course.chapters;
     final themeChange = Provider.of<DarkThemeProvider>(context);
     AppBar appBar = AppBar(
       title: InkWell(
         splashColor: Colors.transparent,
-        onTap: () => _course.description == ""
+        onTap: () async => _course.description == ""
             ? null
-            : showDialog(
+            : await showDialog(
                 context: context,
                 builder: (context) {
                   return AlertDialog(
@@ -280,7 +280,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           onPressed: () async {
                             final TextEditingController _textFieldController =
                                 TextEditingController();
-                            showDialog(
+                            await showDialog(
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
@@ -467,7 +467,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                       TextEditingController
                                           _textFieldController =
                                           TextEditingController();
-                                      showDialog(
+                                      await showDialog(
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
@@ -659,7 +659,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
   Future<Widget> _promptNewSubject(bool darkTheme) async {
     TextEditingController _textFieldController = TextEditingController();
-    return showDialog(
+    return await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -735,7 +735,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
   Future<Widget> _promptNewChapter(bool darkTheme) async {
     TextEditingController _textFieldController = TextEditingController();
-    return showDialog(
+    return await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -852,8 +852,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
         ),
       );
     } else {
-      final coursesData = Provider.of<DataHandler>(context, listen: false);
-      await coursesData.addChapter(
+      final dataProvider = Provider.of<DataHandler>(context, listen: false);
+      await dataProvider.addChapter(
         Chapter(
           name: name,
           courseID: _course.id,
@@ -907,9 +907,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       ],
                     );
                   } else {
-                    final coursesData =
+                    final dataProvider =
                         Provider.of<DataHandler>(context, listen: false);
-                    await coursesData.addSubject(
+                    await dataProvider.addSubject(
                       Subject(
                         name: subjectName,
                         chapterID: _selectedChapter.id,
