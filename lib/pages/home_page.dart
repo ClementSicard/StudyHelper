@@ -5,6 +5,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/pages/courses_page.dart';
+import 'package:study_helper/pages/semester_page.dart';
 import 'package:study_helper/pages/settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
@@ -88,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CoursesPage()),
+                    MaterialPageRoute(builder: (context) => SemestersPage()),
                   );
                 },
                 text: "Start studying",
