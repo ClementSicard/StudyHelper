@@ -61,13 +61,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 const SizedBox(height: 50),
-                NiceButton(
-                  themeChange.darkTheme,
-                  text: "Reset data",
-                  color: Colors.redAccent,
-                  height: 80,
-                  onPressed: () {
-                    showCupertinoModalPopup(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 150.0),
+                  child: NiceButton(
+                    themeChange.darkTheme,
+                    text: "Reset data",
+                    color: Colors.redAccent,
+                    height: 80,
+                    onPressed: () async => await showCupertinoModalPopup(
                       context: context,
                       builder: (context) => CupertinoActionSheet(
                         title: const Text("Warning"),
@@ -94,8 +95,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           },
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 30),
               ],

@@ -41,12 +41,12 @@ class SemestersPageState extends State<SemestersPage> {
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
-              body: Center(
-                child: const CircularProgressIndicator(),
+              body: const Center(
+                child: CircularProgressIndicator(),
               ),
             );
           } else {
-            List<Semester> semesters = snapshot.data;
+            final List<Semester> semesters = snapshot.data;
             if (semesters.isEmpty) {
               return Scaffold(
                 appBar: AppBar(),
@@ -77,14 +77,12 @@ class SemestersPageState extends State<SemestersPage> {
                             ),
                             enableFeedback: true,
                             iconSize: MediaQuery.of(context).size.height / 17.0,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SemesterPromptPage(),
-                                ),
-                              );
-                            },
+                            onPressed: () async => await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SemesterPromptPage(),
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -136,13 +134,12 @@ class SemestersPageState extends State<SemestersPage> {
                               text: current.name,
                               color: Colors.red[400],
                               width: 500,
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => CoursesPage(current),
-                                  ),
-                                );
-                              },
+                              onPressed: () async =>
+                                  await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => CoursesPage(current),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -157,7 +154,7 @@ class SemestersPageState extends State<SemestersPage> {
                     splashColor: Colors.white54,
                   ),
                   child: FloatingActionButton(
-                    onPressed: () => Navigator.of(context).push(
+                    onPressed: () async => await Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) => SemesterPromptPage()),
                     ),
@@ -172,7 +169,7 @@ class SemestersPageState extends State<SemestersPage> {
         } else {
           return Scaffold(
             appBar: AppBar(),
-            body: CircularProgressIndicator(),
+            body: const CircularProgressIndicator(),
           );
         }
       },

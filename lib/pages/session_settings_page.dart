@@ -137,7 +137,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 40),
         child: FloatingActionButton.extended(
-          onPressed: () {
+          onPressed: () async {
             List<Chapter> selectedChapters = [];
             bool emptyChapter = false;
             for (int i = 0; i < _chapters.length; i++) {
@@ -192,7 +192,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
               );
             } else {
               print(_random);
-              Navigator.push(
+              await Navigator.push(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>

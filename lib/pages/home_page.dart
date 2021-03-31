@@ -58,12 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 size: 35,
               ),
               splashColor: Colors.transparent,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
-                );
-              },
+              onPressed: () async => await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              ),
             ),
           )
         ],
@@ -86,12 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 60),
               NiceButton(
                 themeChange.darkTheme,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SemestersPage()),
-                  );
-                },
+                onPressed: () async => await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SemestersPage()),
+                ),
                 text: "Start studying",
               ),
               SizedBox(height: 60),

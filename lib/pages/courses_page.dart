@@ -67,14 +67,12 @@ class CoursesPageState extends State<CoursesPage> {
                   ),
                   enableFeedback: true,
                   iconSize: MediaQuery.of(context).size.height / 17.0,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CoursePromptPage(_semester),
-                      ),
-                    );
-                  },
+                  onPressed: () async => await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CoursePromptPage(_semester),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -116,15 +114,12 @@ class CoursesPageState extends State<CoursesPage> {
                     child: NiceButton(
                       darkTheme,
                       text: current.name,
-                      color: Colors.blueAccent[100],
+                      color: Colors.orange,
                       width: 500,
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ChaptersPage(current),
-                          ),
-                        );
-                      },
+                      onPressed: () async => await Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => ChaptersPage(current)),
+                      ),
                     ),
                   ),
                 ),
@@ -178,7 +173,7 @@ class CoursesPageState extends State<CoursesPage> {
                   splashColor: Colors.white54,
                 ),
                 child: FloatingActionButton(
-                  onPressed: () => Navigator.of(context).push(
+                  onPressed: () async => await Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => CoursePromptPage(_semester)),
                   ),

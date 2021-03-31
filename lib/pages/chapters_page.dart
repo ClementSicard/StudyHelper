@@ -153,11 +153,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
                     size: 30,
                   ),
                   color: Colors.greenAccent,
-                  onPressed: () {
+                  onPressed: () async {
                     Set subjects =
                         _chapters.map((c) => c.subjects.isNotEmpty).toSet();
                     if (!subjects.contains(true)) {
-                      showCupertinoModalPopup(
+                      await showCupertinoModalPopup(
                         context: context,
                         builder: (BuildContext context) => CupertinoActionSheet(
                           title: const Text("Oops..."),
@@ -170,7 +170,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                         ),
                       );
                     } else {
-                      Navigator.push(
+                      await await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
