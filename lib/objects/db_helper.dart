@@ -69,6 +69,7 @@ class DBHelper {
 
   Future<void> clearDB(Database db) async {
     final Database db = await DBHelper.instance.database;
+
     await db.rawQuery('TRUNCATE TABLE Course;');
     await db.rawQuery('TRUNCATE TABLE Semester;');
     await db.rawQuery('TRUNCATE TABLE Subject;');
@@ -87,10 +88,7 @@ class DBHelper {
     );
   }
 
-  Future<void> renameCourse(
-    Course course,
-    String newName,
-  ) async {
+  Future<void> renameCourse(Course course, String newName) async {
     final Database db = await database;
     var row = course.toMap();
     row["Name"] = newName;
@@ -126,10 +124,7 @@ class DBHelper {
     );
   }
 
-  Future<void> renameChapter(
-    Chapter chapter,
-    String newName,
-  ) async {
+  Future<void> renameChapter(Chapter chapter, String newName) async {
     final Database db = await database;
     var row = chapter.toMap();
     row["Name"] = newName;
@@ -165,10 +160,7 @@ class DBHelper {
     );
   }
 
-  Future<void> renameSubject(
-    Subject subject,
-    String newName,
-  ) async {
+  Future<void> renameSubject(Subject subject, String newName) async {
     final Database db = await database;
     var row = subject.toMap();
     row["Name"] = newName;

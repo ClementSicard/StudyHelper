@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/objects/semester.dart';
@@ -37,7 +36,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Add a new course",
+          "Add a new semester",
           textAlign: TextAlign.center,
           style: customTextStyle(themeChange.darkTheme),
         ),
@@ -68,7 +67,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                   focusedBorder: const UnderlineInputBorder(
                     borderSide: const BorderSide(color: Colors.greenAccent),
                   ),
-                  labelText: 'Name of the course',
+                  labelText: 'Name of the semester',
                   focusColor: Colors.blueAccent,
                   labelStyle: customTextStyle(themeChange.darkTheme),
                   fillColor: Colors.blueAccent,
@@ -159,7 +158,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return CustomAlertDialog.alertdialog(
-                      title: "You already have a course of with the name \"" +
+                      title: "You already have a semester of with the name \"" +
                           givenName +
                           "\"",
                       content: "Please choose another name",
@@ -186,7 +185,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
               }
             },
             label: Text(
-              'Save this course',
+              'Save this semester',
               style: customTextStyle(!themeChange.darkTheme),
             ),
             icon: const Icon(

@@ -22,23 +22,25 @@ class CoursesDataHandler with ChangeNotifier {
 
   Future<bool> _update() async {
     final Database db = await DBHelper.instance.database;
-
     List<Map> semestersFromDB = await db.query('Semester');
-    List<Semester> semesters = semestersFromDB
-        .map(
-          (m) => Semester(
-              id: m["SemesterID"],
-              name: m["Name"],
-              description: m["Description"]),
-        )
-        .toList();
+
+    List<Semester> semesters = semestersFromDB.isNotEmpty
+        ? semestersFromDB
+            .map(
+              (m) => Semester(
+                  id: m["SemesterID"],
+                  name: m["Name"],
+                  description: m["Description"]),
+            )
+            .toList()
+        : [];
 
     for (Semester semester in semesters) {
       final List<Course> courses = await _getCoursesFromDB(db, semester.id);
       semester.courses = courses;
     }
 
-    _semesters = semesters;
+    this._semesters = semesters;
     notifyListeners();
     return true;
   }
@@ -74,13 +76,17 @@ class CoursesDataHandler with ChangeNotifier {
       whereArgs: [semesterID],
     );
 
-    final List<Course> courses = coursesFromDB.map((c) {
-      return Course(
-        name: c["Name"],
-        id: c["CourseID"],
-        semesterID: semesterID,
-      );
-    }).toList();
+    final List<Course> courses = coursesFromDB.isNotEmpty
+        ? coursesFromDB.map(
+            (c) {
+              return Course(
+                name: c["Name"],
+                id: c["CourseID"],
+                semesterID: semesterID,
+              );
+            },
+          ).toList()
+        : [];
 
     for (Course course in courses) {
       final List<Chapter> chapters = await _getChaptersFromDB(db, semesterID);
@@ -101,17 +107,19 @@ class CoursesDataHandler with ChangeNotifier {
 
     final List<Map> chaptersFromDB = await db.rawQuery(query, [courseID]);
 
-    final List<Chapter> chapters = chaptersFromDB
-        .map(
-          (m) => Chapter(
-            id: m["ChapterID"],
-            name: m["Name"],
-            mas: m["Mastered"],
-            description: m["Description"],
-            courseID: courseID,
-          ),
-        )
-        .toList();
+    final List<Chapter> chapters = chaptersFromDB.isNotEmpty
+        ? chaptersFromDB
+            .map(
+              (m) => Chapter(
+                id: m["ChapterID"],
+                name: m["Name"],
+                mas: m["Mastered"],
+                description: m["Description"],
+                courseID: courseID,
+              ),
+            )
+            .toList()
+        : [];
 
     for (Chapter chapter in chapters) {
       final List<Subject> subjects = await _getSubjectsFromDB(db, chapter.id);
@@ -133,16 +141,18 @@ class CoursesDataHandler with ChangeNotifier {
 
     List<Map> subjectsFromDB = await db.rawQuery(query, [chapterID]);
 
-    List<Subject> subjects = subjectsFromDB
-        .map(
-          (m) => Subject(
-            id: m["SubjectID"],
-            name: m["Name"],
-            mas: m["Mastered"],
-            chapterID: chapterID,
-          ),
-        )
-        .toList();
+    List<Subject> subjects = subjectsFromDB.isNotEmpty
+        ? subjectsFromDB
+            .map(
+              (m) => Subject(
+                id: m["SubjectID"],
+                name: m["Name"],
+                mas: m["Mastered"],
+                chapterID: chapterID,
+              ),
+            )
+            .toList()
+        : [];
 
     return subjects;
   }
@@ -244,6 +254,6 @@ class CoursesDataHandler with ChangeNotifier {
     if (_semesters == null) {
       await _update();
     }
-    return _semesters;
+    return this._semesters;
   }
 }
