@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
@@ -8,6 +9,7 @@ import 'package:study_helper/objects/semester.dart';
 import 'package:study_helper/pages/chapters_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
+import 'package:study_helper/utils/routes.dart';
 import '../utils/custom_text_styles.dart';
 import 'course_prompt_page.dart';
 
@@ -159,28 +161,64 @@ class CoursesPageState extends State<CoursesPage> {
                   CupertinoIcons.back,
                 ),
                 tooltip: "Back",
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => Navigator.pop(context),
               ),
+              actions: [
+                IconButton(
+                  icon: const Icon(MaterialCommunityIcons.information),
+                  tooltip: "Description",
+                  onPressed: () async => await Navigator.push(
+                    context,
+                    createRoute(
+                      Scaffold(
+                        appBar: AppBar(
+                          title: Text(
+                            "${_semester.name} - Description",
+                            style: customTextStyle(!themeChange.darkTheme),
+                          ),
+                          backgroundColor: Colors.orange[400],
+                          leading: IconButton(
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                            tooltip: "Close",
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ),
+                        body: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: ListView(
+                              children: [
+                                Text(
+                                  _semester.description,
+                                  style: customTextStyle(themeChange.darkTheme),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             body: _body(courses, themeChange.darkTheme),
-            floatingActionButton: Visibility(
-              visible: courses?.isNotEmpty ?? true,
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.white54,
+            floatingActionButton: Theme(
+              data: Theme.of(context).copyWith(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.white54,
+              ),
+              child: FloatingActionButton(
+                onPressed: () async => await Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => CoursePromptPage(_semester)),
                 ),
-                child: FloatingActionButton(
-                  onPressed: () async => await Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => CoursePromptPage(_semester)),
-                  ),
-                  child: const Icon(Icons.add),
-                  backgroundColor: Colors.blueAccent[100],
-                  elevation: 10,
-                ),
+                child: const Icon(Icons.add),
+                backgroundColor: Colors.orange[400],
+                elevation: 0,
               ),
             ),
           );

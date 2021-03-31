@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:study_helper/objects/mastered.dart';
 import 'package:study_helper/objects/subject.dart';
 
 class Chapter {
@@ -36,7 +37,7 @@ class Chapter {
       "CourseID": courseID,
       "Name": this._name,
       "Description": this._description,
-      "Mastered": this._mas,
+      "Mastered": this._mas.value,
     };
   }
 }

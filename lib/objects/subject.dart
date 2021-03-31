@@ -32,7 +32,7 @@ class Subject {
       "SubjectID": id,
       "ChapterID": chapterID,
       "Name": name,
-      "Mastered": _mas,
+      "Mastered": this._mas.value,
     };
   }
 }

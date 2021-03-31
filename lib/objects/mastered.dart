@@ -1,5 +1,9 @@
 class Mastered {
-  static const int Poorly = 0;
-  static const int Moderately = 1;
-  static const int Good = 2;
+  final int value;
+
+  const Mastered(this.value);
+
+  static const Mastered Poorly = Mastered(0);
+  static const Mastered Moderately = Mastered(1);
+  static const Mastered Good = Mastered(2);
 }

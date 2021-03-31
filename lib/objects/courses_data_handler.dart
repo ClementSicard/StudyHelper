@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/db_helper.dart';
+import 'package:study_helper/objects/mastered.dart';
 import 'package:study_helper/objects/semester.dart';
 import 'package:study_helper/objects/subject.dart';
 
@@ -114,7 +115,7 @@ class DataHandler with ChangeNotifier {
               (m) => Chapter(
                 id: m["ChapterID"],
                 name: m["Name"],
-                mas: m["Mastered"],
+                mas: Mastered(m["Mastered"]),
                 description: m["Description"],
                 courseID: courseID,
               ),
@@ -148,7 +149,7 @@ class DataHandler with ChangeNotifier {
               (m) => Subject(
                 id: m["SubjectID"],
                 name: m["Name"],
-                mas: m["Mastered"],
+                mas: Mastered(m["Mastered"]),
                 chapterID: chapterID,
               ),
             )
