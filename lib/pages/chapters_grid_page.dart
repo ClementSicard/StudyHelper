@@ -6,9 +6,12 @@ import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
+import 'package:study_helper/objects/mastered.dart';
 import 'package:study_helper/objects/subject.dart';
+import 'package:study_helper/pages/session_settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/diagonal_scrollview.dart';
+import 'package:study_helper/utils/mastered_sliders.dart';
 import 'package:study_helper/utils/nice_button.dart';
 
 class ChaptersGridPage extends StatefulWidget {
@@ -22,6 +25,7 @@ class ChaptersGridPage extends StatefulWidget {
 class _ChaptersGridPageState extends State<ChaptersGridPage> {
   final Course _course;
   Chapter _selectedChapter;
+  Mastered _mas = Mastered.Poorly;
 
   _ChaptersGridPageState(this._course);
 
@@ -63,7 +67,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                 ),
                               ),
                               title: Text(
-                                'Semeser description',
+                                'Course description',
                                 textAlign: TextAlign.center,
                                 style: customTextStyle(darkTheme),
                               ),
@@ -155,9 +159,27 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                             child: CupertinoContextMenu(
                               actions: [
                                 CupertinoContextMenuAction(
+                                    child: const Center(
+                                      child: Text(
+                                        "Mastery",
+                                        style:
+                                            const TextStyle(color: Colors.blue),
+                                      ),
+                                    ),
+                                    trailingIcon: Icons.star,
+                                    isDefaultAction: false,
+                                    isDestructiveAction: false,
+                                    onPressed: () async {
+                                      Navigator.pop(context);
+                                      await showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              ChapterMasteredSliderDialog(c));
+                                    }),
+                                CupertinoContextMenuAction(
                                   child: const Center(
                                     child: const Text(
-                                      "Rename",
+                                      "Rename chapter",
                                       style:
                                           const TextStyle(color: Colors.blue),
                                     ),
@@ -353,11 +375,46 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                       width: 200,
                                       height: 90,
                                       child: CupertinoContextMenu(
+                                        previewBuilder:
+                                            (context, animation, child) {
+                                          return FittedBox(
+                                            fit: BoxFit.cover,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      64.0 * animation.value),
+                                              child: child,
+                                            ),
+                                          );
+                                        },
                                         actions: [
                                           CupertinoContextMenuAction(
                                             child: const Center(
                                               child: const Text(
-                                                "Rename",
+                                                "Mastery",
+                                                style: const TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                            ),
+                                            trailingIcon: Icons.star,
+                                            isDefaultAction: false,
+                                            isDestructiveAction: false,
+                                            onPressed: () async {
+                                              Navigator.pop(context);
+
+                                              await showDialog(
+                                                context: context,
+                                                builder: (newContext) {
+                                                  return SubjectMasteredSliderDialog(
+                                                      s.key);
+                                                },
+                                              );
+                                            },
+                                          ),
+                                          CupertinoContextMenuAction(
+                                            child: const Center(
+                                              child: const Text(
+                                                "Rename subject",
                                                 style: const TextStyle(
                                                     color: Colors.blue),
                                               ),
@@ -375,6 +432,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                                 builder: (context) {
                                                   return AlertDialog(
                                                     elevation: 0,
+                                                    scrollable: true,
                                                     shape: RoundedRectangleBorder(
                                                         borderRadius:
                                                             BorderRadius.all(
@@ -570,6 +628,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
+                              scrollable: true,
                               elevation: 0,
                               shape: const RoundedRectangleBorder(
                                 borderRadius: const BorderRadius.all(
@@ -612,6 +671,52 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right:
+                              10.0 / 360.0 * MediaQuery.of(context).size.width),
+                      child: Hero(
+                        tag: "animationToFullScreen",
+                        child: Card(
+                          shape: const CircleBorder(),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.play_arrow_rounded,
+                              size: 30,
+                            ),
+                            color: Colors.greenAccent,
+                            onPressed: () async {
+                              Set subjects = chapters
+                                  .map((c) => c.subjects.isNotEmpty)
+                                  .toSet();
+                              if (!subjects.contains(true)) {
+                                await showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      CupertinoActionSheet(
+                                    title: const Text("Oops..."),
+                                    message: const Text(
+                                        "You must have at least one added subject to start a session"),
+                                    cancelButton: CupertinoActionSheetAction(
+                                      child: const Text("OK"),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                await await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SessionSettingsPage(_course, chapters),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 floatingActionButton: Visibility(
@@ -627,10 +732,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                         elevation: 0,
                         autofocus: true,
                         onPressed: () => _promptNewSubject(
-                          dataProvider: dataProvider,
-                          darkTheme: darkTheme,
-                          chapters: chapters,
-                        ),
+                            darkTheme: darkTheme, chapters: chapters),
                         child: const Icon(
                           Icons.add,
                           size: 35,
@@ -707,6 +809,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          scrollable: true,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(20.0),
@@ -759,7 +862,6 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
   }
 
   Future<Widget> _promptNewSubject({
-    @required DataHandler dataProvider,
     @required bool darkTheme,
     @required List<Chapter> chapters,
   }) async {
@@ -768,6 +870,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          scrollable: true,
           elevation: 0,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -784,8 +887,8 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                 TextField(
                   autocorrect: false,
                   autofocus: true,
-                  onEditingComplete: () => _showChapterSelection(
-                      _textFieldController.text, chapters, dataProvider),
+                  onEditingComplete: () async => await _showChapterSelection(
+                      _textFieldController.text, chapters),
                   controller: _textFieldController,
                   decoration: InputDecoration(
                     hintText: "Input the name",
@@ -799,19 +902,14 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                     highlightColor: Colors.transparent,
                     splashColor: Colors.white54,
                   ),
-                  child: FloatingActionButton.extended(
-                    elevation: 0,
-                    backgroundColor: Colors.redAccent[100],
-                    label: Text(
-                      "Pick chapter",
-                      style: customTextStyle(
-                        !darkTheme,
-                        size: 20,
-                      ),
-                    ),
-                    heroTag: null,
-                    onPressed: () => _showChapterSelection(
-                        _textFieldController.text, chapters, dataProvider),
+                  child: NiceButton(
+                    darkTheme,
+                    text: 'Pick chapter',
+                    textColor: Colors.black,
+                    onPressed: () async => await _showChapterSelection(
+                        _textFieldController.text, chapters),
+                    height: 60,
+                    color: Colors.greenAccent,
                   ),
                 ),
               ],
@@ -838,9 +936,9 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
     );
   }
 
-  void _showChapterSelection(
-      String subjectName, List<Chapter> chapters, DataHandler dataProvider) {
-    showCupertinoModalPopup(
+  Future<void> _showChapterSelection(
+      String subjectName, List<Chapter> chapters) async {
+    await showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
         title: const Text('Pick chapter'),
@@ -855,10 +953,11 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                   setState(() {
                     _selectedChapter = c;
                   });
-                  Set<String> names =
+                  final Set<String> names =
                       _selectedChapter.subjects.map((c) => c.name).toSet();
                   if (names.contains(subjectName)) {
                     return AlertDialog(
+                      scrollable: true,
                       elevation: 0,
                       title: const Text(
                           'There already exists a subject with the same name in the same chapter'),
@@ -872,9 +971,10 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                     );
                   } else if (subjectName == "") {
                     return AlertDialog(
+                      scrollable: true,
                       elevation: 0,
                       title: const Text("A subject cannot have an empty name"),
-                      content: Text("Please try a different one"),
+                      content: const Text("Please try a different one"),
                       actions: [
                         TextButton(
                           child: const Text('OK'),
@@ -883,7 +983,8 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                       ],
                     );
                   } else {
-                    await dataProvider.addSubject(
+                    await Provider.of<DataHandler>(context, listen: false)
+                        .addSubject(
                       Subject(
                         name: subjectName,
                         chapterID: _selectedChapter.id,

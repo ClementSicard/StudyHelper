@@ -182,55 +182,51 @@ class CoursesPageState extends State<CoursesPage> {
                       child: IconButton(
                         icon: const Icon(MaterialCommunityIcons.information),
                         tooltip: "${_semester.name} - Description",
-                        onPressed: () {
-                          print(courses);
-                          print("Description: " + _semester.description);
-                        },
-                        //   onPressed: () async => await showDialog(
-                        //     context: context,
-                        //     builder: (context) {
-                        //       return AlertDialog(
-                        //         elevation: 0,
-                        //         shape: const RoundedRectangleBorder(
-                        //           borderRadius: const BorderRadius.all(
-                        //             const Radius.circular(20.0),
-                        //           ),
-                        //         ),
-                        //         title: Text(
-                        //           'Semeser description',
-                        //           textAlign: TextAlign.center,
-                        //           style: customTextStyle(themeChange.darkTheme),
-                        //         ),
-                        //         content: Padding(
-                        //           padding: const EdgeInsets.all(20.0),
-                        //           child: Column(
-                        //             crossAxisAlignment: CrossAxisAlignment.stretch,
-                        //             mainAxisSize: MainAxisSize.min,
-                        //             children: [
-                        //               const SizedBox(height: 20),
-                        //               Text(_semester.description,
-                        //                   style: customTextStyle(
-                        //                       themeChange.darkTheme,
-                        //                       size: 20)),
-                        //               const SizedBox(height: 20),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //         actionsPadding: const EdgeInsets.all(8.0),
-                        //         actions: [
-                        //           NiceButton(
-                        //             themeChange.darkTheme,
-                        //             text: 'OK',
-                        //             textColor: Colors.black,
-                        //             onPressed: () => Navigator.of(context).pop(),
-                        //             height: 60,
-                        //             color: Colors.greenAccent,
-                        //           ),
-                        //         ],
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
+                        onPressed: () async => await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              elevation: 0,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(20.0),
+                                ),
+                              ),
+                              title: Text(
+                                'Semester description',
+                                textAlign: TextAlign.center,
+                                style: customTextStyle(themeChange.darkTheme),
+                              ),
+                              content: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(height: 20),
+                                    Text(_semester.description,
+                                        style: customTextStyle(
+                                            themeChange.darkTheme,
+                                            size: 20)),
+                                    const SizedBox(height: 20),
+                                  ],
+                                ),
+                              ),
+                              actionsPadding: const EdgeInsets.all(8.0),
+                              actions: [
+                                NiceButton(
+                                  themeChange.darkTheme,
+                                  text: 'OK',
+                                  textColor: Colors.black,
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  height: 60,
+                                  color: Colors.orangeAccent,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -264,6 +260,7 @@ class CoursesPageState extends State<CoursesPage> {
                                   isDestructiveAction: false,
                                   trailingIcon: CupertinoIcons.pencil,
                                   onPressed: () async {
+                                    Navigator.pop(context);
                                     final TextEditingController
                                         _textFieldController =
                                         TextEditingController();
@@ -331,7 +328,6 @@ class CoursesPageState extends State<CoursesPage> {
                                                         _textFieldController
                                                             .text);
                                                 Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
                                               },
                                             ),
                                             TextButton(
@@ -343,7 +339,6 @@ class CoursesPageState extends State<CoursesPage> {
                                               ),
                                               onPressed: () {
                                                 Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
                                               },
                                             ),
                                           ],
@@ -354,7 +349,7 @@ class CoursesPageState extends State<CoursesPage> {
                                 ),
                                 CupertinoContextMenuAction(
                                   child: const Text(
-                                    "Remove course",
+                                    "Delete",
                                     textAlign: TextAlign.center,
                                   ),
                                   isDefaultAction: false,

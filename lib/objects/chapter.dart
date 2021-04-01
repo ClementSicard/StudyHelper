@@ -28,6 +28,7 @@ class Chapter {
   String get id => _chapterID;
   String get name => _name;
   String get courseID => _courseID;
+  Mastered get mas => _mas;
   set name(String newName) => _name = newName;
   set mas(Mastered newMas) => _mas = newMas;
 

@@ -18,6 +18,8 @@ dependencies:
   path: ^1.8.0
   provider: ^4.3.2+1xw
   shared_preferences: ^0.5.10
+  slide_popup_dialog: ^0.0.2
+  smooth_star_rating: ^1.1.1
   sqflite: ^2.0.0+3
 
 dev_dependencies:

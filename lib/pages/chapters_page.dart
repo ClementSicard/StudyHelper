@@ -828,7 +828,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
       );
     } else {
       final dataProvider = Provider.of<DataHandler>(context, listen: false);
-      await dataProvider.renameSubject(_course, chapter, subject, newName);
+      await dataProvider.renameSubject(subject, newName);
       Navigator.pop(context);
     }
   }

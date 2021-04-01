@@ -26,6 +26,7 @@ class Subject {
   String get id => _subjectID;
   String get chapterID => _chapterID;
   String get name => _name;
+  Mastered get mas => _mas;
 
   Map<String, dynamic> toMap() {
     return {
