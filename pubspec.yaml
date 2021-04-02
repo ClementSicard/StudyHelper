@@ -17,6 +17,7 @@ dependencies:
   expandable_card: ^0.0.3+1
   flutter_easyloading: ^3.0.0
   flutter_icons: ^1.1.0
+  flutter_speed_dial: ^3.0.5
   path: ^1.8.0
   provider: ^4.3.2+1xw
   shared_preferences: ^0.5.10

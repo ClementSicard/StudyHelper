@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
-import 'package:study_helper/objects/mastered.dart';
 import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/pages/session_settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
@@ -26,7 +26,6 @@ class ChaptersGridPage extends StatefulWidget {
 class _ChaptersGridPageState extends State<ChaptersGridPage> {
   final Course _course;
   Chapter _selectedChapter;
-  Mastered _mas = Mastered.Poorly;
 
   _ChaptersGridPageState(this._course);
 
@@ -287,6 +286,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                         );
                                       },
                                     );
+                                    _textFieldController.dispose();
                                   },
                                 ),
                                 CupertinoContextMenuAction(
@@ -726,17 +726,20 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                         highlightColor: Colors.transparent,
                         splashColor: Colors.white54,
                       ),
-                      child: FloatingActionButton(
-                        elevation: 0,
-                        autofocus: true,
-                        onPressed: () => _promptNewSubject(
-                            darkTheme: darkTheme, chapters: chapters),
-                        child: const Icon(
-                          Icons.add,
-                          size: 35,
-                        ),
-                        backgroundColor: Colors.redAccent[100],
-                        heroTag: null,
+                      // child: FloatingActionButton(
+                      //   elevation: 0,
+                      //   autofocus: true,
+                      //   onPressed: () => _promptNewSubject(
+                      //       darkTheme: darkTheme, chapters: chapters),
+                      //   child: const Icon(
+                      //     Icons.add,
+                      //     size: 35,
+                      //   ),
+                      //   backgroundColor: Colors.redAccent[100],
+                      //   heroTag: null,
+                      // ),
+                      child: SpeedDial(
+                        icon: Icons.add,
                       ),
                     ),
                   ),
