@@ -740,6 +740,31 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                       // ),
                       child: SpeedDial(
                         icon: Icons.add,
+                        curve: Curves.easeIn,
+                        activeIcon: Icons.close,
+                        activeBackgroundColor: Colors.grey[200],
+                        overlayColor: Colors.transparent,
+                        renderOverlay: true,
+                        backgroundColor: Colors.grey[100],
+                        elevation: 0,
+                        children: [
+                          SpeedDialChild(
+                            child: Icon(
+                              Icons.add,
+                            ),
+                            label: "Add a subject",
+                            backgroundColor: Colors.redAccent[100],
+                            elevation: 0,
+                          ),
+                          SpeedDialChild(
+                            child: Icon(
+                              Icons.add,
+                            ),
+                            label: "Add a chapter",
+                            backgroundColor: Colors.greenAccent[100],
+                            elevation: 0,
+                          ),
+                        ],
                       ),
                     ),
                   ),
