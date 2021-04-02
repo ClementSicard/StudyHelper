@@ -74,7 +74,7 @@ class _SubjectMasteredSliderDialogState
               color: Colors.redAccent,
             ),
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pop(context),
         ),
         TextButton(
           child: const Text(
@@ -87,7 +87,7 @@ class _SubjectMasteredSliderDialogState
             Mastered mas = Mastered(currentValue.toInt());
             await Provider.of<DataHandler>(context, listen: false)
                 .updateSubjectMastering(_subject, mas);
-            Navigator.of(context).pop();
+            Navigator.pop(context);
           },
         ),
       ],
@@ -159,7 +159,7 @@ class _ChapterMasteredSliderDialogState
               color: Colors.redAccent,
             ),
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pop(context),
         ),
         TextButton(
           child: const Text(
@@ -172,7 +172,7 @@ class _ChapterMasteredSliderDialogState
             Mastered mas = Mastered(currentValue.toInt());
             await Provider.of<DataHandler>(context, listen: false)
                 .updateChapterMastering(_chapter, mas);
-            Navigator.of(context).pop();
+            Navigator.pop(context);
           },
         ),
       ],

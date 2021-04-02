@@ -10,18 +10,14 @@ import 'package:study_helper/utils/custom_text_styles.dart';
 class SessionSettingsPage extends StatefulWidget {
   final Course _course;
   final List<Chapter> _chapters;
+  final StateSetter _setState;
 
-  factory SessionSettingsPage(Course course, List<Chapter> chapters,
-      {Key key}) {
-    return SessionSettingsPage._(course, chapters, key: key);
-  }
-
-  SessionSettingsPage._(this._course, this._chapters, {Key key})
+  SessionSettingsPage(this._course, this._chapters, this._setState, {Key key})
       : super(key: key);
 
   @override
   _SessionSettingsPageState createState() =>
-      _SessionSettingsPageState(_course, _chapters);
+      _SessionSettingsPageState(_course, _chapters, _setState);
 }
 
 class _SessionSettingsPageState extends State<SessionSettingsPage> {
@@ -30,8 +26,9 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
   List<bool> _selected;
   bool _all = false;
   bool _random = true;
+  StateSetter _setState;
 
-  _SessionSettingsPageState(this._course, this._chapters);
+  _SessionSettingsPageState(this._course, this._chapters, this._setState);
 
   @override
   void initState() {
@@ -86,7 +83,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                     activeColor: Colors.red,
                     value: _all,
                     onChanged: (bool value) {
-                      setState(() {
+                      _setState(() {
                         _all = value;
                         _selected = _chapters
                             .map((c) => c.subjects.isEmpty ? !value : value)
@@ -95,7 +92,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                     },
                   ),
                   onTap: () {
-                    setState(() {
+                    _setState(() {
                       _all = !_all;
                     });
                   },
@@ -118,13 +115,13 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                 trailing: CupertinoSwitch(
                   value: _random,
                   onChanged: (value) {
-                    setState(() {
+                    _setState(() {
                       _random = value;
                     });
                   },
                 ),
                 onTap: () {
-                  setState(() {
+                  _setState(() {
                     _random = !_random;
                   });
                 },
@@ -235,20 +232,22 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
             trailing: CupertinoSwitch(
               value: _selected[i],
               onChanged: (bool value) {
-                setState(() {
+                _setState(() {
                   _selected[i] = value;
                 });
               },
             ),
             onTap: () {
-              setState(() {
-                _selected[i] = !_selected[i];
-                if (_selected.any((element) => false)) {
-                  _all = false;
-                } else if (!_selected.any((element) => false)) {
-                  _all = true;
-                }
-              });
+              _setState(
+                () {
+                  _selected[i] = !_selected[i];
+                  if (_selected.any((element) => false)) {
+                    _all = false;
+                  } else if (!_selected.any((element) => false)) {
+                    _all = true;
+                  }
+                },
+              );
             },
           ),
         ),

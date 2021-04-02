@@ -20,88 +20,67 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     final dataProvider = Provider.of<DataHandler>(context, listen: false);
-    return Container(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(
-              CupertinoIcons.back,
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Center(
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(
+                !themeChange.darkTheme ? Icons.wb_sunny : Ionicons.ios_moon,
+              ),
+              title: Text(
+                "Dark mode",
+                style: customTextStyle(themeChange.darkTheme),
+                textAlign: TextAlign.center,
+              ),
+              trailing: CupertinoSwitch(
+                onChanged: (bool value) {
+                  setState(() {
+                    themeChange.darkTheme = value;
+                  });
+                },
+                value: themeChange.darkTheme,
+              ),
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: Text(
-            "Settings",
-            textAlign: TextAlign.center,
-            style: customTextStyle(themeChange.darkTheme),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Center(
-            child: ListView(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(!themeChange.darkTheme
-                      ? Icons.wb_sunny
-                      : Ionicons.ios_moon),
-                  title: Text(
-                    "Dark mode",
-                    style: customTextStyle(themeChange.darkTheme),
-                    textAlign: TextAlign.center,
-                  ),
-                  trailing: CupertinoSwitch(
-                    onChanged: (bool value) {
-                      setState(() {
-                        themeChange.darkTheme = value;
-                      });
-                    },
-                    value: themeChange.darkTheme,
-                  ),
-                ),
-                const SizedBox(height: 50),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 150.0),
-                  child: NiceButton(
-                    themeChange.darkTheme,
-                    text: "Reset data",
-                    color: Colors.redAccent,
-                    height: 80,
-                    onPressed: () async => await showCupertinoModalPopup(
-                      context: context,
-                      builder: (context) => CupertinoActionSheet(
-                        title: const Text("Warning"),
-                        message: const Text(
-                            "Are you sure that you want to delete all saved data ?"),
-                        actions: [
-                          CupertinoActionSheetAction(
-                            child: const Text("OK"),
-                            isDestructiveAction: true,
-                            onPressed: () async {
-                              await dataProvider.clearData();
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                          )
-                        ],
-                        cancelButton: CupertinoActionSheetAction(
-                          child: const Text(
-                            "Cancel",
-                            style: const TextStyle(color: Colors.blue),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
+            const SizedBox(height: 50),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 150.0),
+              child: NiceButton(
+                themeChange.darkTheme,
+                text: "Reset data",
+                color: Colors.redAccent,
+                height: 80,
+                onPressed: () async => await showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) => CupertinoActionSheet(
+                    title: const Text("Warning"),
+                    message: const Text(
+                        "Are you sure that you want to delete all saved data ?"),
+                    actions: [
+                      CupertinoActionSheetAction(
+                        child: const Text("OK"),
+                        isDestructiveAction: true,
+                        onPressed: () async {
+                          await dataProvider.clearData();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                    cancelButton: CupertinoActionSheetAction(
+                      child: const Text(
+                        "Cancel",
+                        style: const TextStyle(color: Colors.blue),
                       ),
+                      onPressed: () => Navigator.pop(context),
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
-              ],
+              ),
             ),
-          ),
+            const SizedBox(height: 30),
+          ],
         ),
       ),
     );

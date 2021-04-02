@@ -138,7 +138,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                             "Try again",
                             style: TextStyle(color: Colors.green),
                           ),
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () => Navigator.pop(context),
                         ),
                       ],
                     );

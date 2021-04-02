@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:slide_popup_dialog/slide_dialog.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
@@ -79,9 +80,11 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     const SizedBox(height: 20),
-                                    Text(_course.description,
-                                        style: customTextStyle(darkTheme,
-                                            size: 20)),
+                                    Text(
+                                      _course.description,
+                                      style:
+                                          customTextStyle(darkTheme, size: 20),
+                                    ),
                                     const SizedBox(height: 20),
                                   ],
                                 ),
@@ -92,7 +95,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                   darkTheme,
                                   text: 'OK',
                                   textColor: Colors.black,
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  onPressed: () => Navigator.pop(context),
                                   height: 60,
                                   color: Colors.greenAccent,
                                 ),
@@ -277,7 +280,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                               ),
                                               onPressed: () {
                                                 _selectedChapter = null;
-                                                Navigator.of(context).pop();
+                                                Navigator.pop(context);
                                               },
                                             ),
                                           ],
@@ -520,7 +523,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                                       ),
                                                     ),
                                                     actions: [
-                                                      FlatButton(
+                                                      TextButton(
                                                         child: Text(
                                                           'CANCEL',
                                                           style: TextStyle(
@@ -535,10 +538,6 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                                           Navigator.of(context)
                                                               .pop();
                                                         },
-                                                        highlightColor:
-                                                            Colors.transparent,
-                                                        splashColor:
-                                                            Colors.transparent,
                                                       ),
                                                     ],
                                                   );
@@ -661,7 +660,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                   darkTheme,
                                   text: 'OK',
                                   textColor: Colors.black,
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  onPressed: () => Navigator.pop(context),
                                   height: 60,
                                   color: Colors.greenAccent,
                                 ),
@@ -704,12 +703,35 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                   ),
                                 );
                               } else {
-                                await await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SessionSettingsPage(_course, chapters),
-                                  ),
+                                await showGeneralDialog(
+                                  context: context,
+                                  pageBuilder:
+                                      (context, animation1, animation2) {},
+                                  barrierLabel: "Dismiss",
+                                  barrierDismissible: true,
+                                  transitionBuilder: (context, animation1,
+                                      animation2, widget) {
+                                    final curvedValue = Curves.easeInOut
+                                            .transform(animation1.value) -
+                                        1.0;
+                                    return StatefulBuilder(
+                                      builder: (context, setStater) =>
+                                          Transform(
+                                        transform: Matrix4.translationValues(
+                                            0.0, curvedValue * -400, 0.0),
+                                        child: Opacity(
+                                          opacity: animation1.value,
+                                          child: SlideDialog(
+                                            pillColor: Colors.orangeAccent,
+                                            backgroundColor:
+                                                Theme.of(context).canvasColor,
+                                            child: SessionSettingsPage(
+                                                _course, chapters, setStater),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
                               }
                             },
@@ -830,19 +852,17 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
             decoration: InputDecoration(hintText: "Input the name"),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'CANCEL',
                 style: TextStyle(color: Colors.redAccent[100]),
               ),
               onPressed: () {
                 _selectedChapter = null;
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
             ),
-            FlatButton(
+            TextButton(
               child: const Text(
                 'OK',
                 style: TextStyle(color: Colors.greenAccent),
@@ -852,8 +872,6 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                     name: _textFieldController.text, courseID: _course.id));
                 Navigator.pop(context);
               },
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
             ),
           ],
         );
@@ -916,7 +934,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
             ),
           ),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text(
                 'CANCEL',
                 style: TextStyle(
@@ -925,10 +943,8 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
               ),
               onPressed: () {
                 _selectedChapter = null;
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
             ),
           ],
         );
@@ -965,7 +981,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                       actions: [
                         TextButton(
                           child: const Text('OK'),
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () => Navigator.pop(context),
                         ),
                       ],
                     );
@@ -978,7 +994,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                       actions: [
                         TextButton(
                           child: const Text('OK'),
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () => Navigator.pop(context),
                         ),
                       ],
                     );
@@ -1000,9 +1016,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
         cancelButton: CupertinoActionSheetAction(
           child: const Text('Cancel'),
           isDefaultAction: true,
-          onPressed: () {
-            Navigator.pop(context, 'Cancel');
-          },
+          onPressed: () => Navigator.pop(context, 'Cancel'),
         ),
       ),
     );

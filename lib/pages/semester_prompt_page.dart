@@ -141,7 +141,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                             style: TextStyle(color: Colors.green),
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            Navigator.pop(context);
                           },
                         ),
                       ],
@@ -216,7 +216,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
 //                             style: TextStyle(color: Colors.green),
 //                           ),
 //                           onPressed: () {
-//                             Navigator.of(context).pop();
+//                             Navigator.pop(context);
 //                           },
 //                         ),
 //                       ],

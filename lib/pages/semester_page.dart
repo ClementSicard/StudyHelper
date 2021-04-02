@@ -217,8 +217,8 @@ class SemestersPageState extends State<SemestersPage> {
                                                       current,
                                                       _textFieldController
                                                           .text);
-                                              Navigator.of(context).pop();
-                                              Navigator.of(context).pop();
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
                                             },
                                           ),
                                           TextButton(
@@ -229,8 +229,8 @@ class SemestersPageState extends State<SemestersPage> {
                                               ),
                                             ),
                                             onPressed: () {
-                                              Navigator.of(context).pop();
-                                              Navigator.of(context).pop();
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
                                             },
                                           ),
                                         ],
@@ -258,8 +258,8 @@ class SemestersPageState extends State<SemestersPage> {
                               text: current.name,
                               color: Colors.red[400],
                               width: 500,
-                              onPressed: () async =>
-                                  await Navigator.of(context).push(
+                              onPressed: () async => await Navigator.push(
+                                context,
                                 MaterialPageRoute(
                                   builder: (context) => CoursesPage(current),
                                 ),
@@ -277,7 +277,8 @@ class SemestersPageState extends State<SemestersPage> {
                     splashColor: Colors.white54,
                   ),
                   child: FloatingActionButton(
-                    onPressed: () async => await Navigator.of(context).push(
+                    onPressed: () async => await Navigator.push(
+                      context,
                       MaterialPageRoute(
                           builder: (context) => SemesterPromptPage()),
                     ),

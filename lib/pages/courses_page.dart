@@ -7,11 +7,13 @@ import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/objects/semester.dart';
 import 'package:study_helper/pages/chapters_grid_page.dart';
+import 'package:study_helper/pages/settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/nice_button.dart';
 import 'package:study_helper/utils/routes.dart';
 import '../utils/custom_text_styles.dart';
 import 'course_prompt_page.dart';
+import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 
 class CoursesPage extends StatefulWidget {
   final Semester _semester;
@@ -57,49 +59,56 @@ class CoursesPageState extends State<CoursesPage> {
                     child: IconButton(
                       icon: const Icon(MaterialCommunityIcons.information),
                       tooltip: "${_semester.name} - Description",
-                      onPressed: () async => await showDialog(
+                      // onPressed: () async => await showDialog(
+                      //   context: context,
+                      //   builder: (context) {
+                      //     return AlertDialog(
+                      //       elevation: 0,
+                      //       shape: const RoundedRectangleBorder(
+                      //         borderRadius: const BorderRadius.all(
+                      //           const Radius.circular(20.0),
+                      //         ),
+                      //       ),
+                      //       title: Text(
+                      //         'Semester description',
+                      //         textAlign: TextAlign.center,
+                      //         style: customTextStyle(themeChange.darkTheme),
+                      //       ),
+                      // content: Padding(
+                      //   padding: const EdgeInsets.all(20.0),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.stretch,
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     children: [
+                      //       const SizedBox(height: 20),
+                      //       Text(_semester.description,
+                      //           style: customTextStyle(
+                      //               themeChange.darkTheme,
+                      //               size: 20)),
+                      //       const SizedBox(height: 20),
+                      //     ],
+                      //   ),
+                      // ),
+                      // actionsPadding: const EdgeInsets.all(8.0),
+                      // actions: [
+                      //   NiceButton(
+                      //     themeChange.darkTheme,
+                      //     text: 'OK',
+                      //     textColor: Colors.black,
+                      //     onPressed: () => Navigator.pop(context),
+                      //     height: 60,
+                      //     color: Colors.greenAccent,
+                      //   ),
+                      //       ],
+                      //     );
+                      //   },
+                      // ),
+                      onPressed: () async => await slideDialog.showSlideDialog(
                         context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            elevation: 0,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(20.0),
-                              ),
-                            ),
-                            title: Text(
-                              'Semester description',
-                              textAlign: TextAlign.center,
-                              style: customTextStyle(themeChange.darkTheme),
-                            ),
-                            content: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(height: 20),
-                                  Text(_semester.description,
-                                      style: customTextStyle(
-                                          themeChange.darkTheme,
-                                          size: 20)),
-                                  const SizedBox(height: 20),
-                                ],
-                              ),
-                            ),
-                            actionsPadding: const EdgeInsets.all(8.0),
-                            actions: [
-                              NiceButton(
-                                themeChange.darkTheme,
-                                text: 'OK',
-                                textColor: Colors.black,
-                                onPressed: () => Navigator.of(context).pop(),
-                                height: 60,
-                                color: Colors.greenAccent,
-                              ),
-                            ],
-                          );
-                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: SettingsPage(),
+                        ),
                       ),
                     ),
                   ),
@@ -125,6 +134,34 @@ class CoursesPageState extends State<CoursesPage> {
                     tooltip: "Back",
                     onPressed: () => Navigator.pop(context),
                   ),
+                  actions: [
+                    Visibility(
+                      visible: _semester.description != "",
+                      child: IconButton(
+                        icon: const Icon(MaterialCommunityIcons.information),
+                        tooltip: "${_semester.name} - Description",
+                        onPressed: () async =>
+                            await slideDialog.showSlideDialog(
+                          context: context,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(height: 20),
+                                Text(_semester.description,
+                                    style: customTextStyle(
+                                        themeChange.darkTheme,
+                                        size: 20)),
+                                const SizedBox(height: 20),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 body: ListView(
                   physics: NeverScrollableScrollPhysics(),
@@ -182,50 +219,38 @@ class CoursesPageState extends State<CoursesPage> {
                       child: IconButton(
                         icon: const Icon(MaterialCommunityIcons.information),
                         tooltip: "${_semester.name} - Description",
-                        onPressed: () async => await showDialog(
+                        onPressed: () async =>
+                            await slideDialog.showSlideDialog(
+                          barrierDismissible: true,
+                          transitionDuration: const Duration(milliseconds: 200),
                           context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              elevation: 0,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(20.0),
+                          pillColor: Colors.orangeAccent,
+                          child: Padding(
+                            padding: const EdgeInsets.all(30.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 80.0),
+                                  child: NiceButton(
+                                    themeChange.darkTheme,
+                                    text: "Semester description",
+                                    color: Colors.orangeAccent,
+                                    height: 100,
+                                  ),
                                 ),
-                              ),
-                              title: Text(
-                                'Semester description',
-                                textAlign: TextAlign.center,
-                                style: customTextStyle(themeChange.darkTheme),
-                              ),
-                              content: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const SizedBox(height: 20),
-                                    Text(_semester.description,
-                                        style: customTextStyle(
-                                            themeChange.darkTheme,
-                                            size: 20)),
-                                    const SizedBox(height: 20),
-                                  ],
+                                const SizedBox(height: 20),
+                                Text(
+                                  _semester.description,
+                                  style: customTextStyle(themeChange.darkTheme,
+                                      size: 20),
                                 ),
-                              ),
-                              actionsPadding: const EdgeInsets.all(8.0),
-                              actions: [
-                                NiceButton(
-                                  themeChange.darkTheme,
-                                  text: 'OK',
-                                  textColor: Colors.black,
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  height: 60,
-                                  color: Colors.orangeAccent,
-                                ),
+                                const SizedBox(height: 20),
                               ],
-                            );
-                          },
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -327,7 +352,7 @@ class CoursesPageState extends State<CoursesPage> {
                                                         current,
                                                         _textFieldController
                                                             .text);
-                                                Navigator.of(context).pop();
+                                                Navigator.pop(context);
                                               },
                                             ),
                                             TextButton(
@@ -338,7 +363,7 @@ class CoursesPageState extends State<CoursesPage> {
                                                 ),
                                               ),
                                               onPressed: () {
-                                                Navigator.of(context).pop();
+                                                Navigator.pop(context);
                                               },
                                             ),
                                           ],
@@ -360,7 +385,7 @@ class CoursesPageState extends State<CoursesPage> {
                                         Provider.of<DataHandler>(context,
                                             listen: false);
                                     await dataProvider.removeCourse(current);
-                                    Navigator.of(context).pop();
+                                    Navigator.pop(context);
                                   },
                                 ),
                               ],
@@ -369,8 +394,8 @@ class CoursesPageState extends State<CoursesPage> {
                                 text: current.name,
                                 color: Colors.orange,
                                 width: 500,
-                                onPressed: () async =>
-                                    await Navigator.of(context).push(
+                                onPressed: () async => await Navigator.push(
+                                  context,
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           ChaptersGridPage(current)),
@@ -389,7 +414,8 @@ class CoursesPageState extends State<CoursesPage> {
                     splashColor: Colors.white54,
                   ),
                   child: FloatingActionButton(
-                    onPressed: () async => await Navigator.of(context).push(
+                    onPressed: () async => await Navigator.push(
+                      context,
                       MaterialPageRoute(
                           builder: (context) => CoursePromptPage(_semester)),
                     ),
