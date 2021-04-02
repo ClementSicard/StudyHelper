@@ -110,6 +110,7 @@ class SemestersPageState extends State<SemestersPage> {
                   child: ListView.separated(
                     shrinkWrap: true,
                     primary: false,
+                    padding: const EdgeInsets.all(16.0),
                     itemCount: semesters.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 40),

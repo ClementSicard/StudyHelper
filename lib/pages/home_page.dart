@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_popup_dialog/slide_dialog.dart';
@@ -7,6 +8,7 @@ import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/pages/semester_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
+import 'package:study_helper/utils/device.dart';
 import 'package:study_helper/utils/nice_button.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 import 'package:study_helper/utils/routes.dart';
@@ -103,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 themeChange.darkTheme,
                 onPressed: () async => await Navigator.push(
                   context,
-                  createRoute(SemestersPage()),
+                  MaterialPageRoute(builder: (context) => SemestersPage()),
                 ),
                 text: "Start studying",
               ),
@@ -127,26 +129,35 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               title: Text(
                 "Dark mode",
-                style: customTextStyle(themeChange.darkTheme),
+                style: customTextStyle(themeChange.darkTheme, size: 25),
                 textAlign: TextAlign.center,
               ),
               trailing: CupertinoSwitch(
                 onChanged: (bool value) {
-                  setState(() {
-                    themeChange.darkTheme = value;
-                  });
+                  setState(
+                    () {
+                      themeChange.darkTheme = value;
+                      SystemChrome.setSystemUIOverlayStyle(
+                        SystemUiOverlayStyle(
+                          statusBarColor: Colors.transparent,
+                          systemNavigationBarColor:
+                              value ? Colors.black : Colors.transparent,
+                        ),
+                      );
+                    },
+                  );
                 },
                 value: themeChange.darkTheme,
               ),
             ),
             const SizedBox(height: 50),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 150.0),
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: NiceButton(
                 themeChange.darkTheme,
                 text: "Reset data",
                 color: Colors.redAccent,
-                height: 80,
+                height: 70,
                 onPressed: () async => await showCupertinoModalPopup(
                   context: context,
                   builder: (context) => CupertinoActionSheet(

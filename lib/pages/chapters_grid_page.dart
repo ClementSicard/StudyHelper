@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:slide_popup_dialog/slide_dialog.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
@@ -14,6 +13,7 @@ import 'package:study_helper/utils/custom_text_styles.dart';
 import 'package:study_helper/utils/diagonal_scrollview.dart';
 import 'package:study_helper/utils/mastered_sliders.dart';
 import 'package:study_helper/utils/nice_button.dart';
+import 'package:study_helper/utils/routes.dart';
 
 class ChaptersGridPage extends StatefulWidget {
   final Course _course;
@@ -703,35 +703,11 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                   ),
                                 );
                               } else {
-                                await showGeneralDialog(
-                                  context: context,
-                                  pageBuilder:
-                                      (context, animation1, animation2) {},
-                                  barrierLabel: "Dismiss",
-                                  barrierDismissible: true,
-                                  transitionBuilder: (context, animation1,
-                                      animation2, widget) {
-                                    final curvedValue = Curves.easeInOut
-                                            .transform(animation1.value) -
-                                        1.0;
-                                    return StatefulBuilder(
-                                      builder: (context, setStater) =>
-                                          Transform(
-                                        transform: Matrix4.translationValues(
-                                            0.0, curvedValue * -400, 0.0),
-                                        child: Opacity(
-                                          opacity: animation1.value,
-                                          child: SlideDialog(
-                                            pillColor: Colors.orangeAccent,
-                                            backgroundColor:
-                                                Theme.of(context).canvasColor,
-                                            child: SessionSettingsPage(
-                                                _course, chapters, setStater),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
+                                await Navigator.push(
+                                  context,
+                                  createRoute(
+                                    SessionSettingsPage(_course, chapters),
+                                  ),
                                 );
                               }
                             },

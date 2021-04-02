@@ -73,13 +73,8 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                 maxLength: 100,
                 maxLines: 1,
                 textCapitalization: TextCapitalization.sentences,
-                style: customTextStyle(themeChange.darkTheme),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
+                style:
+                    customTextStyle(themeChange.darkTheme, fw: FontWeight.w300),
               ),
               TextFormField(
                 controller: _descriptionController,
@@ -97,14 +92,9 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                 ),
                 maxLength: 1000,
                 keyboardType: TextInputType.multiline,
-                style: customTextStyle(themeChange.darkTheme, size: 20),
+                style: customTextStyle(themeChange.darkTheme,
+                    size: 20, fw: FontWeight.w300),
                 textCapitalization: TextCapitalization.sentences,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 100),
             ],

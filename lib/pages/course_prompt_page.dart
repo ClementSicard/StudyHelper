@@ -75,7 +75,8 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 maxLength: 100,
                 maxLines: 1,
                 textCapitalization: TextCapitalization.sentences,
-                style: customTextStyle(themeChange.darkTheme),
+                style:
+                    customTextStyle(themeChange.darkTheme, fw: FontWeight.w300),
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter some text';
@@ -97,8 +98,11 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                   labelStyle: customTextStyle(themeChange.darkTheme),
                 ),
                 maxLength: 1000,
+                minLines: 2,
+                maxLines: 10,
                 keyboardType: TextInputType.multiline,
-                style: customTextStyle(themeChange.darkTheme, size: 20),
+                style: customTextStyle(themeChange.darkTheme,
+                    size: 20, fw: FontWeight.w300),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
                   if (value.isEmpty) {

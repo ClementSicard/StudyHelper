@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Styles {
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {

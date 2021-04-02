@@ -47,6 +47,7 @@ class _SubjectMasteredSliderDialogState
       title: Text(
         'How comfortable are you with this subject?',
         style: customTextStyle(darkTheme),
+        textAlign: TextAlign.center,
       ),
       content: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -131,6 +132,7 @@ class _ChapterMasteredSliderDialogState
       ),
       title: Text(
         'How comfortable are you with this chapter?',
+        textAlign: TextAlign.center,
         style: customTextStyle(darkTheme),
       ),
       content: Padding(
