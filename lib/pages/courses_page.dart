@@ -136,7 +136,9 @@ class CoursesPageState extends State<CoursesPage> {
                 ),
                 body: ListView(
                   physics: NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.only(
+                    top: 5.0,
+                  ),
                   children: <Widget>[
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 3.0,
@@ -237,6 +239,9 @@ class CoursesPageState extends State<CoursesPage> {
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 40),
                       physics: BouncingScrollPhysics(),
+                      padding: const EdgeInsets.only(
+                        bottom: 50,
+                      ),
                       shrinkWrap: true,
                       primary: false,
                       itemCount: courses.length,
@@ -395,6 +400,8 @@ class CoursesPageState extends State<CoursesPage> {
                     child: const Icon(Icons.add),
                     backgroundColor: Colors.orange[400],
                     elevation: 0,
+                    autofocus: true,
+                    focusElevation: 0,
                   ),
                 ),
               );

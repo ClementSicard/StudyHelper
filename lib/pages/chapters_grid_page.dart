@@ -14,6 +14,7 @@ import 'package:study_helper/utils/diagonal_scrollview.dart';
 import 'package:study_helper/utils/mastered_sliders.dart';
 import 'package:study_helper/utils/nice_button.dart';
 import 'package:study_helper/utils/routes.dart';
+import 'package:study_helper/utils/themes.dart';
 
 class ChaptersGridPage extends StatefulWidget {
   final Course _course;
@@ -31,7 +32,8 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool darkTheme = Provider.of<DarkThemeProvider>(context).darkTheme;
+    bool darkTheme =
+        Provider.of<DarkThemeProvider>(context, listen: false).darkTheme;
     final dataProvider = Provider.of<DataHandler>(context, listen: true);
 
     return FutureBuilder(
@@ -131,8 +133,8 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                 : Colors.white,
                             enableFeedback: true,
                             iconSize: MediaQuery.of(context).size.height / 17.0,
-                            onPressed: () =>
-                                _promptNewChapter(dataProvider, darkTheme),
+                            onPressed: () => _promptNewChapter(darkTheme),
+                            autofocus: true,
                           ),
                         ),
                       ],
@@ -220,11 +222,14 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                                   autofocus: true,
                                                   controller:
                                                       _textFieldController,
-                                                  onEditingComplete: () async =>
-                                                      dataProvider.renameChapter(
-                                                          c,
-                                                          _textFieldController
-                                                              .text),
+                                                  onEditingComplete: () async {
+                                                    await dataProvider
+                                                        .renameChapter(
+                                                            c,
+                                                            _textFieldController
+                                                                .text);
+                                                    Navigator.pop(context);
+                                                  },
                                                   decoration: InputDecoration(
                                                     hintText: "Input the name",
                                                     hintStyle: customTextStyle(
@@ -353,12 +358,12 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                   color: Colors.black,
                                 ),
                                 backgroundColor: Colors.greenAccent,
-                                onPressed: () =>
-                                    _promptNewChapter(dataProvider, darkTheme),
+                                onPressed: () => _promptNewChapter(darkTheme),
                                 mini: true,
                                 elevation: 0,
                                 heroTag: null,
                                 focusElevation: 0,
+                                autofocus: true,
                               ),
                             ),
                           ),
@@ -462,12 +467,16 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                                             autofocus: true,
                                                             controller:
                                                                 _textFieldController,
-                                                            onEditingComplete: () async =>
-                                                                await dataProvider
-                                                                    .renameSubject(
-                                                                        s.key,
-                                                                        _textFieldController
-                                                                            .text),
+                                                            onEditingComplete:
+                                                                () async {
+                                                              await dataProvider
+                                                                  .renameSubject(
+                                                                      s.key,
+                                                                      _textFieldController
+                                                                          .text);
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
                                                             decoration:
                                                                 InputDecoration(
                                                               hintText:
@@ -744,25 +753,34 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                         activeIcon: Icons.close,
                         activeBackgroundColor: Colors.grey[200],
                         overlayColor: Colors.transparent,
-                        renderOverlay: true,
                         backgroundColor: Colors.grey[100],
+                        overlayOpacity: 0.0,
                         elevation: 0,
                         children: [
                           SpeedDialChild(
-                            child: Icon(
-                              Icons.add,
-                            ),
+                            child: const Icon(Icons.add),
                             label: "Add a subject",
                             backgroundColor: Colors.redAccent[100],
+                            labelBackgroundColor: darkTheme
+                                ? Styles.darkThemeForeground
+                                : Styles.lightThemeForeground,
                             elevation: 0,
+                            onTap: () => _promptNewSubject(
+                              darkTheme: darkTheme,
+                              chapters: chapters,
+                            ),
                           ),
                           SpeedDialChild(
                             child: Icon(
                               Icons.add,
                             ),
                             label: "Add a chapter",
-                            backgroundColor: Colors.greenAccent[100],
+                            backgroundColor: Colors.greenAccent,
+                            labelBackgroundColor: darkTheme
+                                ? Styles.darkThemeForeground
+                                : Styles.lightThemeForeground,
                             elevation: 0,
+                            onTap: () => _promptNewChapter(darkTheme),
                           ),
                         ],
                       ),
@@ -828,9 +846,10 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
     return subjectsByCol;
   }
 
-  Future<Widget> _promptNewChapter(
-      DataHandler dataHandler, bool darkTheme) async {
+  Future<Widget> _promptNewChapter(bool darkTheme) async {
     TextEditingController _textFieldController = TextEditingController();
+    final dataHandler = Provider.of<DataHandler>(context, listen: false);
+
     return await showDialog(
       context: context,
       builder: (context) {
@@ -847,9 +866,12 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
             style: customTextStyle(darkTheme),
           ),
           content: TextField(
-            onEditingComplete: () => dataHandler.addChapter(
-              Chapter(name: _textFieldController.text, courseID: _course.id),
-            ),
+            onEditingComplete: () {
+              dataHandler.addChapter(
+                Chapter(name: _textFieldController.text, courseID: _course.id),
+              );
+              Navigator.pop(context);
+            },
             autocorrect: false,
             autofocus: true,
             controller: _textFieldController,
@@ -869,7 +891,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
             TextButton(
               child: const Text(
                 'OK',
-                style: TextStyle(color: Colors.greenAccent),
+                style: const TextStyle(color: Colors.greenAccent),
               ),
               onPressed: () async {
                 await dataHandler.addChapter(Chapter(

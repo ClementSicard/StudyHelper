@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_popup_dialog/slide_dialog.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/pages/semester_page.dart';
@@ -185,6 +186,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: NiceButton(
+                themeChange.darkTheme,
+                text: "Export data",
+                color: Colors.blueAccent,
+                height: 70,
+                onPressed: () async {
+                  await Provider.of<DataHandler>(context, listen: false)
+                      .exportData();
+                },
               ),
             ),
             const SizedBox(height: 30),

@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Styles {
+  static const Color darkThemeBackground = const Color(0xFF121212);
+  static const Color darkThemeForeground = const Color(0xFF242424);
+  static const Color lightThemeBackground = Colors.white;
+  static Color lightThemeForeground = Colors.grey[100];
+
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
     return ThemeData(
       primarySwatch: Colors.red,
       primaryColor: isDarkTheme ? Colors.black : Colors.white,
-      backgroundColor: isDarkTheme ? Colors.black : Colors.white,
+      backgroundColor: isDarkTheme ? darkThemeBackground : Colors.white,
       highlightColor: Colors.white24,
       hoverColor: Colors.transparent,
       splashColor: Colors.white24,

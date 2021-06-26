@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:study_helper/objects/chapter.dart';
@@ -12,6 +15,34 @@ class DataHandler with ChangeNotifier {
 
   DataHandler() {
     _update();
+  }
+
+  Future<bool> exportData() async {
+    try {
+      final path = "${await getDatabasesPath()}/${DBHelper.databaseName}";
+      final file = File(path);
+
+      final _bytes = await file.readAsBytes();
+
+      FilePickerCross myFile = FilePickerCross(
+        _bytes,
+        fileExtension: "db",
+      );
+
+      final date = DateTime.now();
+      final filePath =
+          "StudyHelper_${date.day.toString().padLeft(2, "0")}_${date.month.toString().padLeft(2, "0")}_${date.year}.db";
+
+      myFile.exportToStorage(
+        fileName: filePath,
+      );
+
+      return true;
+    } catch (e) {
+      print(e);
+
+      return false;
+    }
   }
 
   Future<bool> clearData() async {

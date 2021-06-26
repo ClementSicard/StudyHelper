@@ -281,11 +281,13 @@ class SemestersPageState extends State<SemestersPage> {
                     onPressed: () async => await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SemesterPromptPage()),
+                        builder: (context) => SemesterPromptPage(),
+                      ),
                     ),
                     child: const Icon(Icons.add),
                     backgroundColor: Colors.red[400],
                     elevation: 0,
+                    autofocus: true,
                   ),
                 ),
               );

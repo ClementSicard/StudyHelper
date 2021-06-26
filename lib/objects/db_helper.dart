@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:study_helper/objects/chapter.dart';
@@ -7,7 +9,7 @@ import 'package:study_helper/objects/semester.dart';
 import 'package:study_helper/objects/subject.dart';
 
 class DBHelper {
-  static final _databaseName = 'courses.db';
+  static final databaseName = 'courses.db';
   static final _databaseVersion = 1;
   static final table = "courses";
 
@@ -52,7 +54,7 @@ class DBHelper {
 
   Future<Database> _initDatabase() async {
     String dbPath = await getDatabasesPath();
-    String path = join(dbPath, _databaseName);
+    String path = join(dbPath, databaseName);
     return await openDatabase(
       path,
       version: _databaseVersion,
@@ -277,5 +279,11 @@ class DBHelper {
       whereArgs: [semester.id],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  // Backup methods
+
+  Future<File> getDBFile() async {
+    print("");
   }
 }
