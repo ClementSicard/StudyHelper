@@ -97,32 +97,33 @@ class _SubjectMasteredSliderDialogState
 }
 
 class ChapterMasteredSliderDialog extends StatefulWidget {
-  final Chapter _chapter;
+  final Chapter chapter;
 
-  ChapterMasteredSliderDialog(this._chapter, {Key key}) : super(key: key);
+  ChapterMasteredSliderDialog(this.chapter, {Key key}) : super(key: key);
 
   @override
   _ChapterMasteredSliderDialogState createState() =>
-      _ChapterMasteredSliderDialogState(_chapter);
+      _ChapterMasteredSliderDialogState();
 }
 
 class _ChapterMasteredSliderDialogState
     extends State<ChapterMasteredSliderDialog> {
+  double toBeSavedValue;
   double currentValue;
-  final Chapter _chapter;
-
-  _ChapterMasteredSliderDialogState(this._chapter);
 
   @override
   void initState() {
     super.initState();
-    currentValue = _chapter.mas.value.toDouble();
+    currentValue = widget.chapter.mas.value.toDouble();
+    toBeSavedValue = currentValue;
   }
 
   @override
   Widget build(BuildContext context) {
     final bool darkTheme =
         Provider.of<DarkThemeProvider>(context, listen: false).darkTheme;
+
+    print(toBeSavedValue);
 
     return AlertDialog(
       elevation: 0,
@@ -144,6 +145,11 @@ class _ChapterMasteredSliderDialogState
                 allowHalfRating: false,
                 starCount: 3,
                 rating: currentValue,
+                onRated: (newRating) {
+                  setState(() {
+                    toBeSavedValue = newRating;
+                  });
+                },
                 size: 70.0,
                 color: Colors.greenAccent,
                 borderColor: Colors.greenAccent,
@@ -171,9 +177,13 @@ class _ChapterMasteredSliderDialogState
             ),
           ),
           onPressed: () async {
-            Mastered mas = Mastered(currentValue.toInt());
+            Mastered mas = Mastered(toBeSavedValue.toInt());
+            print(mas);
             await Provider.of<DataHandler>(context, listen: false)
-                .updateChapterMastering(_chapter, mas);
+                .updateChapterMastering(
+              widget.chapter,
+              mas,
+            );
             Navigator.pop(context);
           },
         ),

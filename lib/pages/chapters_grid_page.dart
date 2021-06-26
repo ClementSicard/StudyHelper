@@ -163,23 +163,25 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                             child: CupertinoContextMenu(
                               actions: [
                                 CupertinoContextMenuAction(
-                                    child: const Center(
-                                      child: Text(
-                                        "Mastery",
-                                        style:
-                                            const TextStyle(color: Colors.blue),
-                                      ),
+                                  child: const Center(
+                                    child: Text(
+                                      "Mastery",
+                                      style:
+                                          const TextStyle(color: Colors.blue),
                                     ),
-                                    trailingIcon: Icons.star,
-                                    isDefaultAction: false,
-                                    isDestructiveAction: false,
-                                    onPressed: () async {
-                                      Navigator.pop(context);
-                                      await showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              ChapterMasteredSliderDialog(c));
-                                    }),
+                                  ),
+                                  trailingIcon: Icons.star,
+                                  isDefaultAction: false,
+                                  isDestructiveAction: false,
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          ChapterMasteredSliderDialog(c),
+                                    );
+                                  },
+                                ),
                                 CupertinoContextMenuAction(
                                   child: const Center(
                                     child: const Text(
