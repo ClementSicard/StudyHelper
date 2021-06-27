@@ -182,6 +182,7 @@ class DataHandler with ChangeNotifier {
                 name: m["Name"],
                 mas: Mastered(m["Mastered"]),
                 chapterID: chapterID,
+                aside: m["Aside"] ?? false,
               ),
             )
             .toList()
@@ -309,6 +310,13 @@ class DataHandler with ChangeNotifier {
     await DBHelper.instance.updateSubjectMastering(subject, mas);
     await _update();
     print("[DataHandler] Subject mastering well changed!");
+    return true;
+  }
+
+  Future<bool> updateSubjectAside(Subject subject, bool value) async {
+    await DBHelper.instance.updateSubjectAside(subject, value);
+    await _update();
+    print("[DataHandler] Subject aside well changed!");
     return true;
   }
 

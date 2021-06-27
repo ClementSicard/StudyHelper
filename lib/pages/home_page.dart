@@ -7,12 +7,11 @@ import 'package:slide_popup_dialog/slide_dialog.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
+import 'package:study_helper/objects/db_helper.dart';
 import 'package:study_helper/pages/semester_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
-import 'package:study_helper/utils/device.dart';
 import 'package:study_helper/utils/nice_button.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
-import 'package:study_helper/utils/routes.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -199,6 +198,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   await Provider.of<DataHandler>(context, listen: false)
                       .exportData();
+                },
+              ),
+            ),
+            const SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: NiceButton(
+                themeChange.darkTheme,
+                text: "Copy DB path",
+                color: Colors.blueAccent,
+                height: 70,
+                onPressed: () async {
+                  String path =
+                      "${await getDatabasesPath()}/${DBHelper.databaseName}";
+
+                  Clipboard.setData(ClipboardData(text: path));
+
+                  print('Copied "$path" to clipboard!');
                 },
               ),
             ),

@@ -73,8 +73,7 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                 maxLength: 100,
                 maxLines: 1,
                 textCapitalization: TextCapitalization.sentences,
-                style:
-                    customTextStyle(themeChange.darkTheme, fw: FontWeight.w300),
+                style: customTextStyle(themeChange.darkTheme),
               ),
               TextFormField(
                 controller: _descriptionController,
@@ -92,8 +91,10 @@ class _SemesterPromptPageState extends State<SemesterPromptPage> {
                 ),
                 maxLength: 1000,
                 keyboardType: TextInputType.multiline,
-                style: customTextStyle(themeChange.darkTheme,
-                    size: 20, fw: FontWeight.w300),
+                style: customTextStyle(
+                  themeChange.darkTheme,
+                  size: 20,
+                ),
                 textCapitalization: TextCapitalization.sentences,
               ),
               const SizedBox(height: 100),

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:study_helper/objects/chapter.dart';
@@ -17,9 +15,11 @@ class DBHelper {
         SubjectID varchar(1000), 
         ChapterID varchar(1000), 
         Name varchar(100), 
-        Mastered integer, 
+        Mastered integer,
+        Aside boolean,
         PRIMARY KEY (SubjectID)
         );''';
+
   final _chapterCreationQuery = '''CREATE TABLE Chapter(
         ChapterID varchar(1000), 
         CourseID varchar(1000), 
@@ -28,6 +28,7 @@ class DBHelper {
         Mastered integer,
         PRIMARY KEY (ChapterID)
         );''';
+
   final _courseCreationQuery = '''CREATE TABLE Course(
         CourseID varchar(1000), 
         SemesterID varchar(1000), 
@@ -35,6 +36,7 @@ class DBHelper {
         Description varchar(1000), 
         PRIMARY KEY (CourseID)
         );''';
+
   final _semesterCreationQuery = '''CREATE TABLE Semester(
         SemesterID varchar(1000), 
         Name varchar(100), 
@@ -77,6 +79,8 @@ class DBHelper {
     await db.delete('Semester');
     await db.delete('Chapter');
     await db.delete('Subject');
+
+    print("[DBHelper] Database was successfully cleared!");
   }
 
   // Course methods
@@ -227,6 +231,19 @@ class DBHelper {
     );
   }
 
+  Future<void> updateSubjectAside(Subject subject, bool value) async {
+    final Database db = await database;
+    var row = subject.toMap();
+    row["Aside"] = value;
+
+    await db.update(
+      'Subject',
+      row,
+      where: 'SubjectID = ?',
+      whereArgs: [subject.id],
+    );
+  }
+
   // Semester methods
 
   Future<void> addSemester(Semester semester) async {
@@ -281,9 +298,6 @@ class DBHelper {
     );
   }
 
-  // Backup methods
+  // Put Aside methods
 
-  Future<File> getDBFile() async {
-    print("");
-  }
 }

@@ -7,6 +7,7 @@ import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
+import 'package:study_helper/objects/mastered.dart';
 import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/pages/session_settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
@@ -34,6 +35,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
   Widget build(BuildContext context) {
     bool darkTheme =
         Provider.of<DarkThemeProvider>(context, listen: false).darkTheme;
+
     final dataProvider = Provider.of<DataHandler>(context, listen: true);
 
     return FutureBuilder(
@@ -163,9 +165,9 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                             child: CupertinoContextMenu(
                               actions: [
                                 CupertinoContextMenuAction(
-                                  child: const Center(
+                                  child: Center(
                                     child: Text(
-                                      "Mastery",
+                                      "Mastery (${c.mas})",
                                       style:
                                           const TextStyle(color: Colors.blue),
                                     ),
@@ -403,7 +405,8 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                               child: const Text(
                                                 "Mastery",
                                                 style: const TextStyle(
-                                                    color: Colors.blue),
+                                                  color: Colors.blue,
+                                                ),
                                               ),
                                             ),
                                             trailingIcon: Icons.star,
@@ -576,7 +579,9 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                         ],
                                         child: FlatButton(
                                           highlightColor: Colors.redAccent,
-                                          color: Colors.redAccent[100],
+                                          color: s.key.aside
+                                              ? Colors.red
+                                              : Colors.redAccent[100],
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(60.0),
@@ -595,6 +600,9 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                                       ? Colors.black
                                                       : Colors.white,
                                                   size: 18,
+                                                  fw: s.key.aside
+                                                      ? FontWeight.w400
+                                                      : FontWeight.w200,
                                                 ),
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.center,
@@ -679,6 +687,12 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                             );
                           },
                         ),
+                      ),
+                    ),
+                    Container(
+                      child: IconButton(
+                        icon: const Icon(Icons.bookmark),
+                        onPressed: () {},
                       ),
                     ),
                     Padding(
@@ -981,7 +995,9 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
   }
 
   Future<void> _showChapterSelection(
-      String subjectName, List<Chapter> chapters) async {
+    String subjectName,
+    List<Chapter> chapters,
+  ) async {
     await showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(

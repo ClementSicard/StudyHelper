@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
+import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
 import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
@@ -276,8 +277,15 @@ class _GamePageState extends State<GamePage> {
                           color: _color,
                           enableFeedback: true,
                           iconSize: 30,
-                          onPressed: () {
+                          onPressed: () async {
                             if (!_putAsideSubjects.contains(_currentSubject)) {
+                              await Provider.of<DataHandler>(context,
+                                      listen: false)
+                                  .updateSubjectAside(
+                                _currentSubject.key,
+                                true,
+                              );
+
                               setState(() {
                                 _putAsideSubjects.add(_currentSubject);
                                 _putAsideCounter++;

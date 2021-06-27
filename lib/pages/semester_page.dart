@@ -47,6 +47,7 @@ class SemestersPageState extends State<SemestersPage> {
             );
           } else {
             final List<Semester> semesters = snapshot.data;
+
             if (semesters.isEmpty) {
               return Scaffold(
                 appBar: AppBar(),

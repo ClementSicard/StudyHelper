@@ -56,7 +56,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
           child: ListView(
             padding: const EdgeInsets.all(16.0),
             shrinkWrap: true,
-            children: <Widget>[
+            children: [
               TextFormField(
                 autocorrect: false,
                 controller: _nameController,
@@ -76,7 +76,7 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 maxLines: 1,
                 textCapitalization: TextCapitalization.sentences,
                 style:
-                    customTextStyle(themeChange.darkTheme, fw: FontWeight.w300),
+                    customTextStyle(themeChange.darkTheme, fw: FontWeight.w200),
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter some text';
@@ -101,8 +101,11 @@ class _CoursePromptPageState extends State<CoursePromptPage> {
                 minLines: 2,
                 maxLines: 10,
                 keyboardType: TextInputType.multiline,
-                style: customTextStyle(themeChange.darkTheme,
-                    size: 20, fw: FontWeight.w300),
+                style: customTextStyle(
+                  themeChange.darkTheme,
+                  size: 20,
+                  fw: FontWeight.w200,
+                ),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (value) {
                   if (value.isEmpty) {
