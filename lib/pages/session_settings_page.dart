@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
@@ -26,6 +27,10 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
   bool _all = false;
   bool _random = true;
   bool _onlyAside = false;
+  bool _zeroStar = false;
+  bool _oneStar = false;
+  bool _twoStar = false;
+  bool _threeStar = false;
 
   _SessionSettingsPageState(this._course, this._chapters);
 
@@ -136,6 +141,107 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                   onTap: () {
                     setState(() {
                       _onlyAside = !_onlyAside;
+                    });
+                  },
+                ),
+                const SizedBox(height: 50),
+                ListTile(
+                  leading: const Icon(Icons.school_sharp),
+                  title: Row(
+                    children: [
+                      Text(
+                        "Only   ",
+                        style: customTextStyle(themeChange.darkTheme, size: 20),
+                      ),
+                      const Icon(Ionicons.ios_star_outline),
+                      const Icon(Ionicons.ios_star_outline),
+                      const Icon(Ionicons.ios_star_outline),
+                    ],
+                  ),
+                  trailing: CupertinoSwitch(
+                    value: _zeroStar,
+                    onChanged: (value) {
+                      setState(() => _zeroStar = value);
+                    },
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _zeroStar = !_zeroStar;
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.school),
+                  title: Row(
+                    children: [
+                      Text(
+                        "Only   ",
+                        style: customTextStyle(themeChange.darkTheme, size: 20),
+                      ),
+                      const Icon(Ionicons.ios_star),
+                      const Icon(Ionicons.ios_star_outline),
+                      const Icon(Ionicons.ios_star_outline),
+                    ],
+                  ),
+                  trailing: CupertinoSwitch(
+                    value: _oneStar,
+                    onChanged: (value) {
+                      setState(() => _oneStar = value);
+                    },
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _oneStar = !_oneStar;
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.school),
+                  title: Row(
+                    children: [
+                      Text(
+                        "Only   ",
+                        style: customTextStyle(themeChange.darkTheme, size: 20),
+                      ),
+                      const Icon(Ionicons.ios_star),
+                      const Icon(Ionicons.ios_star),
+                      const Icon(Ionicons.ios_star_outline),
+                    ],
+                  ),
+                  trailing: CupertinoSwitch(
+                    value: _twoStar,
+                    onChanged: (value) {
+                      setState(() => _twoStar = value);
+                    },
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _twoStar = !_twoStar;
+                    });
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.school),
+                  title: Row(
+                    children: [
+                      Text(
+                        "Only   ",
+                        style: customTextStyle(themeChange.darkTheme, size: 20),
+                      ),
+                      const Icon(Ionicons.ios_star),
+                      const Icon(Ionicons.ios_star),
+                      const Icon(Ionicons.ios_star),
+                    ],
+                  ),
+                  trailing: CupertinoSwitch(
+                    value: _threeStar,
+                    onChanged: (value) {
+                      setState(() => _threeStar = value);
+                    },
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _threeStar = !_threeStar;
                     });
                   },
                 ),
