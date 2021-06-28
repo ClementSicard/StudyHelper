@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -146,6 +147,8 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
             } else {
               List<List<MapEntry<Subject, Chapter>>> subjectsByCol =
                   subjectsByColumn(chapters);
+
+              int asideNumber = nbOfAsideSubjects(chapters);
 
               double dataRowHeight = 110;
               double headingRowHeight = 120;
@@ -377,247 +380,299 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                 rows: subjectsByCol
                     .map(
                       (r) => DataRow(
-                        cells: r.map((s) {
-                          return DataCell(
-                            Visibility(
-                              visible: s.key.name != "",
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  width: 200,
-                                  height: 90,
-                                  child: CupertinoContextMenu(
-                                    previewBuilder:
-                                        (context, animation, child) {
-                                      return FittedBox(
-                                        fit: BoxFit.cover,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                              64.0 * animation.value),
-                                          child: child,
-                                        ),
-                                      );
-                                    },
-                                    actions: [
-                                      CupertinoContextMenuAction(
-                                        child: const Center(
-                                          child: const Text(
-                                            "Mastery",
-                                            style: const TextStyle(
-                                              color: Colors.blue,
-                                            ),
-                                          ),
-                                        ),
-                                        trailingIcon: Icons.star,
-                                        isDefaultAction: false,
-                                        isDestructiveAction: false,
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-
-                                          await showDialog(
-                                            context: context,
-                                            builder: (newContext) {
-                                              return SubjectMasteredSliderDialog(
-                                                  s.key);
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      CupertinoContextMenuAction(
-                                        child: Center(
-                                          child: Text(
-                                            "Put aside",
-                                            style: const TextStyle(
-                                                color: Colors.blue),
-                                          ),
-                                        ),
-                                        trailingIcon: Icons.bookmark,
-                                        isDefaultAction: false,
-                                        isDestructiveAction: false,
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-                                          await Provider.of<DataHandler>(
-                                                  context,
-                                                  listen: false)
-                                              .updateSubjectAside(
-                                                  s.key, !s.key.aside);
-                                        },
-                                      ),
-                                      CupertinoContextMenuAction(
-                                        child: const Center(
-                                          child: const Text(
-                                            "Rename subject",
-                                            style: const TextStyle(
-                                                color: Colors.blue),
-                                          ),
-                                        ),
-                                        trailingIcon: CupertinoIcons.pencil,
-                                        isDefaultAction: false,
-                                        isDestructiveAction: false,
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-                                          TextEditingController
-                                              _textFieldController =
-                                              TextEditingController();
-                                          await showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                elevation: 0,
-                                                scrollable: true,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0))),
-                                                title: Text(
-                                                  'Rename the subject',
-                                                  style: customTextStyle(
-                                                      darkTheme),
-                                                ),
-                                                content: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      20.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .stretch,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      TextField(
-                                                        autocorrect: false,
-                                                        autofocus: true,
-                                                        controller:
-                                                            _textFieldController,
-                                                        onEditingComplete:
-                                                            () async {
-                                                          await dataProvider
-                                                              .renameSubject(
-                                                                  s.key,
-                                                                  _textFieldController
-                                                                      .text);
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        decoration:
-                                                            InputDecoration(
-                                                          hintText:
-                                                              "Input the name",
-                                                          hintStyle:
-                                                              customTextStyle(
-                                                                  darkTheme,
-                                                                  size: 17),
-                                                        ),
-                                                        textCapitalization:
-                                                            TextCapitalization
-                                                                .sentences,
-                                                      ),
-                                                      SizedBox(height: 40),
-                                                      Theme(
-                                                        data: Theme.of(context)
-                                                            .copyWith(
-                                                          highlightColor: Colors
-                                                              .transparent,
-                                                          splashColor:
-                                                              Colors.white54,
-                                                        ),
-                                                        child:
-                                                            FloatingActionButton
-                                                                .extended(
-                                                          elevation: 0,
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .greenAccent,
-                                                          icon: Icon(
-                                                              Icons.save_sharp),
-                                                          label: Text(
-                                                            "Save changes",
-                                                            style:
-                                                                customTextStyle(
-                                                              !darkTheme,
-                                                              size: 20,
-                                                            ),
-                                                          ),
-                                                          heroTag: null,
-                                                          onPressed: () async =>
-                                                              await dataProvider
-                                                                  .renameSubject(
-                                                                      s.key,
-                                                                      _textFieldController
-                                                                          .text),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    child: Text(
-                                                      'CANCEL',
-                                                      style: TextStyle(
-                                                        color: Colors
-                                                            .greenAccent[100],
-                                                      ),
+                        cells: r.map(
+                          (s) {
+                            return DataCell(
+                              Visibility(
+                                visible: s.key.name != "",
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: 200,
+                                    height: 90,
+                                    child: CupertinoContextMenu(
+                                      previewBuilder:
+                                          (context, animation, child) {
+                                        return FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                64.0 * animation.value),
+                                            child: FlatButton(
+                                              highlightColor: Colors.redAccent,
+                                              color: Colors.redAccent[100],
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(60.0),
+                                              ),
+                                              onPressed: () {},
+                                              child: Center(
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 15.0),
+                                                  child: Text(
+                                                    s.key.name,
+                                                    style: customTextStyle(
+                                                      darkTheme,
+                                                      color: darkTheme
+                                                          ? Colors.black
+                                                          : Colors.white,
+                                                      size:
+                                                          18 * animation.value,
+                                                      fw: FontWeight.w200,
                                                     ),
-                                                    onPressed: () {
-                                                      _selectedChapter = null;
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
                                                   ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      CupertinoContextMenuAction(
-                                        child: const Center(
-                                          child: const Text("Delete"),
-                                        ),
-                                        isDefaultAction: false,
-                                        trailingIcon: CupertinoIcons.delete,
-                                        isDestructiveAction: true,
-                                        onPressed: () async {
-                                          final dataProvider =
-                                              Provider.of<DataHandler>(context,
-                                                  listen: false);
-                                          await dataProvider
-                                              .removeSubject(s.key);
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                    child: FlatButton(
-                                      highlightColor: Colors.redAccent,
-                                      color: s.key.aside
-                                          ? Colors.red
-                                          : Colors.redAccent[100],
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(60.0),
-                                      ),
-                                      onPressed: () {},
-                                      child: Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 15.0),
-                                          child: Text(
-                                            s.key.name,
-                                            style: customTextStyle(
-                                              darkTheme,
-                                              color: darkTheme
-                                                  ? Colors.black
-                                                  : Colors.white,
-                                              size: 18,
-                                              fw: s.key.aside
-                                                  ? FontWeight.w400
-                                                  : FontWeight.w200,
+                                                ),
+                                              ),
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.center,
-                                            maxLines: 2,
+                                          ),
+                                        );
+                                      },
+                                      actions: [
+                                        CupertinoContextMenuAction(
+                                          child: const Center(
+                                            child: const Text(
+                                              "Mastery",
+                                              style: const TextStyle(
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                          ),
+                                          trailingIcon: Icons.star,
+                                          isDefaultAction: false,
+                                          isDestructiveAction: false,
+                                          onPressed: () async {
+                                            Navigator.pop(context);
+
+                                            await showDialog(
+                                              context: context,
+                                              builder: (newContext) {
+                                                return SubjectMasteredSliderDialog(
+                                                    s.key);
+                                              },
+                                            );
+                                          },
+                                        ),
+                                        CupertinoContextMenuAction(
+                                          child: Center(
+                                            child: Text(
+                                              s.key.aside
+                                                  ? "Remove bookmark"
+                                                  : "Add bookmark",
+                                              style: const TextStyle(
+                                                  color: Colors.blue),
+                                            ),
+                                          ),
+                                          trailingIcon: s.key.aside
+                                              ? MaterialCommunityIcons
+                                                  .bookmark_remove
+                                              : MaterialCommunityIcons
+                                                  .bookmark_plus,
+                                          isDefaultAction: false,
+                                          isDestructiveAction: false,
+                                          onPressed: () async {
+                                            Navigator.pop(context);
+
+                                            await Future.delayed(
+                                                const Duration(
+                                                    milliseconds: 300),
+                                                () {});
+
+                                            await Provider.of<DataHandler>(
+                                                    context,
+                                                    listen: false)
+                                                .updateSubjectAside(
+                                                    s.key, !s.key.aside);
+                                          },
+                                        ),
+                                        CupertinoContextMenuAction(
+                                          child: const Center(
+                                            child: const Text(
+                                              "Rename subject",
+                                              style: const TextStyle(
+                                                  color: Colors.blue),
+                                            ),
+                                          ),
+                                          trailingIcon: CupertinoIcons.pencil,
+                                          isDefaultAction: false,
+                                          isDestructiveAction: false,
+                                          onPressed: () async {
+                                            Navigator.pop(context);
+                                            TextEditingController
+                                                _textFieldController =
+                                                TextEditingController();
+                                            await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  elevation: 0,
+                                                  scrollable: true,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  20.0))),
+                                                  title: Text(
+                                                    'Rename the subject',
+                                                    style: customTextStyle(
+                                                        darkTheme),
+                                                  ),
+                                                  content: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            20.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .stretch,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        TextField(
+                                                          autocorrect: false,
+                                                          autofocus: true,
+                                                          controller:
+                                                              _textFieldController,
+                                                          onEditingComplete:
+                                                              () async {
+                                                            await dataProvider
+                                                                .renameSubject(
+                                                                    s.key,
+                                                                    _textFieldController
+                                                                        .text);
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          decoration:
+                                                              InputDecoration(
+                                                            hintText:
+                                                                "Input the name",
+                                                            hintStyle:
+                                                                customTextStyle(
+                                                                    darkTheme,
+                                                                    size: 17),
+                                                          ),
+                                                          textCapitalization:
+                                                              TextCapitalization
+                                                                  .sentences,
+                                                        ),
+                                                        SizedBox(height: 40),
+                                                        Theme(
+                                                          data:
+                                                              Theme.of(context)
+                                                                  .copyWith(
+                                                            highlightColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            splashColor:
+                                                                Colors.white54,
+                                                          ),
+                                                          child:
+                                                              FloatingActionButton
+                                                                  .extended(
+                                                            elevation: 0,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .greenAccent,
+                                                            icon: Icon(Icons
+                                                                .save_sharp),
+                                                            label: Text(
+                                                              "Save changes",
+                                                              style:
+                                                                  customTextStyle(
+                                                                !darkTheme,
+                                                                size: 20,
+                                                              ),
+                                                            ),
+                                                            heroTag: null,
+                                                            onPressed: () async =>
+                                                                await dataProvider
+                                                                    .renameSubject(
+                                                                        s.key,
+                                                                        _textFieldController
+                                                                            .text),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text(
+                                                        'CANCEL',
+                                                        style: TextStyle(
+                                                          color: Colors
+                                                              .greenAccent[100],
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        _selectedChapter = null;
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                        CupertinoContextMenuAction(
+                                          child: const Center(
+                                            child: const Text("Delete"),
+                                          ),
+                                          isDefaultAction: false,
+                                          trailingIcon: CupertinoIcons.delete,
+                                          isDestructiveAction: true,
+                                          onPressed: () async {
+                                            final dataProvider =
+                                                Provider.of<DataHandler>(
+                                                    context,
+                                                    listen: false);
+                                            await dataProvider
+                                                .removeSubject(s.key);
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                      child: Badge(
+                                        showBadge: s.key.aside,
+                                        badgeContent:
+                                            const Icon(Icons.bookmark),
+                                        badgeColor: Colors.redAccent,
+                                        child: FlatButton(
+                                          highlightColor: Colors.redAccent,
+                                          color: Colors.redAccent[100],
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(60.0),
+                                          ),
+                                          onPressed: () {},
+                                          child: Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 15.0),
+                                              child: Text(
+                                                s.key.name,
+                                                style: customTextStyle(
+                                                  darkTheme,
+                                                  color: darkTheme
+                                                      ? Colors.black
+                                                      : Colors.white,
+                                                  size: 18,
+                                                  fw: FontWeight.w200,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.center,
+                                                maxLines: 2,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -625,9 +680,9 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        }).toList()
+                            );
+                          },
+                        ).toList()
                           ..add(
                             const DataCell(
                               const Text(""),
@@ -640,6 +695,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
 
               return Scaffold(
                 appBar: AppBar(
+                  toolbarHeight: 80.0,
                   title: Text(
                     _course.name,
                     textAlign: TextAlign.center,
@@ -699,10 +755,47 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                         ),
                       ),
                     ),
-                    Container(
-                      child: IconButton(
-                        icon: const Icon(Icons.bookmark),
-                        onPressed: () {},
+                    Visibility(
+                      visible: asideNumber > 0,
+                      child: Center(
+                        child: Badge(
+                          badgeContent: Center(
+                            child: Text(
+                              "$asideNumber",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          badgeColor: Colors.red,
+                          child: IconButton(
+                            icon: const Icon(Icons.bookmark),
+                            onPressed: () async =>
+                                await showCupertinoModalPopup(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CupertinoActionSheet(
+                                title: const Text("Bookmarks"),
+                                message: Text(
+                                    "You have currenlty added $asideNumber bookmarks"),
+                                cancelButton: CupertinoActionSheetAction(
+                                  child: const Text("OK"),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                actions: [
+                                  CupertinoActionSheetAction(
+                                    onPressed: () async {
+                                      await removeAllPutAside(chapters);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Remove all bookmarks"),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          position: BadgePosition.bottomStart(),
+                        ),
                       ),
                     ),
                     Padding(
@@ -1073,6 +1166,34 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
           isDefaultAction: true,
           onPressed: () => Navigator.pop(context, 'Cancel'),
         ),
+      ),
+    );
+  }
+
+  int nbOfAsideSubjects(List<Chapter> chapters) {
+    int count = 0;
+
+    chapters.forEach(
+      (c) {
+        c.subjects.forEach(
+          (s) {
+            if (s.aside) {
+              count += 1;
+            }
+          },
+        );
+      },
+    );
+    return count;
+  }
+
+  Future<void> removeAllPutAside(List<Chapter> chapters) async {
+    final dataProvider = Provider.of<DataHandler>(context, listen: false);
+
+    chapters.forEach(
+      (chapter) async => chapter.subjects.forEach(
+        (subject) async =>
+            await dataProvider.updateSubjectAside(subject, false),
       ),
     );
   }
