@@ -165,7 +165,7 @@ class DataHandler with ChangeNotifier {
   Future<List<Subject>> _getSubjectsFromDB(
       Database db, String chapterID) async {
     var query = '''
-        SELECT Subject.SubjectID, Subject.Name, Subject.Mastered FROM Chapter 
+        SELECT Subject.SubjectID, Subject.Name, Subject.Mastered, Subject.Aside FROM Chapter 
           JOIN Subject 
           ON Subject.ChapterID = Chapter.ChapterID 
         WHERE 
@@ -175,17 +175,17 @@ class DataHandler with ChangeNotifier {
     List<Map> subjectsFromDB = await db.rawQuery(query, [chapterID]);
 
     List<Subject> subjects = subjectsFromDB.isNotEmpty
-        ? subjectsFromDB
-            .map(
-              (m) => Subject(
+        ? subjectsFromDB.map(
+            (m) {
+              return Subject(
                 id: m["SubjectID"],
                 name: m["Name"],
                 mas: Mastered(m["Mastered"]),
                 chapterID: chapterID,
-                aside: m["Aside"] ?? false,
-              ),
-            )
-            .toList()
+                aside: m["Aside"] == 1 ? true : false ?? false,
+              );
+            },
+          ).toList()
         : [];
 
     return subjects;

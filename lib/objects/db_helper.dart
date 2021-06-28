@@ -16,7 +16,7 @@ class DBHelper {
         ChapterID varchar(1000), 
         Name varchar(100), 
         Mastered integer,
-        Aside boolean,
+        Aside integer,
         PRIMARY KEY (SubjectID)
         );''';
 
@@ -69,6 +69,7 @@ class DBHelper {
     await db.execute(_chapterCreationQuery);
     await db.execute(_courseCreationQuery);
     await db.execute(_semesterCreationQuery);
+
     print("[DBHelper] Database was created!");
   }
 
@@ -234,7 +235,8 @@ class DBHelper {
   Future<void> updateSubjectAside(Subject subject, bool value) async {
     final Database db = await database;
     var row = subject.toMap();
-    row["Aside"] = value;
+    int toStore = value ? 1 : 0;
+    row["Aside"] = toStore;
 
     await db.update(
       'Subject',

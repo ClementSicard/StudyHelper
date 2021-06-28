@@ -94,7 +94,7 @@ class _GamePageState extends State<GamePage> {
                     right: 15.0 / 360.0 * MediaQuery.of(context).size.width),
                 child: Center(
                   child: Text(
-                    _counter.toString() + " / " + _nbOfSubjects.toString(),
+                    "$_counter/$_nbOfSubjects",
                     style: customTextStyle(false),
                   ),
                 ),
@@ -112,91 +112,220 @@ class _GamePageState extends State<GamePage> {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     if (_subjects.isEmpty) {
       _done = true;
-      _confettiController.play();
-      return Stack(
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height / 30),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: RaisedButton(
-                  onPressed: () {},
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(40.0),
-                    ),
-                  ),
-                  mouseCursor: MouseCursor.defer,
-                  elevation: 0,
-                  hoverElevation: 0,
-                  hoverColor: Colors.transparent,
-                  color:
-                      themeChange.darkTheme ? Colors.black12 : Colors.white54,
-                  focusColor: Colors.transparent,
-                  highlightElevation: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      "Well done!",
-                      style: customTextStyle(themeChange.darkTheme, size: 50),
-                      textAlign: TextAlign.center,
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 50.0,
-                    left: 20.0,
-                    right: 20.0,
-                    top: 20.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundColor: const Color(0xff272827),
-                        child: IconButton(
-                          icon: const Icon(
-                            CupertinoIcons.refresh,
-                          ),
-                          color: _color,
-                          enableFeedback: true,
-                          iconSize: 43,
-                          onPressed: () {
-                            setup();
-                          },
-                        ),
+
+      if (_putAsideSubjects.isEmpty) {
+        _confettiController.play();
+        return Stack(
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height / 30),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: RaisedButton(
+                    onPressed: () {},
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(40.0),
                       ),
-                    ],
+                    ),
+                    mouseCursor: MouseCursor.defer,
+                    elevation: 0,
+                    hoverElevation: 0,
+                    hoverColor: Colors.transparent,
+                    color:
+                        themeChange.darkTheme ? Colors.black12 : Colors.white54,
+                    focusColor: Colors.transparent,
+                    highlightElevation: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        "Well done!",
+                        style: customTextStyle(themeChange.darkTheme, size: 50),
+                        textAlign: TextAlign.center,
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              maxBlastForce: 5, // set a lower max blast force
-              minBlastForce: 2, // set a lower min blast force
-              emissionFrequency: 0.05,
-              numberOfParticles: 30, // a lot of particles at once
-              gravity: 0.5,
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 50.0,
+                      left: 20.0,
+                      right: 20.0,
+                      top: 20.0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: const Color(0xff272827),
+                          child: IconButton(
+                            icon: const Icon(
+                              CupertinoIcons.refresh,
+                            ),
+                            color: _color,
+                            enableFeedback: true,
+                            iconSize: 43,
+                            onPressed: () {
+                              setup();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      );
+            Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                maxBlastForce: 5, // set a lower max blast force
+                minBlastForce: 2, // set a lower min blast force
+                emissionFrequency: 0.05,
+                numberOfParticles: 30, // a lot of particles at once
+                gravity: 0.5,
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Stack(
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height / 30),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: RaisedButton(
+                    onPressed: () {},
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(40.0),
+                      ),
+                    ),
+                    mouseCursor: MouseCursor.defer,
+                    elevation: 0,
+                    hoverElevation: 0,
+                    hoverColor: Colors.transparent,
+                    color:
+                        themeChange.darkTheme ? Colors.black12 : Colors.white54,
+                    focusColor: Colors.transparent,
+                    highlightElevation: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        "There is still progress that can be done.",
+                        style: customTextStyle(themeChange.darkTheme, size: 50),
+                        textAlign: TextAlign.center,
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: RaisedButton(
+                    onPressed: () {},
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(40.0),
+                      ),
+                    ),
+                    mouseCursor: MouseCursor.defer,
+                    elevation: 0,
+                    hoverElevation: 0,
+                    hoverColor: Colors.transparent,
+                    color:
+                        themeChange.darkTheme ? Colors.black12 : Colors.white54,
+                    focusColor: Colors.transparent,
+                    highlightElevation: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            "Session summary:",
+                            style: customTextStyle(themeChange.darkTheme,
+                                size: 30),
+                            textAlign: TextAlign.center,
+                            maxLines: 5,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            "\nPut aside subjects: $_nbOfSubjects/$_putAsideCounter",
+                            style: customTextStyle(themeChange.darkTheme,
+                                size: 25),
+                            maxLines: 5,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 50.0,
+                      left: 20.0,
+                      right: 20.0,
+                      top: 20.0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: const Color(0xff272827),
+                          child: IconButton(
+                            icon: const Icon(
+                              CupertinoIcons.refresh,
+                            ),
+                            color: _color,
+                            enableFeedback: true,
+                            iconSize: 43,
+                            onPressed: () {
+                              setup();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                maxBlastForce: 5, // set a lower max blast force
+                minBlastForce: 2, // set a lower min blast force
+                emissionFrequency: 0.05,
+                numberOfParticles: 30, // a lot of particles at once
+                gravity: 0.5,
+              ),
+            ),
+          ],
+        );
+      }
     } else {
       return Column(
         mainAxisSize: MainAxisSize.max,
@@ -289,6 +418,20 @@ class _GamePageState extends State<GamePage> {
                               setState(() {
                                 _putAsideSubjects.add(_currentSubject);
                                 _putAsideCounter++;
+
+                                _subjects.remove(_currentSubject);
+                                _counter++;
+                                if (_subjects.isEmpty) {
+                                  _color = _putAsideSubjects.isEmpty
+                                      ? Colors.lightGreenAccent
+                                      : Colors.yellowAccent[200];
+                                } else {
+                                  _currentSubject = _subjects.first;
+                                  Color oldColor = _color;
+                                  while (_color == oldColor) {
+                                    _color = (_colors..shuffle()).first;
+                                  }
+                                }
                               });
                             } else {
                               showCupertinoModalPopup(
@@ -384,7 +527,9 @@ class _GamePageState extends State<GamePage> {
                             _subjects.remove(_currentSubject);
                             _counter++;
                             if (_subjects.isEmpty) {
-                              _color = Colors.lightGreenAccent;
+                              _color = _putAsideSubjects.isEmpty
+                                  ? Colors.lightGreenAccent
+                                  : Colors.yellowAccent[200];
                             } else {
                               _currentSubject = _subjects.first;
                               Color oldColor = _color;

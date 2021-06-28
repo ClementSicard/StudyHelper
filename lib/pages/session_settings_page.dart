@@ -25,6 +25,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
   List<bool> _selected;
   bool _all = false;
   bool _random = true;
+  bool _onlyAside = false;
 
   _SessionSettingsPageState(this._course, this._chapters);
 
@@ -99,33 +100,48 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
               ],
             )
             ..addAll(_chapterSelection(themeChange.darkTheme))
-            ..addAll([
-              Visibility(
-                visible: !_all,
-                child: const SizedBox(height: 60),
-              ),
-              ListTile(
-                leading: const Icon(CupertinoIcons.shuffle),
-                title: Text(
-                  "Random order",
-                  style: customTextStyle(themeChange.darkTheme, size: 20),
+            ..addAll(
+              [
+                Visibility(
+                  visible: !_all,
+                  child: const SizedBox(height: 60),
                 ),
-                trailing: CupertinoSwitch(
-                  value: _random,
-                  onChanged: (value) {
+                ListTile(
+                  leading: const Icon(CupertinoIcons.shuffle),
+                  title: Text(
+                    "Random order",
+                    style: customTextStyle(themeChange.darkTheme, size: 20),
+                  ),
+                  trailing: CupertinoSwitch(
+                    value: _random,
+                    onChanged: (value) => setState(() => _random = value),
+                  ),
+                  onTap: () => setState(() => _random = !_random),
+                ),
+                ListTile(
+                  leading: const Icon(CupertinoIcons.bookmark),
+                  title: Text(
+                    "Only bookmarked subjects",
+                    style: customTextStyle(themeChange.darkTheme, size: 20),
+                  ),
+                  trailing: CupertinoSwitch(
+                    activeColor: Colors.redAccent[100],
+                    value: _onlyAside,
+                    onChanged: (value) {
+                      setState(() {
+                        _onlyAside = value;
+                      });
+                    },
+                  ),
+                  onTap: () {
                     setState(() {
-                      _random = value;
+                      _onlyAside = !_onlyAside;
                     });
                   },
                 ),
-                onTap: () {
-                  setState(() {
-                    _random = !_random;
-                  });
-                },
-              ),
-              const SizedBox(height: 90)
-            ]),
+                const SizedBox(height: 90)
+              ],
+            ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -135,6 +151,7 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
           onPressed: () async {
             List<Chapter> selectedChapters = [];
             bool emptyChapter = false;
+
             for (int i = 0; i < _chapters.length; i++) {
               if (_selected[i]) {
                 selectedChapters.add(_chapters[i]);
@@ -179,21 +196,49 @@ class _SessionSettingsPageState extends State<SessionSettingsPage> {
                       style: const TextStyle(color: Colors.blue),
                     ),
                     isDefaultAction: true,
-                    onPressed: () {
-                      Navigator.pop(context, 'Cancel');
-                    },
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
                   ),
                 ),
               );
             } else {
-              print(_random);
-              await Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      GamePage(_course, selectedChapters, _random),
-                ),
-              );
+              if (_onlyAside) {
+                selectedChapters.forEach((c) =>
+                    c.subjects = c.subjects.where((s) => s.aside).toList());
+              }
+
+              bool nonEmptySubjects = false;
+              for (Chapter c in selectedChapters) {
+                nonEmptySubjects |= c.subjects.isNotEmpty;
+              }
+
+              print(selectedChapters
+                  .map((c) => c.subjects.map((s) => s.toMap())));
+
+              if (!nonEmptySubjects) {
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) => CupertinoActionSheet(
+                    title: const Text("No subject aside"),
+                    message: const Text("You didn't put aside any subject"),
+                    cancelButton: CupertinoActionSheetAction(
+                      child: const Text(
+                        'Cancel',
+                        style: const TextStyle(color: Colors.blue),
+                      ),
+                      isDefaultAction: true,
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                    ),
+                  ),
+                );
+              } else {
+                await Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) =>
+                        GamePage(_course, selectedChapters, _random),
+                  ),
+                );
+              }
             }
           },
           label: Text(

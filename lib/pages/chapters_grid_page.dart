@@ -7,7 +7,6 @@ import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
-import 'package:study_helper/objects/mastered.dart';
 import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/pages/session_settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
@@ -147,8 +146,10 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
             } else {
               List<List<MapEntry<Subject, Chapter>>> subjectsByCol =
                   subjectsByColumn(chapters);
+
               double dataRowHeight = 110;
               double headingRowHeight = 120;
+
               DataTable dataTable = DataTable(
                 dataRowHeight: dataRowHeight,
                 headingRowHeight: headingRowHeight,
@@ -376,239 +377,247 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                 rows: subjectsByCol
                     .map(
                       (r) => DataRow(
-                        cells: r
-                            .map(
-                              (s) => DataCell(
-                                Visibility(
-                                  visible: s.key.name != "",
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 200,
-                                      height: 90,
-                                      child: CupertinoContextMenu(
-                                        previewBuilder:
-                                            (context, animation, child) {
-                                          return FittedBox(
-                                            fit: BoxFit.cover,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      64.0 * animation.value),
-                                              child: child,
+                        cells: r.map((s) {
+                          return DataCell(
+                            Visibility(
+                              visible: s.key.name != "",
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: 200,
+                                  height: 90,
+                                  child: CupertinoContextMenu(
+                                    previewBuilder:
+                                        (context, animation, child) {
+                                      return FittedBox(
+                                        fit: BoxFit.cover,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              64.0 * animation.value),
+                                          child: child,
+                                        ),
+                                      );
+                                    },
+                                    actions: [
+                                      CupertinoContextMenuAction(
+                                        child: const Center(
+                                          child: const Text(
+                                            "Mastery",
+                                            style: const TextStyle(
+                                              color: Colors.blue,
                                             ),
+                                          ),
+                                        ),
+                                        trailingIcon: Icons.star,
+                                        isDefaultAction: false,
+                                        isDestructiveAction: false,
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+
+                                          await showDialog(
+                                            context: context,
+                                            builder: (newContext) {
+                                              return SubjectMasteredSliderDialog(
+                                                  s.key);
+                                            },
                                           );
                                         },
-                                        actions: [
-                                          CupertinoContextMenuAction(
-                                            child: const Center(
-                                              child: const Text(
-                                                "Mastery",
-                                                style: const TextStyle(
-                                                  color: Colors.blue,
-                                                ),
-                                              ),
-                                            ),
-                                            trailingIcon: Icons.star,
-                                            isDefaultAction: false,
-                                            isDestructiveAction: false,
-                                            onPressed: () async {
-                                              Navigator.pop(context);
-
-                                              await showDialog(
-                                                context: context,
-                                                builder: (newContext) {
-                                                  return SubjectMasteredSliderDialog(
-                                                      s.key);
-                                                },
-                                              );
-                                            },
+                                      ),
+                                      CupertinoContextMenuAction(
+                                        child: Center(
+                                          child: Text(
+                                            "Put aside",
+                                            style: const TextStyle(
+                                                color: Colors.blue),
                                           ),
-                                          CupertinoContextMenuAction(
-                                            child: const Center(
-                                              child: const Text(
-                                                "Rename subject",
-                                                style: const TextStyle(
-                                                    color: Colors.blue),
-                                              ),
-                                            ),
-                                            trailingIcon: CupertinoIcons.pencil,
-                                            isDefaultAction: false,
-                                            isDestructiveAction: false,
-                                            onPressed: () async {
-                                              Navigator.pop(context);
-                                              TextEditingController
-                                                  _textFieldController =
-                                                  TextEditingController();
-                                              await showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    elevation: 0,
-                                                    scrollable: true,
-                                                    shape: RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    20.0))),
-                                                    title: Text(
-                                                      'Rename the subject',
-                                                      style: customTextStyle(
-                                                          darkTheme),
-                                                    ),
-                                                    content: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .stretch,
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          TextField(
-                                                            autocorrect: false,
-                                                            autofocus: true,
-                                                            controller:
-                                                                _textFieldController,
-                                                            onEditingComplete:
-                                                                () async {
+                                        ),
+                                        trailingIcon: Icons.bookmark,
+                                        isDefaultAction: false,
+                                        isDestructiveAction: false,
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          await Provider.of<DataHandler>(
+                                                  context,
+                                                  listen: false)
+                                              .updateSubjectAside(
+                                                  s.key, !s.key.aside);
+                                        },
+                                      ),
+                                      CupertinoContextMenuAction(
+                                        child: const Center(
+                                          child: const Text(
+                                            "Rename subject",
+                                            style: const TextStyle(
+                                                color: Colors.blue),
+                                          ),
+                                        ),
+                                        trailingIcon: CupertinoIcons.pencil,
+                                        isDefaultAction: false,
+                                        isDestructiveAction: false,
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          TextEditingController
+                                              _textFieldController =
+                                              TextEditingController();
+                                          await showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                elevation: 0,
+                                                scrollable: true,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0))),
+                                                title: Text(
+                                                  'Rename the subject',
+                                                  style: customTextStyle(
+                                                      darkTheme),
+                                                ),
+                                                content: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      20.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .stretch,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      TextField(
+                                                        autocorrect: false,
+                                                        autofocus: true,
+                                                        controller:
+                                                            _textFieldController,
+                                                        onEditingComplete:
+                                                            () async {
+                                                          await dataProvider
+                                                              .renameSubject(
+                                                                  s.key,
+                                                                  _textFieldController
+                                                                      .text);
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        decoration:
+                                                            InputDecoration(
+                                                          hintText:
+                                                              "Input the name",
+                                                          hintStyle:
+                                                              customTextStyle(
+                                                                  darkTheme,
+                                                                  size: 17),
+                                                        ),
+                                                        textCapitalization:
+                                                            TextCapitalization
+                                                                .sentences,
+                                                      ),
+                                                      SizedBox(height: 40),
+                                                      Theme(
+                                                        data: Theme.of(context)
+                                                            .copyWith(
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          splashColor:
+                                                              Colors.white54,
+                                                        ),
+                                                        child:
+                                                            FloatingActionButton
+                                                                .extended(
+                                                          elevation: 0,
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .greenAccent,
+                                                          icon: Icon(
+                                                              Icons.save_sharp),
+                                                          label: Text(
+                                                            "Save changes",
+                                                            style:
+                                                                customTextStyle(
+                                                              !darkTheme,
+                                                              size: 20,
+                                                            ),
+                                                          ),
+                                                          heroTag: null,
+                                                          onPressed: () async =>
                                                               await dataProvider
                                                                   .renameSubject(
                                                                       s.key,
                                                                       _textFieldController
-                                                                          .text);
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            decoration:
-                                                                InputDecoration(
-                                                              hintText:
-                                                                  "Input the name",
-                                                              hintStyle:
-                                                                  customTextStyle(
-                                                                      darkTheme,
-                                                                      size: 17),
-                                                            ),
-                                                            textCapitalization:
-                                                                TextCapitalization
-                                                                    .sentences,
-                                                          ),
-                                                          SizedBox(height: 40),
-                                                          Theme(
-                                                            data: Theme.of(
-                                                                    context)
-                                                                .copyWith(
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              splashColor:
-                                                                  Colors
-                                                                      .white54,
-                                                            ),
-                                                            child:
-                                                                FloatingActionButton
-                                                                    .extended(
-                                                              elevation: 0,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .greenAccent,
-                                                              icon: Icon(Icons
-                                                                  .save_sharp),
-                                                              label: Text(
-                                                                "Save changes",
-                                                                style:
-                                                                    customTextStyle(
-                                                                  !darkTheme,
-                                                                  size: 20,
-                                                                ),
-                                                              ),
-                                                              heroTag: null,
-                                                              onPressed: () async =>
-                                                                  await dataProvider
-                                                                      .renameSubject(
-                                                                          s.key,
-                                                                          _textFieldController
-                                                                              .text),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        child: Text(
-                                                          'CANCEL',
-                                                          style: TextStyle(
-                                                            color: Colors
-                                                                    .greenAccent[
-                                                                100],
-                                                          ),
+                                                                          .text),
                                                         ),
-                                                        onPressed: () {
-                                                          _selectedChapter =
-                                                              null;
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
                                                       ),
                                                     ],
-                                                  );
-                                                },
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    child: Text(
+                                                      'CANCEL',
+                                                      style: TextStyle(
+                                                        color: Colors
+                                                            .greenAccent[100],
+                                                      ),
+                                                    ),
+                                                    onPressed: () {
+                                                      _selectedChapter = null;
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
                                               );
                                             },
-                                          ),
-                                          CupertinoContextMenuAction(
-                                            child: const Center(
-                                              child: const Text("Delete"),
+                                          );
+                                        },
+                                      ),
+                                      CupertinoContextMenuAction(
+                                        child: const Center(
+                                          child: const Text("Delete"),
+                                        ),
+                                        isDefaultAction: false,
+                                        trailingIcon: CupertinoIcons.delete,
+                                        isDestructiveAction: true,
+                                        onPressed: () async {
+                                          final dataProvider =
+                                              Provider.of<DataHandler>(context,
+                                                  listen: false);
+                                          await dataProvider
+                                              .removeSubject(s.key);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                    child: FlatButton(
+                                      highlightColor: Colors.redAccent,
+                                      color: s.key.aside
+                                          ? Colors.red
+                                          : Colors.redAccent[100],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(60.0),
+                                      ),
+                                      onPressed: () {},
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15.0),
+                                          child: Text(
+                                            s.key.name,
+                                            style: customTextStyle(
+                                              darkTheme,
+                                              color: darkTheme
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                              size: 18,
+                                              fw: s.key.aside
+                                                  ? FontWeight.w400
+                                                  : FontWeight.w200,
                                             ),
-                                            isDefaultAction: false,
-                                            trailingIcon: CupertinoIcons.delete,
-                                            isDestructiveAction: true,
-                                            onPressed: () async {
-                                              final dataProvider =
-                                                  Provider.of<DataHandler>(
-                                                      context,
-                                                      listen: false);
-                                              await dataProvider
-                                                  .removeSubject(s.key);
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        ],
-                                        child: FlatButton(
-                                          highlightColor: Colors.redAccent,
-                                          color: s.key.aside
-                                              ? Colors.red
-                                              : Colors.redAccent[100],
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(60.0),
-                                          ),
-                                          onPressed: () {},
-                                          child: Center(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 15.0),
-                                              child: Text(
-                                                s.key.name,
-                                                style: customTextStyle(
-                                                  darkTheme,
-                                                  color: darkTheme
-                                                      ? Colors.black
-                                                      : Colors.white,
-                                                  size: 18,
-                                                  fw: s.key.aside
-                                                      ? FontWeight.w400
-                                                      : FontWeight.w200,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.center,
-                                                maxLines: 2,
-                                              ),
-                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                            maxLines: 2,
                                           ),
                                         ),
                                       ),
@@ -616,13 +625,14 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                   ),
                                 ),
                               ),
-                            )
-                            .toList()
-                              ..add(
-                                const DataCell(
-                                  const Text(""),
-                                ),
-                              ),
+                            ),
+                          );
+                        }).toList()
+                          ..add(
+                            const DataCell(
+                              const Text(""),
+                            ),
+                          ),
                       ),
                     )
                     .toList(),
@@ -1048,6 +1058,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                       Subject(
                         name: subjectName,
                         chapterID: _selectedChapter.id,
+                        aside: false,
                       ),
                     );
                     Navigator.pop(context);

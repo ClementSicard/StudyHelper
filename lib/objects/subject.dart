@@ -38,7 +38,12 @@ class Subject {
       "ChapterID": chapterID,
       "Name": name,
       "Mastered": this._mas.value,
-      "Aside": aside,
+      "Aside": aside ? 1 : 0,
     };
+  }
+
+  @override
+  String toString() {
+    return this.toMap().toString();
   }
 }
