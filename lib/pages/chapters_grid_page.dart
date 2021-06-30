@@ -206,7 +206,7 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                   onPressed: () async {
                                     final TextEditingController
                                         _textFieldController =
-                                        TextEditingController();
+                                        TextEditingController()..text = c.name;
                                     await showDialog(
                                       context: context,
                                       builder: (context) {
@@ -509,7 +509,8 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                             Navigator.pop(context);
                                             TextEditingController
                                                 _textFieldController =
-                                                TextEditingController();
+                                                TextEditingController()
+                                                  ..text = s.key.name;
                                             await showDialog(
                                               context: context,
                                               builder: (context) {
@@ -517,10 +518,11 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                                   elevation: 0,
                                                   scrollable: true,
                                                   shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  20.0))),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(20.0),
+                                                    ),
+                                                  ),
                                                   title: Text(
                                                     'Rename the subject',
                                                     style: customTextStyle(
