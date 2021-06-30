@@ -20,6 +20,9 @@ dependencies:
   flutter_easyloading: ^3.0.0
   flutter_icons: ^1.1.0
   flutter_speed_dial: ^3.0.5
+  keyboard_shortcuts:
+    git: 
+      url: git://github.com/ForrestHilton/keyboard_shortcuts.git
   path: ^1.8.0
   provider: ^4.3.2+1xw
   shared_preferences: ^2.0.6
