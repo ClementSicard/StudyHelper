@@ -1,13 +1,16 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:study_helper/objects/chapter.dart';
 import 'package:study_helper/objects/course.dart';
 import 'package:study_helper/objects/courses_data_handler.dart';
 import 'package:study_helper/objects/dark_theme_handler.dart';
+import 'package:study_helper/objects/mastered.dart';
 import 'package:study_helper/objects/subject.dart';
 import 'package:study_helper/pages/session_settings_page.dart';
 import 'package:study_helper/utils/custom_text_styles.dart';
@@ -16,6 +19,7 @@ import 'package:study_helper/utils/mastered_sliders.dart';
 import 'package:study_helper/utils/nice_button.dart';
 import 'package:study_helper/utils/routes.dart';
 import 'package:study_helper/utils/themes.dart';
+import 'package:keyboard_shortcuts/keyboard_shortcuts.dart';
 
 class ChaptersGridPage extends StatefulWidget {
   final Course _course;
@@ -906,7 +910,17 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                     ),
                   ),
                 ),
-                body: DiagonalScrollView(child: dataTable),
+                body: KeyBoardShortcuts(
+                  keysToPress: {
+                    LogicalKeyboardKey.enter,
+                    LogicalKeyboardKey.shiftLeft,
+                  },
+                  onKeysPressed: () => _promptNewSubject(
+                    darkTheme: darkTheme,
+                    chapters: chapters,
+                  ),
+                  child: DiagonalScrollView(child: dataTable),
+                ),
               );
             }
           } else {
@@ -969,56 +983,86 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
     TextEditingController _textFieldController = TextEditingController();
     final dataHandler = Provider.of<DataHandler>(context, listen: false);
 
+    double doubleToMas = 0;
+
     return await showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          scrollable: true,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
-            ),
-          ),
-          elevation: 0,
-          title: Text(
-            'Add a new chapter',
-            style: customTextStyle(darkTheme),
-          ),
-          content: TextField(
-            onEditingComplete: () {
-              dataHandler.addChapter(
-                Chapter(name: _textFieldController.text, courseID: _course.id),
-              );
-              Navigator.pop(context);
-            },
-            autocorrect: false,
-            autofocus: true,
-            controller: _textFieldController,
-            decoration: InputDecoration(hintText: "Input the name"),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                'CANCEL',
-                style: TextStyle(color: Colors.redAccent[100]),
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            scrollable: true,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
               ),
-              onPressed: () {
-                _selectedChapter = null;
-                Navigator.pop(context);
-              },
             ),
-            TextButton(
-              child: const Text(
-                'OK',
-                style: const TextStyle(color: Colors.greenAccent),
+            elevation: 0,
+            title: Text(
+              'Add a new chapter',
+              style: customTextStyle(darkTheme),
+            ),
+            content: Column(
+              children: [
+                TextField(
+                  onEditingComplete: () {
+                    dataHandler.addChapter(
+                      Chapter(
+                        name: _textFieldController.text,
+                        courseID: _course.id,
+                        mas: Mastered(doubleToMas.toInt()),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  },
+                  autocorrect: false,
+                  autofocus: true,
+                  controller: _textFieldController,
+                  decoration: InputDecoration(hintText: "Input the name"),
+                ),
+                const SizedBox(height: 20),
+                SmoothStarRating(
+                  allowHalfRating: false,
+                  starCount: 3,
+                  rating: doubleToMas,
+                  onRated: (newRating) =>
+                      setState(() => doubleToMas = newRating),
+                  size: 50.0,
+                  color: Colors.greenAccent,
+                  borderColor: Colors.greenAccent,
+                  spacing: 0.0,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "Mastery: ${Mastered(doubleToMas.toInt()).toString()}",
+                  style: customTextStyle(darkTheme, size: 18),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  'CANCEL',
+                  style: TextStyle(color: Colors.redAccent[100]),
+                ),
+                onPressed: () {
+                  _selectedChapter = null;
+                  Navigator.pop(context);
+                },
               ),
-              onPressed: () async {
-                await dataHandler.addChapter(Chapter(
-                    name: _textFieldController.text, courseID: _course.id));
-                Navigator.pop(context);
-              },
-            ),
-          ],
+              TextButton(
+                child: const Text(
+                  'OK',
+                  style: const TextStyle(color: Colors.greenAccent),
+                ),
+                onPressed: () async {
+                  await dataHandler.addChapter(Chapter(
+                      name: _textFieldController.text, courseID: _course.id));
+
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         );
       },
     );
@@ -1029,78 +1073,147 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
     @required List<Chapter> chapters,
   }) async {
     TextEditingController _textFieldController = TextEditingController();
+    bool bookmarked = false;
+    double intSoonToBeMastered = 0.0;
+
     return await showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          scrollable: true,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: Text(
-            'Add a new subject',
-            style: customTextStyle(darkTheme),
-          ),
-          content: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  autocorrect: false,
-                  autofocus: true,
-                  onEditingComplete: () async => await _showChapterSelection(
-                      _textFieldController.text, chapters),
-                  controller: _textFieldController,
-                  decoration: InputDecoration(
-                    hintText: "Input the name",
-                    hintStyle: customTextStyle(darkTheme, size: 17),
-                  ),
-                  textCapitalization: TextCapitalization.sentences,
-                ),
-                SizedBox(height: 40),
-                Theme(
-                  data: Theme.of(context).copyWith(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.white54,
-                  ),
-                  child: NiceButton(
-                    darkTheme,
-                    text: 'Pick chapter',
-                    textColor: Colors.black,
-                    onPressed: () async => await _showChapterSelection(
-                        _textFieldController.text, chapters),
-                    height: 60,
-                    color: Colors.greenAccent,
-                  ),
-                ),
-              ],
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (dialogContext, setState) => AlertDialog(
+            scrollable: true,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            title: Text(
+              'Add a new subject',
+              style: customTextStyle(darkTheme),
             ),
-          ),
-          actions: [
-            TextButton(
-              child: Text(
-                'CANCEL',
-                style: TextStyle(
-                  color: Colors.redAccent[100],
-                ),
+            content: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    autocorrect: false,
+                    autofocus: true,
+                    onEditingComplete: () async => await _showChapterSelection(
+                      subjectName: _textFieldController.text,
+                      chapters: chapters,
+                      bookmarked: bookmarked,
+                      mas: Mastered(intSoonToBeMastered.toInt()),
+                    ),
+                    controller: _textFieldController,
+                    decoration: InputDecoration(
+                      hintText: "Input the name",
+                      hintStyle: customTextStyle(darkTheme, size: 17),
+                    ),
+                    textCapitalization: TextCapitalization.sentences,
+                  ),
+                  SizedBox(height: 40),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Theme(
+                        data: Theme.of(dialogContext).copyWith(
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.white54,
+                        ),
+                        child: NiceButton(
+                          darkTheme,
+                          text: 'Pick chapter',
+                          textColor: Colors.black,
+                          onPressed: () async => await _showChapterSelection(
+                            subjectName: _textFieldController.text,
+                            chapters: chapters,
+                            bookmarked: bookmarked,
+                            mas: Mastered(intSoonToBeMastered.toInt()),
+                          ),
+                          height: 60,
+                          color: Colors.greenAccent,
+                        ),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(width: 20),
+                              Theme(
+                                data: Theme.of(dialogContext).copyWith(
+                                  highlightColor: Colors.transparent,
+                                  splashColor: Colors.white54,
+                                ),
+                                child: CircleAvatar(
+                                  child: const Icon(Icons.bookmark),
+                                  backgroundColor: bookmarked
+                                      ? Colors.red
+                                      : Colors.redAccent[100],
+                                  foregroundColor: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              CupertinoSwitch(
+                                value: bookmarked,
+                                onChanged: (value) =>
+                                    setState(() => bookmarked = value),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          SmoothStarRating(
+                            allowHalfRating: false,
+                            starCount: 3,
+                            rating: intSoonToBeMastered,
+                            onRated: (newRating) {
+                              setState(() {
+                                intSoonToBeMastered = newRating;
+                              });
+                            },
+                            size: 35.0,
+                            color: Colors.greenAccent,
+                            borderColor: Colors.greenAccent,
+                            spacing: 0.0,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
               ),
-              onPressed: () {
-                _selectedChapter = null;
-                Navigator.pop(context);
-              },
             ),
-          ],
+            actions: [
+              TextButton(
+                child: Text(
+                  'CANCEL',
+                  style: TextStyle(
+                    color: Colors.redAccent[100],
+                  ),
+                ),
+                onPressed: () {
+                  _selectedChapter = null;
+                  Navigator.pop(dialogContext);
+                },
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-  Future<void> _showChapterSelection(
-    String subjectName,
-    List<Chapter> chapters,
-  ) async {
+  Future<void> _showChapterSelection({
+    @required String subjectName,
+    @required List<Chapter> chapters,
+    @required bool bookmarked,
+    @required Mastered mas,
+  }) async {
     await showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
@@ -1151,7 +1264,8 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                       Subject(
                         name: subjectName,
                         chapterID: _selectedChapter.id,
-                        aside: false,
+                        aside: bookmarked,
+                        mas: mas,
                       ),
                     );
                     Navigator.pop(context);
