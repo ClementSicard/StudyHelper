@@ -397,39 +397,41 @@ class _ChaptersGridPageState extends State<ChaptersGridPage> {
                                     child: CupertinoContextMenu(
                                       previewBuilder:
                                           (context, animation, child) {
-                                        return FittedBox(
-                                          fit: BoxFit.cover,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                64.0 * animation.value),
-                                            child: FlatButton(
-                                              highlightColor: Colors.redAccent,
-                                              color: Colors.redAccent[100],
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(60.0),
-                                              ),
-                                              onPressed: () {},
-                                              child: Center(
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      vertical: 15.0),
-                                                  child: Text(
-                                                    s.key.name,
-                                                    style: customTextStyle(
-                                                      darkTheme,
-                                                      color: darkTheme
-                                                          ? Colors.black
-                                                          : Colors.white,
-                                                      size:
-                                                          18 * animation.value,
-                                                      fw: FontWeight.w200,
+                                        return Center(
+                                          child: FittedBox(
+                                            fit: BoxFit.cover,
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(
+                                                  64.0 * animation.value),
+                                              child: FlatButton(
+                                                highlightColor: Colors.redAccent,
+                                                color: Colors.redAccent[100],
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(60.0),
+                                                ),
+                                                onPressed: () {},
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 15.0),
+                                                    child: Text(
+                                                      s.key.name,
+                                                      style: customTextStyle(
+                                                        darkTheme,
+                                                        color: darkTheme
+                                                            ? Colors.black
+                                                            : Colors.white,
+                                                        size:
+                                                            18 * animation.value,
+                                                        fw: FontWeight.w200,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      textAlign: TextAlign.center,
+                                                      maxLines: 2,
                                                     ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    textAlign: TextAlign.center,
-                                                    maxLines: 2,
                                                   ),
                                                 ),
                                               ),
