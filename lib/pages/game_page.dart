@@ -520,6 +520,7 @@ class _GamePageState extends State<GamePage> {
                       icon: const Icon(Icons.check),
                       color: _color,
                       enableFeedback: true,
+                      autofocus: true,
                       iconSize: 30,
                       onPressed: () {
                         setState(
